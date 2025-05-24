@@ -1,0 +1,35 @@
+[
+    {
+        "id": 11,
+        "date": "2025-05-20",
+        "displayDate": "20/05/2025",
+        "title": "Passage de ID à UUID v7 sur les IDs en DB de toolcenter",
+        "summary": "Cliquez ici pour en savoir plus sur le passage de ID à UUID v7 sur les IDs en DB de toolcenter.",
+        "content": "Désormais, tous les IDs de toolcenter seront des UUID v7. Cela permettra d'améliorer la sécurité et la scalabilité de l'application.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
+    },
+    {
+        "id": 12,
+        "date": "2025-05-20",
+        "displayDate": "20/05/2025",
+        "title": "Amélioration de l'endpoint API pour les news",
+        "summary": "L'API des news a été améliorée pour permettre la mise à jour des articles via un fichier JSON sans redémarrage.",
+        "content": "L'endpoint API pour les news supporte désormais la mise à jour des articles directement depuis un fichier JSON. Plus besoin de redémarrer l'API pour publier ou modifier des articles, ce qui facilite la gestion et accélère le déploiement des nouveautés.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
+    },
+    {
+        "id": 13,
+        "date": "2025-05-24",
+        "displayDate": "24/05/2025",
+        "title": "Suppression du cache sur les avatars",
+        "summary": "Le cache sur les avatars a enfin été retiré, la cause venait de Cloudflare et d'une mauvaise configuration Nginx.",
+        "content": "Le problème de cache sur les avatars est résolu. La cause principale était l'absence de règle Cloudflare adaptée à l'URI, ainsi qu'une configuration Nginx qui ajoutait 'Cache-Control: public, max-age=2592000, immutable'. Cela empêchait le bon fonctionnement du rafraîchissement des avatars. Désormais, les avatars sont bien mis à jour.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
+    }
+]

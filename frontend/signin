@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolCenter - Connexion</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/switcher-noir.png" as="image">
+  <link rel="preload" href="/assets/error.png" as="image">
+  <link rel="stylesheet" href="/ressources/CSS/signin.css">
+  <script src="/ressources/JS/signin.js" defer></script>
+  <script src="/ressources/utils/anti-scam.js" defer></script>
+</head>
+<body>
+  <header>
+    <a href="/" class="back-button">
+      <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo">
+      <span class="logo-text">ToolCenter</span>
+    </a>
+    <button class="theme-switcher" id="theme-switcher">
+      <img src="/assets/switcher.png" alt="Switcher Icon">
+    </button>
+  </header>
+  <div class="login-wrapper">
+    <div class="login-container">
+      <h2 class="login-title">Se connecter</h2>
+      <div class="form-error" id="form-error">
+        <img src="/assets/error.png" alt="Alerte">
+        <span id="error-text"></span>
+      </div>
+      <form id="login-form" class="login-form">
+        <div class="input-group">
+          <img src="/assets/email.png" alt="Email Icon" class="input-icon">
+          <input type="email" name="email" placeholder="Adresse email" required>
+        </div>
+        <div class="input-group">
+          <img src="/assets/password.png" alt="Password Icon" class="input-icon">
+          <input type="password" name="password" placeholder="Mot de passe" required>
+        </div>
+        <button type="submit" class="login-button" id="login-button" disabled>
+          <span>Connexion</span>
+        </button>
+      </form>
+      <div class="login-options">
+        <p>Pas de compte ? <a href="/signup">Inscription</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

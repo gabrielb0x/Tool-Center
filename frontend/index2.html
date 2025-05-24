@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ToolCenter - La meilleure plateforme d'outils en ligne, simple, intuitive et 100% open-source.">
+  <meta name="keywords" content="tools, outils, open-source, ToolCenter, en ligne, gratuit">
+  <meta property="og:title" content="ToolCenter - Accueil">
+  <meta property="og:description" content="Découvrez la meilleure sélection d'outils en ligne pour simplifier votre vie.">
+  <meta property="og:image" content="/assets/tc_logo.webp">
+  <meta property="og:url" content="https://tool-center.fr">
+  <meta property="og:type" content="website">
+  <title>ToolCenter - Accueil</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link rel="stylesheet" href="/ressources/utils/tc_font_full.css">
+  <style>
+    :root {
+      --primary-color: #2a00d9;
+      --primary-light: #3000FF;
+      --text-color: #ffffff;
+      --text-secondary: #B0B0B0;
+      --bg-dark: #121212;
+      --bg-darker: #0a0a0a;
+      --border-color: rgba(115, 115, 115, 0.3);
+      --transition: all 0.3s ease;
+    }
+
+    .light-theme {
+      --text-color: #121212;
+      --text-secondary: #666666;
+      --bg-dark: #ffffff;
+      --bg-darker: #f5f5f5;
+      --border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-color);
+      transition: var(--transition);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .navbar {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 10px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .light-theme .navbar {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 30px;
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .light-theme .logo-link:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark-theme .logo-link:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .menu-icon {
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+    }
+
+    .menu-icon span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: var(--text-color);
+      border-radius: 3px;
+      transition: var(--transition);
+    }
+
+    .menu-icon.open span:nth-child(1) {
+      transform: translateY(10px) rotate(45deg);
+    }
+
+    .menu-icon.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-icon.open span:nth-child(3) {
+      transform: translateY(-10px) rotate(-45deg);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .theme-switcher {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .theme-switcher:hover {
+      background-color: rgba(42, 0, 217, 0.1);
+    }
+
+    .theme-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 12px;
+      overflow: hidden;
+      opacity: 1;
+      max-width: 500px;
+      transition: opacity .3s ease, max-width .3s ease;
+    }
+
+    .auth-buttons.hide {
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
+    }
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .btn-signin {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: white;
+    }
+
+    .btn-signup {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+    }
+
+    .light-theme .btn-signup {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(42, 0, 217, 0.2);
+    }
+
+    .account-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(42, 0, 217, 0.1);
+      transition: var(--transition);
+    }
+
+    .account-icon:hover {
+      transform: scale(1.05);
+    }
+
+    .account-icon svg,
+    .account-icon img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .account-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .account-icon img.show {
+      opacity: 1;
+    }
+
+    .account-icon img[hidden] {
+      display: none;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 70px;
+      left: -300px;
+      width: 280px;
+      height: calc(100vh - 70px);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 20px 0;
+      z-index: 999;
+      transition: var(--transition);
+      border-right: 1px solid var(--border-color);
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .light-theme .side-menu {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .menu-item {
+      display: block;
+      padding: 14px 30px;
+      color: var(--text-color);
+      font-size: 16px;
+      font-weight: 500;
+      transition: var(--transition);
+      border-left: 3px solid transparent;
+    }
+
+    .menu-item:hover {
+      background: rgba(42, 0, 217, 0.1);
+      border-left: 3px solid var(--primary-color);
+      color: var(--primary-light);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 80px;
+      overflow: hidden;
+    }
+
+    .hero-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.8));
+      z-index: -1;
+    }
+
+    .light-theme .hero-overlay {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.55));
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 30px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out forwards;
+      animation-delay: 0.2s;
+    }
+
+    .hero-title span {
+      color: var(--primary-light);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out forwards;
+      animation-delay: 0.4s;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      color: white;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: var(--transition);
+      opacity: 0;
+      animation: fadeInUp 1s ease-out forwards;
+      animation-delay: 0.6s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(42, 0, 217, 0.3);
+    }
+
+    .hero-btn:active {
+      transform: translateY(0);
+    }
+
+    .hero-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+      opacity: 0;
+      transition: var(--transition);
+      z-index: -1;
+    }
+
+    .hero-btn:hover::after {
+      opacity: 1;
+    }
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 80px;
+    }
+
+    .section-title span {
+      color: var(--primary-light);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .feature-card {
+      background: rgba(42, 0, 217, 0.05);
+      border-radius: 16px;
+      padding: 30px;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .feature-card.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px) !important;
+      box-shadow: 0 10px 30px rgba(42, 0, 217, 0.1);
+      background: rgba(42, 0, 217, 0.1);
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(42, 0, 217, 0.1);
+      border-radius: 12px;
+    }
+
+    .feature-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    .faq-section {
+      background: var(--bg-darker);
+      padding: 100px 0;
+    }
+
+    .faq-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .faq-item {
+      background: rgba(42, 0, 217, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid var(--border-color);
+    }
+
+    .faq-item:hover {
+      background: rgba(42, 0, 217, 0.1);
+    }
+
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      color: var(--text-secondary);
+      transition: max-height 0.4s ease, padding-top 0.3s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      padding-top: 15px;
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    footer {
+      background: var(--bg-darker);
+      padding: 30px 0 30px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: var(--text-color);
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--primary-light);
+    }
+
+    .copyright {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(42, 0, 217, 0.3);
+      z-index: 100;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-5px);
+    }
+
+    .arrow-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(42, 0, 217, 0.2);
+      border-top-color: var(--primary-light);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .preloader-message {
+      color: var(--text-color);
+      margin-top: 20px;
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      font-family: 'Poppins', sans-serif;
+      font-weight: bold;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-container {
+        padding: 0 20px;
+      }
+      
+      .auth-buttons {
+        display: none;
+      }
+      
+      .hero-content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .hero-btn {
+        width: 80%;
+        text-align: center;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+      }
+      
+      .side-menu {
+        width: 100%;
+        left: -100%;
+      }
+      
+      .side-menu.open {
+        left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="preloader" id="preloader">
+    <div class="spinner"></div>
+    <div class="preloader-message">Le site est en train de charger, c'est selon votre connection...</div>
+  </div>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <div class="menu-icon" id="menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <a href="https://tool-center.fr" class="logo-link">
+          <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo-img">
+          <span class="logo-text">ToolCenter (BETA)</span>
+        </a>
+      </div>
+      <div class="nav-right">
+        <button class="theme-switcher" id="theme-switcher">
+          <svg class="theme-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+          </svg>
+        </button>
+        <div class="auth-buttons">
+          <a href="https://tool-center.fr/signin" class="btn btn-signin">Sign In</a>
+          <a href="https://tool-center.fr/signup" class="btn btn-signup">Sign Up</a>
+        </div>
+        <a href="https://tool-center.fr/account" class="account-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.0" stroke="blue" class="account-img">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>
+          <img class="avatar-img" src="" alt="Avatar" hidden>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="side-menu" id="side-menu">
+    <a href="https://tool-center.fr" class="menu-item">Accueil</a>
+    <a href="https://tool-center.fr/tools" class="menu-item">Outils</a>
+    <a href="https://tool-center.fr/account" class="menu-item">Compte</a>
+    <a href="https://tool-center.fr/about" class="menu-item">À propos</a>
+    <a href="https://tool-center.fr/legals" class="menu-item">Mentions légales</a>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <video autoplay muted loop playsinline class="hero-video">
+        <source src="/assets/intro_video_2.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas les vidéos HTML5.
+      </video>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">Le meilleur des <span>outils en ligne</span> à proximité.</h1>
+        <p class="hero-subtitle">Les meilleurs outils disponibles gratuitement ! Ajoutez vous-mêmes vos outils et discutez avec une communauté active.</p>
+        <a href="https://tool-center.fr/signup" class="hero-btn">Commencez gratuitement !</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Simplifiez votre <span>travail</span></h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path fill="var(--primary-light)" d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Diversité des outils</h3>
+          <p class="feature-desc">Accédez à une large gamme d'outils conçus pour vous simplifier la vie.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path fill="var(--primary-light)" d="M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Outils vérifiés</h3>
+          <p class="feature-desc">Tous les outils sont vérifiés pour garantir leur sécurité et leur bon fonctionnement.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path fill="var(--primary-light)" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Interface intuitive</h3>
+          <p class="feature-desc">Une interface soignée et intuitive pour une expérience utilisateur optimale.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path fill="var(--primary-light)" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Personnalisation</h3>
+          <p class="feature-desc">Personnalisez vos outils selon vos préférences pour une meilleure expérience.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path fill="var(--primary-light)" d="M12,3L2,12H5V20H19V12H22L12,3M12,7.7C14.1,7.7 15.8,9.4 15.8,11.5C15.8,12.9 15,14.1 13.8,14.7L14.8,16.8C16.8,15.9 17.9,13.9 17.9,11.5C17.9,8.3 15.2,5.6 12,5.6C8.8,5.6 6.1,8.3 6.1,11.5C6.1,13.9 7.2,15.9 9.2,16.8L10.2,14.7C9,14.1 8.2,12.9 8.2,11.5C8.2,9.4 9.9,7.7 12,7.7M11,18V22H13V18H11Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">100% Open-Source</h3>
+          <p class="feature-desc">Tous les outils sont Open-Source, vous pouvez les reprendre à votre façon.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32">
+              <path fill="var(--primary-light)" d="M12,3A9,9 0 0,0 3,12H0L4,16L8,12H5A7,7 0 0,1 12,5A7,7 0 0,1 19,12A7,7 0 0,1 12,19C10.5,19 9.09,18.5 7.94,17.7L6.5,19.14C8.04,20.3 9.94,21 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M14,12A2,2 0 0,0 12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12Z" />
+            </svg>
+          </div>
+          <h3 class="feature-title">Support 24/7</h3>
+          <p class="feature-desc">Profitez d'un support client disponible 24h/24 et 7j/7 pour toutes vos questions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <div class="faq-container">
+        <h2 class="section-title"><span>Questions</span> fréquentes</h2>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>🛠️ C'est quoi ToolCenter ?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>ToolCenter est une plateforme où vous pouvez retrouver, partager et utiliser des outils gratuits en ligne. Le tout, en open-source.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>💸 Est-ce que c'est payant ?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Non, tous les outils sont 100% gratuits à utiliser. Et ce n'est pas près de changer.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>🔐 Est-ce que les outils sont sûrs ?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Oui, chaque outil est vérifié manuellement avant d'être publié, pour éviter tout scam ou malware.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>👥 Qui peut publier un outil ?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+            </svg>
+          </div>
+          <div class="faq-answer">
+            <p>Tout le monde peut proposer un outil après inscription. Chaque proposition est relue avant mise en ligne.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="https://tool-center.fr/legals" class="footer-link">Mentions légales</a>
+        <a href="https://tool-center.fr/contact" class="footer-link">Contact</a>
+        <a href="https://tool-center.fr/about" class="footer-link">À propos</a>
+        <a href="https://tool-center.fr/privacy" class="footer-link">Confidentialité</a>
+      </div>
+      <p class="copyright">© 2024-2025, ToolCenter. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top">
+    <svg class="arrow-icon" viewBox="0 0 24 24">
+      <path fill="white" d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+    </svg>
+  </button>
+
+  <script>
+    const menuIcon = document.getElementById('menu-icon');
+    const sideMenu = document.getElementById('side-menu');
+
+    menuIcon.addEventListener('click', () => {
+        menuIcon.classList.toggle('open');
+        sideMenu.classList.toggle('open');
+    });
+
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const themeIcon = themeSwitcher.querySelector('.theme-icon');
+
+    function updateThemeIcon() {
+        if (document.body.classList.contains('light-theme')) {
+            themeIcon.querySelector('path').setAttribute('fill', '#000000');
+        } else {
+            themeIcon.querySelector('path').setAttribute('fill', '#ffffff');
+        }
+    }
+
+    themeSwitcher.addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        updateThemeIcon();
+    });
+
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-theme');
+    }
+    updateThemeIcon();
+
+    const featureCards = document.querySelectorAll('.feature-card');
+
+    function checkFeatures() {
+        featureCards.forEach((card, index) => {
+            const cardPosition = card.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.2;
+            if (cardPosition < screenPosition) {
+                setTimeout(() => {
+                    card.classList.add('active');
+                }, index * 100);
+            }
+        });
+    }
+
+    window.addEventListener('scroll', checkFeatures);
+    window.addEventListener('load', checkFeatures);
+
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('open');
+        });
+    });
+
+    const backToTop = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    const preloader = document.getElementById('preloader')
+    const preloaderMessage = document.querySelector('.preloader-message')
+    let hidden = false
+
+    function hidePreloader () {
+      if (hidden) return
+      hidden = true
+      preloader.style.opacity = '0'
+      setTimeout(() => { preloader.style.display = 'none' }, 500)
+    }
+
+    window.addEventListener('load', hidePreloader)
+
+    setTimeout(() => {
+      if (!hidden) preloaderMessage.style.opacity = '1'
+    }, 1500)
+
+    function connected (avatarUrl) {
+      const img       = document.querySelector('.account-icon .avatar-img');
+      const svg       = document.querySelector('.account-icon .avatar-svg');
+      const authBox   = document.querySelector('.auth-buttons');
+
+      // 1. avatar
+      img.onload = () => {
+        img.classList.add('show');       // fade-in
+        svg.style.display = 'none';      // cache le SVG
+      };
+      img.onerror = img.onload;
+      img.hidden  = false;
+      img.src     = avatarUrl;
+      if (img.complete) img.onload();    // cas cache
+
+      // 2. fade / slide des boutons
+      authBox.classList.add('hide');     // lance la transition
+      setTimeout(() => {                 // après 0.3 s on les retire du flux
+        authBox.style.display = 'none';
+      }, 300);
+    }
+
+    async function fetchUserInfo () {
+      const token   = localStorage.getItem('token');
+      const baseUrl = (await (await fetch('/ressources/utils/api')).text()).trim();
+      if (!token) return;
+
+      try {
+        const res = await fetch(baseUrl + '/user/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        const { success, user } = await res.json();
+        if (!success || !user) return;
+
+        const img = document.querySelector('.account-icon .avatar-img');
+        const svg = document.querySelector('.account-icon .avatar-svg');
+
+        if (user.avatar_url) {
+          const url = user.avatar_url.startsWith('/')
+            ? location.origin + user.avatar_url
+            : user.avatar_url;
+
+          img.onload = () => {
+            img.classList.add('show')
+            if (svg) svg.style.display = 'none';
+          };
+
+          img.onerror = img.onload;
+          img.hidden = false;
+          img.src = url;
+
+          if (img.complete) img.onload();
+        }
+
+        document.querySelector('.auth-buttons').style.display = 'none';
+      } catch (err) {
+        console.error('[TC LOGS] Error when fetching acc :', err);
+      }
+    }
+
+    fetchUserInfo();
+  </script>
+</body>
+</html>

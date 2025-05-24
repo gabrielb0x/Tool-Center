@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ToolCenter - La meilleure plateforme d'outils en ligne, simple, intuitive et 100% open-source.">
+  <meta name="keywords" content="tools, outils, open-source, ToolCenter, en ligne, gratuit">
+  <meta property="og:title" content="ToolCenter - Accueil">
+  <meta property="og:description" content="Découvrez la meilleure sélection d'outils en ligne pour simplifier votre vie.">
+  <meta property="og:image" content="/assets/tc_logo.webp">
+  <meta property="og:url" content="https://tool-center.fr">
+  <meta property="og:type" content="website">
+  <title>ToolCenter - Accueil</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/croix.png" as="image">
+  <link rel="preload" href="/assets/switcher-noir.png" as="image">
+  <link rel="stylesheet" href="/ressources/CSS/index.css">
+  <script src="/ressources/JS/main.js" defer></script>
+  <script src="/ressources/utils/anti-scam.js" defer></script>
+</head>
+<body>
+  <div id="preloader">
+    <div class="spinner"></div>
+    <div id="preloader-message">Le site est en train de charger, c'est selon votre connection...</div>
+  </div>
+  <header>
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-left">
+          <span class="menu-icon" id="menu-icon" onclick="toggleNav()"></span>
+          <a href="https://tool-center.fr" class="logo-link">
+            <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo">
+            <span class="logo-text">ToolCenter (BETA)</span>
+          </a>
+        </div>
+        <div class="nav-right">
+          <button class="theme-switcher" id="theme-switcher">
+            <img src="/assets/switcher.png" alt="Switcher Icon">
+          </button>
+          <div class="auth-buttons">
+            <a href="https://tool-center.fr/signin" class="btn btn-signin">Sign In</a>
+            <a href="https://tool-center.fr/signup" class="btn btn-signup">Sign Up</a>
+          </div>
+          <a href="https://tool-center.fr/account" class="account-icon">
+            <img src="/assets/account.png" alt="Account Icon">
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div id="side-menu" class="side-menu">
+    <a href="https://tool-center.fr">Home</a>
+    <a href="https://tool-center.fr/tools">Tools</a>
+    <a href="https://tool-center.fr/account">Account</a>
+    <a href="https://tool-center.fr/about">About</a>
+    <a href="https://tool-center.fr/legals">Légals</a>
+  </div>
+  <main>
+    <div class="intro-container">
+      <video autoplay muted loop playsinline class="bg-video">
+        <source src="/assets/intro_video_2.mp4" type="video/mp4">
+        Ton navigateur ne supporte pas les vidéos HTML5.
+      </video>
+      <div class="intro-text">
+        Le meilleur des <span>outils en ligne</span> à proximité. (Site non fini !)
+      </div>
+      <div class="intro-subtext">
+        Les meilleurs des tools/outils disponibles gratuitement ! Ajoutez vous-mêmes vos tools et discutez avec une communauté active.
+      </div>
+      <a href="https://tool-center.fr/signup" class="intro-btn">Commencez gratuitement !</a>
+    </div>
+    <div class="centered-intro-text">
+      <span>Simplifiez votre</span> <span class="highlighted-word">travail</span>.
+    </div>
+    <section class="features">
+      <div class="feature-item">
+        <img src="/assets/code.png" alt="Icon 1">
+        <div class="feature-text">
+          <h3>Diversité des outils</h3>
+          <p>Accédez à une large gamme d'outils conçu pour vous simplifier la vie.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <img src="/assets/verified-icon.png" alt="Icon 2">
+        <div class="feature-text">
+          <h3>Outils vérifiés</h3>
+          <p>Tous les outils sur ToolCenter sont vérifiés pour être sûrs qu'ils ne contiennent pas de virus et marchent correctement.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <img src="/assets/facile.png" alt="Icon 3">
+        <div class="feature-text">
+          <h3>Interface simple et intuitive</h3>
+          <p>Toute l'interface du site et des outils a été revue pour être la plus intuitive possible.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <img src="/assets/personnaliser.png" alt="Icon 4">
+        <div class="feature-text">
+          <h3>Personnalisation</h3>
+          <p>Personnalisez vos outils selon vos préférences pour une meilleure expérience.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <img src="/assets/open-source.png" alt="Icon 5">
+        <div class="feature-text">
+          <h3>100% Open-Source</h3>
+          <p>Tous les outils sur ToolCenter sont Open-Source, vous pouvez les reprendre à votre façon.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <img src="/assets/support.png" alt="Icon 6">
+        <div class="feature-text">
+          <h3>Support 24/7</h3>
+          <p>Profitez d'un support client disponible 24h/24 et 7j/7 pour toutes vos questions.</p>
+        </div>
+      </div>
+    </section>
+    <section class="faq">
+      <h2><span>Questions</span> fréquentes</h2>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <h3>🛠️ C’est quoi ToolCenter ?</h3>
+        <p>ToolCenter est une plateforme où tu peux retrouver, partager et utiliser des outils gratuits en ligne. Le tout, en open-source.</p>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <h3>💸 Est-ce que c’est payant ?</h3>
+        <p>Non, tous les outils sont 100% gratuits à utiliser. Et c’est pas près de changer.</p>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <h3>🔐 Est-ce que les outils sont safe ?</h3>
+        <p>Oui, chaque outil est vérifié manuellement avant d’être publié, pour éviter tout scam ou malware.</p>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <h3>👥 Qui peut publier un outil ?</h3>
+        <p>Tout le monde peut proposer un outil après inscription. Chaque proposition est relue avant mise en ligne.</p>
+      </div>
+    </section>
+  </main>
+  <button id="back-to-top" onclick="scrollToTop()">
+    <img src="/assets/arrow-up.png" alt="Retour en haut">
+  </button>
+  <div class="footer-separator"></div>
+  <footer>
+    <p>
+      <a href="https://tool-center.fr/legals" target="_blank">Mentions légales</a> | 
+      <a href="https://tool-center.fr/contact" target="_blank">Contact</a> | 
+      <a href="https://tool-center.fr/about" target="_blank">À propos</a><br>
+      © 2024-2025, tool-center. Tous droits réservés.
+    </p>
+  </footer>
+</body>
+</html>
