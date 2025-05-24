@@ -3,7 +3,7 @@
 ![Tool Center Banner](./frontend/assets/Bannière-TC.png)
 
 > **Tool Center**, c’est **LE** projet phare de **[@gabex749](https://github.com/gabex749)**.  
-> Un concentré de **code**, de **passion**, et d’**utilité**, taillé pour ceux qui veulent des outils qui claquent.
+> Un concentré de **code**, de **passion**, et d’**utilité**, taillé pour ceux qui veulent des outils de qualitée.
 
 ---
 
@@ -33,14 +33,14 @@ Parce que le monde avait besoin :
 
 ---
 
-## 🧱 **Architecture solide (pas en carton)**
+## 🧱 **Architecture du projet**
 
 | 🧩 Composant       | ⚙️ Technologies utilisées             |
 |-------------------|-------------------------------------|
-| **Backend API**   | Go (Golang) + MariaDB 🔥             |
+| **Backend API**   | Go (Golang) + MariaDB               |
 | **Frontend**      | HTML, JS, CSS (vanilla stylé)       |
-| **Auth**          | Email, tokens, vérif, sessions      |
-| **Hosting**       | Raspberry Pi 5 perso 💪              |
+| **Auth**          | Email, tokens JWT, vérif,sessions   |
+| **Hosting**       | Raspberry Pi 5                      |
 | **Proxy / HTTPS** | Nginx + SSL via Cloudflare          |
 | **Domaines**      | [tool-center.fr](https://tool-center.fr) & [gabex.xyz](https://gabex.xyz) |
 
@@ -50,16 +50,16 @@ Parce que le monde avait besoin :
 
 | 🔐 Connexion                         | 📊 Tableau de bord                  |
 |-------------------------------------|------------------------------------|
-| ![Login](./assets/login.png)        | ![Dashboard](./assets/dashboard.png) |
+| ![Login](./frontend/assets/login-preview.png)        | ![Dashboard](./frontend/assets/dashbord-preview.png) |
 
-> _Même les 404 sont sexy chez Tool Center._
+> _Ces photos ont étés réalisés le 24/05/2025. Il peut donc y avoir une différence entre les photos et la réalitée actuelle._
 
 ---
 
 ## 🧙‍♂️ **Le créateur**
 
-Développé par **[@gabex749](https://github.com/gabex749)** aka *Gonatarx*,  
-jeune dev full stack passionné par l’**électronique**, la **cybersécurité**, et les **projets qui claquent**.  
+Développé par **[@gabex749](https://github.com/gabex749)**,  
+jeune dev full stack passionné par l’**électronique**, la **cybersécurité**, et les **projets innovant**.  
 👉 **Tool Center** est son projet **le plus gros, le plus poussé et le plus ambitieux**.
 
 ---
@@ -67,12 +67,12 @@ jeune dev full stack passionné par l’**électronique**, la **cybersécurité*
 ## ❤️ **Soutien & Contributions**
 
 **Tool Center** est un projet **open-source**, fait avec :
-- 💻 du code
-- ☕ beaucoup de café
-- 🧠 un max de neurones
+- 💕 Amour
+- ⏱️ Patience et determination
+- ❤️‍🔥 Passion pour l'informatique
 
-Tu veux participer, contribuer, signaler un bug ou juste stalker ?  
-→ **Bienvenue à toi, l’ami.**
+Tu veux participer, contribuer, ou signaler un bug ?  
+→ **Tu peux me contacter sur gabex@gabex.xyz**
 
 ---
 
@@ -84,12 +84,4 @@ Tu veux participer, contribuer, signaler un bug ou juste stalker ?
 - 🌍 Traductions multilangues
 
 ---
-
-## 🎨 **Juste pour le style :**
-
-> “**Un bon outil, c’est comme un bon pote : il te lâche pas quand t’en as besoin.**”  
-> — *gabex749, fondateur de Tool Center*
-
----
-
-![Made with 💻 and 🧠](./assets/footer.png)
+## **© Gabriel B., 2024-2025 — Tous droits réservés.**
