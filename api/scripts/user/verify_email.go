@@ -2,6 +2,7 @@ package user
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"fmt"
@@ -21,8 +22,14 @@ func newToken(n int) string {
 	return hex.EncodeToString(b)
 }
 
+func hashToken(t string) string {
+	sum := sha256.Sum256([]byte(t))
+	return hex.EncodeToString(sum[:])
+}
+
 func VerifyEmailHandler(c *gin.Context) {
 	token := c.Query("token")
+	tokenHash := hashToken(token)
 	if token == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Token manquant."})
 		return
@@ -46,7 +53,7 @@ SELECT u.user_id, evt.expires_at, u.email_verified_at
 FROM email_verification_tokens evt
 JOIN users u ON u.user_id = evt.user_id
 WHERE evt.token = ? LIMIT 1`
-	err = db.QueryRow(query, token).Scan(&userID, &expiresAt, &verifiedAt)
+	err = db.QueryRow(query, tokenHash).Scan(&userID, &expiresAt, &verifiedAt)
 	switch {
 	case err == sql.ErrNoRows:
 		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "Token invalide."})
@@ -63,12 +70,13 @@ WHERE evt.token = ? LIMIT 1`
 	}
 
 	if time.Now().After(expiresAt) {
-		db.Exec("DELETE FROM email_verification_tokens WHERE token = ?", token)
+		db.Exec("DELETE FROM email_verification_tokens WHERE token = ?", tokenHash)
 		redirectWithMsg(c, "Token expiré.", "")
 		return
 	}
 
 	sessionToken := newToken(64)
+	sessionTokenHash := hashToken(sessionToken)
 	sessionExpire := time.Now().Add(30 * 24 * time.Hour)
 	deviceInfo := c.Request.UserAgent()
 	ip := c.ClientIP()
@@ -99,7 +107,7 @@ WHERE evt.token = ? LIMIT 1`
 	_, err = tx.Exec(`
 		INSERT INTO user_tokens (user_id, token, device_info, expires_at)
 		VALUES (?, ?, ?, ?)`,
-		userID, sessionToken, deviceInfo+" | "+ip, sessionExpire)
+		userID, sessionTokenHash, deviceInfo+" | "+ip, sessionExpire)
 	if err != nil {
 		tx.Rollback()
 		log.Println("Insert session token:", err)

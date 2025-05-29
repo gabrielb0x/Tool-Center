@@ -1597,7 +1597,7 @@
         content: "La nouvelle version de l'API est enfin disponible après plusieurs semaines de travail. Elle inclut :<br><br>- Un système d'authentification plus sécurisé<br>- Des endpoints optimisés pour de meilleures performances<br>- Une documentation complète et interactive<br><br>N'hésitez pas à nous faire part de vos retours !",
         isNew: true,
         isPrivate: false,
-        tags: ['pinned']
+        tags: []
       }
     ];
     

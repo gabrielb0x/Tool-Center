@@ -31,5 +31,27 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 14,
+        "date": "2025-05-24",
+        "displayDate": "24/05/2025",
+        "title": "Mise en place d'un dépôt privé GitHub et intégration de Git",
+        "summary": "Le projet est désormais sous dépôt privé GitHub avec Git, facilitant le suivi des changements et la gestion des nouveautés.",
+        "content": "Le projet toolcenter est maintenant versionné avec Git et hébergé sur un dépôt privé GitHub. Cela permet un meilleur suivi des évolutions, une gestion simplifiée des modifications et une sécurité accrue pour le code source.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
+    },
+    {
+        "id": 15,
+        "date": "2025-05-29",
+        "displayDate": "29/05/2025",
+        "title": "Hashage des tokens de vérification et d'accès en base de données",
+        "summary": "Les tokens de vérification d'emails et d'accès au compte sont désormais stockés hashés (SHA-256) en base de données.",
+        "content": "Pour renforcer la sécurité, tous les tokens de vérification d'emails et de connexion/acces au compte sont maintenant hashés en base de données avec SHA-256. Auparavant, ils étaient stockés en clair. Cette modification protège mieux les utilisateurs en cas de fuite de données.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
     }
 ]

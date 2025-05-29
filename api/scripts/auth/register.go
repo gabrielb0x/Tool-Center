@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"crypto/sha256"
 	"toolcenter/config"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,11 @@ func randomToken(n int) string {
 	b := make([]byte, n)
 	_, _ = rand.Read(b)
 	return hex.EncodeToString(b)
+}
+
+func hashToken(t string) string {
+	sum := sha256.Sum256([]byte(t))
+	return hex.EncodeToString(sum[:])
 }
 
 func RegisterHandler(c *gin.Context) {
@@ -66,7 +72,6 @@ func RegisterHandler(c *gin.Context) {
 	}
 	defer db.Close()
 
-	// anti-multicompte sur la même IP
 	var ipCount int
 	db.QueryRow("SELECT COUNT(*) FROM users WHERE ip_address = ?", ip).Scan(&ipCount)
 	if ipCount > 0 {
@@ -74,7 +79,6 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	// doublon username / email
 	var dup int
 	db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?", req.Username, req.Email).Scan(&dup)
 	if dup > 0 {
@@ -84,12 +88,12 @@ func RegisterHandler(c *gin.Context) {
 
 	pwHash, _ := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	verifyToken := randomToken(32)
+	verifyTokenHash := hashToken(verifyToken)
 	expires := time.Now().Add(10 * time.Minute)
 
 	// ===== génération de l’UUID v7 =====
 	uuidV7, _ := uuid.NewV7() // (retourne uuid.UUID, error)
 	userID := uuidV7.String() // forme texte 36 caractères
-	// ===================================
 
 	tx, err := db.Begin()
 	if err != nil {
@@ -97,7 +101,6 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	// insert user avec l’ID généré
 	_, err = tx.Exec(`
 		INSERT INTO users (user_id, username, email, password_hash, ip_address)
 		VALUES (?,?,?,?,?)`,
@@ -108,11 +111,10 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	// token de vérification
 	_, err = tx.Exec(`
-		INSERT INTO email_verification_tokens (user_id, token, expires_at)
-		VALUES (?,?,?)`,
-		userID, verifyToken, expires)
+        INSERT INTO email_verification_tokens (user_id, token, expires_at)
+        VALUES (?,?,?)`,
+		userID, verifyTokenHash, expires)
 	if err != nil {
 		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur création token."})

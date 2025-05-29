@@ -1,7 +1,7 @@
 {
   "port": 8000,
   "gin_mode": "release",
-  "version": "1.6.5",
+  "version": "1.6.7",
   "URL_version": "v1",
   "URL_api": "https://api.tool-center.fr",
   "URL_web": "https://tool-center.fr",
