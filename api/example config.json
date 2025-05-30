@@ -1,0 +1,29 @@
+{
+  "port": 8000,
+  "gin_mode": "release",
+  "version": "1.0.0",
+  "URL_version": "v1",
+  "URL_api": "https://api.example.com",
+  "URL_web": "https://example.com",
+  "debug": false,
+  "time_zone": "UTC",
+  "timezone": "",
+  "logs": {
+    "enabled": true,
+    "path": "/path/to/logs/api.log"
+  },
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "dbuser",
+    "password": "dbpassword",
+    "dbname": "dbname"
+  },
+  "email": {
+    "host": "smtp.example.com",
+    "port": 465,
+    "username": "user@example.com",
+    "password": "emailpassword",
+    "from": "user@example.com"
+  }
+}

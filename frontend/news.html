@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tool Center News</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://tool-center.fr/assets/tc_logo.webp" type="image/png">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #5e7cff;
+      --dark: #0f172a;
+      --darker: #020617;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+      --card-bg: #1e293b;
+      --card-hover: #334155;
+      --accent: #7c3aed;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --private: #d946ef;
+      --pinned: #3b82f6;
+      --urgent: #ef4444;
+      --important: #f59e0b;
+      --todo: #8b5cf6;
+      --inprogress: #0ea5e9;
+      --done: #10b981;
+      --obsolete: #64748b;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: var(--light);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    header {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      padding: 1.5rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transform: translateY(0);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    
+    header.hidden {
+      transform: translateY(-100%);
+    }
+    
+    header.scrolled {
+      background: rgba(15, 23, 42, 0.95);
+      padding: 1rem 0;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      transition: transform 0.3s ease;
+    }
+    
+    header.scrolled .header-content {
+      transform: scale(0.95);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled h1 {
+      font-size: 2rem;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--gray);
+      font-weight: 300;
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled .subtitle {
+      font-size: 0.9rem;
+    }
+    
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--card-bg);
+      padding: 0.3rem;
+      border-radius: 50px;
+      margin-bottom: 1rem;
+    }
+    
+    .tab {
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      color: var(--gray);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .tab.active {
+      color: white;
+    }
+    
+    .tab.active::before {
+      opacity: 1;
+    }
+    
+    .tab-private {
+      position: relative;
+    }
+    
+    .tab-private::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 8px;
+      height: 8px;
+      background: var(--private);
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px var(--card-bg);
+    }
+    
+    .sort-options {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .sort-btn {
+      background: var(--card-bg);
+      color: var(--gray);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .sort-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .sort-btn:hover, .sort-btn.active {
+      color: white;
+    }
+    
+    .sort-btn:hover::before, .sort-btn.active::before {
+      opacity: 1;
+    }
+    
+    .search-container {
+      position: relative;
+      flex-grow: 1;
+      max-width: 300px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      border-radius: 50px;
+      border: none;
+      background: var(--card-bg);
+      color: var(--light);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      transition: all 0.3s ease;
+    }
+    
+    .search-input:focus + .search-icon {
+      color: var(--primary);
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    .news-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .news-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+      will-change: transform;
+    }
+    
+    .news-card.private {
+      border-left: 4px solid var(--private);
+    }
+    
+    .news-card.pinned {
+      border-left: 4px solid var(--pinned);
+    }
+    
+    .news-card.urgent {
+      border-left: 4px solid var(--urgent);
+    }
+    
+    .news-card.important {
+      border-left: 4px solid var(--important);
+    }
+    
+    .news-card.todo {
+      border-left: 4px solid var(--todo);
+    }
+    
+    .news-card.inprogress {
+      border-left: 4px solid var(--inprogress);
+    }
+    
+    .news-card.done {
+      border-left: 4px solid var(--done);
+    }
+    
+    .news-card.obsolete {
+      border-left: 4px solid var(--obsolete);
+    }
+    
+    .news-card:hover {
+      transform: translateY(-5px) perspective(1000px) rotateX(5deg) rotateY(2deg);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      background: var(--card-hover);
+    }
+    
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    .news-card.private::before {
+      background: linear-gradient(90deg, var(--private), #a855f7);
+    }
+    
+    .news-card.pinned::before {
+      background: linear-gradient(90deg, var(--pinned), #60a5fa);
+    }
+    
+    .news-card.urgent::before {
+      background: linear-gradient(90deg, var(--urgent), #f87171);
+    }
+    
+    .news-card.important::before {
+      background: linear-gradient(90deg, var(--important), #fbbf24);
+    }
+    
+    .news-card.todo::before {
+      background: linear-gradient(90deg, var(--todo), #a78bfa);
+    }
+    
+    .news-card.inprogress::before {
+      background: linear-gradient(90deg, var(--inprogress), #38bdf8);
+    }
+    
+    .news-card.done::before {
+      background: linear-gradient(90deg, var(--done), #34d399);
+    }
+    
+    .news-card.obsolete::before {
+      background: linear-gradient(90deg, var(--obsolete), #94a3b8);
+    }
+    
+    .news-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 1.25rem 1.5rem 0;
+      overflow: hidden;
+    }
+    
+    .news-date {
+      color: var(--gray);
+      font-size: 0.85rem;
+      background: rgba(30, 41, 59, 0.7);
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    .news-card:hover .news-date {
+      background: rgba(67, 97, 238, 0.2);
+      color: var(--light);
+    }
+    
+    .news-card.private:hover .news-date {
+      background: rgba(217, 70, 239, 0.2);
+    }
+    
+    .news-content {
+      padding: 1rem 1.5rem 1.5rem;
+    }
+    
+    .news-title {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+      color: var(--light);
+      font-weight: 600;
+      line-height: 1.4;
+      transition: all 0.3s ease;
+    }
+    
+    .news-card:hover .news-title {
+      color: var(--primary-light);
+    }
+    
+    .news-text {
+      margin-bottom: 1.5rem;
+      color: var(--gray);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+    
+    .news-card:hover .news-text {
+      color: var(--light);
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn.private {
+      background: linear-gradient(135deg, var(--private), #c026d3);
+      box-shadow: 0 4px 6px rgba(217, 70, 239, 0.2);
+    }
+    
+    .btn.pinned {
+      background: linear-gradient(135deg, var(--pinned), #2563eb);
+      box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+    }
+    
+    .btn.urgent {
+      background: linear-gradient(135deg, var(--urgent), #dc2626);
+      box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+    }
+    
+    .btn.important {
+      background: linear-gradient(135deg, var(--important), #d97706);
+      box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+    }
+    
+    .btn.todo {
+      background: linear-gradient(135deg, var(--todo), #7c3aed);
+      box-shadow: 0 4px 6px rgba(139, 92, 246, 0.2);
+    }
+    
+    .btn.inprogress {
+      background: linear-gradient(135deg, var(--inprogress), #0284c7);
+      box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2);
+    }
+    
+    .btn.done {
+      background: linear-gradient(135deg, var(--done), #059669);
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+    }
+    
+    .btn.obsolete {
+      background: linear-gradient(135deg, var(--obsolete), #475569);
+      box-shadow: 0 4px 6px rgba(100, 116, 139, 0.2);
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-light), var(--accent));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .btn.private::before {
+      background: linear-gradient(135deg, #c026d3, #9333ea);
+    }
+    
+    .btn.pinned::before {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    }
+    
+    .btn.urgent::before {
+      background: linear-gradient(135deg, #f87171, #ef4444);
+    }
+    
+    .btn.important::before {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    }
+    
+    .btn.todo::before {
+      background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+    }
+    
+    .btn.inprogress::before {
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    }
+    
+    .btn.done::before {
+      background: linear-gradient(135deg, #34d399, #10b981);
+    }
+    
+    .btn.obsolete::before {
+      background: linear-gradient(135deg, #94a3b8, #64748b);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn.private:hover {
+      box-shadow: 0 6px 12px rgba(217, 70, 239, 0.3);
+    }
+    
+    .btn.pinned:hover {
+      box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn.urgent:hover {
+      box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn.important:hover {
+      box-shadow: 0 6px 12px rgba(245, 158, 11, 0.3);
+    }
+    
+    .btn.todo:hover {
+      box-shadow: 0 6px 12px rgba(139, 92, 246, 0.3);
+    }
+    
+    .btn.inprogress:hover {
+      box-shadow: 0 6px 12px rgba(14, 165, 233, 0.3);
+    }
+    
+    .btn.done:hover {
+      box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn.obsolete:hover {
+      box-shadow: 0 6px 12px rgba(100, 116, 139, 0.3);
+    }
+    
+    .btn:hover::before {
+      opacity: 1;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      box-shadow: none;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(67, 97, 238, 0.1);
+      transform: none;
+      box-shadow: none;
+      color: var(--light);
+      border-color: var(--primary-light);
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      color: var(--gray);
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+    
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      transform: scaleX(0);
+      transition: transform 0.6s ease;
+    }
+    
+    footer:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+      transform: translateY(50px) scale(0.9);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      position: relative;
+    }
+    
+    .modal.private .modal-content {
+      border-left: 4px solid var(--private);
+    }
+    
+    .modal.pinned .modal-content {
+      border-left: 4px solid var(--pinned);
+    }
+    
+    .modal.urgent .modal-content {
+      border-left: 4px solid var(--urgent);
+    }
+    
+    .modal.important .modal-content {
+      border-left: 4px solid var(--important);
+    }
+    
+    .modal.todo .modal-content {
+      border-left: 4px solid var(--todo);
+    }
+    
+    .modal.inprogress .modal-content {
+      border-left: 4px solid var(--inprogress);
+    }
+    
+    .modal.done .modal-content {
+      border-left: 4px solid var(--done);
+    }
+    
+    .modal.obsolete .modal-content {
+      border-left: 4px solid var(--obsolete);
+    }
+    
+    .modal.active .modal-content {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    
+    .modal-header {
+      padding: 1.5rem 1.5rem 0.5rem;
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--light);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    
+    .modal.private .modal-title {
+      color: var(--private);
+    }
+    
+    .modal.pinned .modal-title {
+      color: var(--pinned);
+    }
+    
+    .modal.urgent .modal-title {
+      color: var(--urgent);
+    }
+    
+    .modal.important .modal-title {
+      color: var(--important);
+    }
+    
+    .modal.todo .modal-title {
+      color: var(--todo);
+    }
+    
+    .modal.inprogress .modal-title {
+      color: var(--inprogress);
+    }
+    
+    .modal.done .modal-title {
+      color: var(--done);
+    }
+    
+    .modal.obsolete .modal-title {
+      color: var(--obsolete);
+    }
+    
+    .modal-date {
+      color: var(--gray);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+    
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--gray);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 2;
+    }
+    
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--light);
+      transform: rotate(90deg);
+    }
+    
+    .modal-body {
+      padding: 0 1.5rem 1.5rem;
+    }
+    
+    .modal-body p {
+      margin-bottom: 1.5rem;
+      color: var(--gray);
+      line-height: 1.7;
+      font-size: 1.05rem;
+    }
+    
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(67, 97, 238, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    
+    .modal.private::before {
+      background: radial-gradient(circle at center, rgba(217, 70, 239, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.pinned::before {
+      background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.urgent::before {
+      background: radial-gradient(circle at center, rgba(239, 68, 68, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.important::before {
+      background: radial-gradient(circle at center, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.todo::before {
+      background: radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.inprogress::before {
+      background: radial-gradient(circle at center, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.done::before {
+      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.obsolete::before {
+      background: radial-gradient(circle at center, rgba(100, 116, 139, 0.1) 0%, transparent 70%);
+    }
+    
+    .modal.active::before {
+      opacity: 1;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .news-card {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+    }
+    
+    .news-card:nth-child(1) { animation-delay: 0.1s; }
+    .news-card:nth-child(2) { animation-delay: 0.2s; }
+    .news-card:nth-child(3) { animation-delay: 0.3s; }
+    .news-card:nth-child(4) { animation-delay: 0.4s; }
+    .news-card:nth-child(5) { animation-delay: 0.5s; }
+    .news-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    .badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      animation: pulse 2s infinite;
+      transform-origin: center;
+    }
+    
+    .new-badge {
+      background: var(--success);
+    }
+    
+    .private-badge {
+      background: var(--private);
+    }
+    
+    .pinned-badge {
+      background: var(--pinned);
+    }
+    
+    .urgent-badge {
+      background: var(--urgent);
+    }
+    
+    .important-badge {
+      background: var(--important);
+    }
+    
+    .todo-badge {
+      background: var(--todo);
+    }
+    
+    .inprogress-badge {
+      background: var(--inprogress);
+    }
+    
+    .done-badge {
+      background: var(--done);
+    }
+    
+    .obsolete-badge {
+      background: var(--obsolete);
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .scroll-indicator {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 60px;
+      border: 2px solid var(--primary);
+      border-radius: 25px;
+      opacity: 0.7;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+      display: none;
+    }
+    
+    .scroll-indicator:hover {
+      opacity: 1;
+    }
+    
+    .scroll-indicator::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      animation: scrollDown 2s infinite;
+    }
+    
+    @keyframes scrollDown {
+      0% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translateX(-50%) translateY(15px);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .wave-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(67, 97, 238, 0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    header:hover .wave-effect {
+      transform: translateX(100%);
+    }
+    
+    .btn-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+    }
+    
+    .password-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    
+    .password-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .password-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      padding: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+      transform: translateY(50px) scale(0.9);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      position: relative;
+      border-left: 4px solid var(--private);
+    }
+    
+    .password-modal.active .password-content {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    
+    .password-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--light);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .password-input-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .password-input {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.8rem;
+      border-radius: 8px;
+      border: none;
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--light);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .password-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--private);
+      border-color: transparent;
+    }
+    
+    .password-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      transition: all 0.3s ease;
+    }
+    
+    .password-input:focus + .password-icon {
+      color: var(--private);
+    }
+    
+    .password-error {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      text-align: center;
+      min-height: 1.2rem;
+    }
+    
+    .password-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .password-btn {
+      flex: 1;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+    }
+    
+    .password-submit {
+      background: linear-gradient(135deg, var(--private), #c026d3);
+      color: white;
+      border: none;
+    }
+    
+    .password-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(217, 70, 239, 0.3);
+    }
+    
+    .password-cancel {
+      background: transparent;
+      border: 1px solid var(--gray);
+      color: var(--gray);
+    }
+    
+    .password-cancel:hover {
+      border-color: var(--light);
+      color: var(--light);
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .tag {
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .tag-pinned {
+      background-color: rgba(59, 130, 246, 0.2);
+      color: var(--pinned);
+    }
+    
+    .tag-urgent {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--urgent);
+    }
+    
+    .tag-important {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: var(--important);
+    }
+    
+    .tag-todo {
+      background-color: rgba(139, 92, 246, 0.2);
+      color: var(--todo);
+    }
+    
+    .tag-inprogress {
+      background-color: rgba(14, 165, 233, 0.2);
+      color: var(--inprogress);
+    }
+    
+    .tag-done {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: var(--done);
+    }
+    
+    .tag-obsolete {
+      background-color: rgba(100, 116, 139, 0.2);
+      color: var(--obsolete);
+    }
+    
+    .private-info {
+      background: rgba(217, 70, 239, 0.1);
+      border-left: 4px solid var(--private);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--private);
+    }
+    
+    .private-info i {
+      color: var(--private);
+      margin-right: 0.5rem;
+    }
+    
+    .refresh-btn {
+      background: var(--card-bg);
+      color: var(--gray);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      overflow: hidden;
+      margin-left: auto;
+    }
+    
+    .refresh-btn:hover {
+      background: var(--card-hover);
+      color: var(--light);
+    }
+    
+    .refresh-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .refresh-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .tag-filter {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    
+    .tag-filter-btn {
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--card-bg);
+      color: var(--gray);
+      border: none;
+    }
+    
+    .tag-filter-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .tag-filter-btn.pinned {
+      background: rgba(59, 130, 246, 0.2);
+      color: var(--pinned);
+    }
+    
+    .tag-filter-btn.pinned.active {
+      background: var(--pinned);
+      color: white;
+    }
+    
+    .tag-filter-btn.urgent {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--urgent);
+    }
+    
+    .tag-filter-btn.urgent.active {
+      background: var(--urgent);
+      color: white;
+    }
+    
+    .tag-filter-btn.important {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--important);
+    }
+    
+    .tag-filter-btn.important.active {
+      background: var(--important);
+      color: white;
+    }
+    
+    .tag-filter-btn.todo {
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--todo);
+    }
+    
+    .tag-filter-btn.todo.active {
+      background: var(--todo);
+      color: white;
+    }
+    
+    .tag-filter-btn.inprogress {
+      background: rgba(14, 165, 233, 0.2);
+      color: var(--inprogress);
+    }
+    
+    .tag-filter-btn.inprogress.active {
+      background: var(--inprogress);
+      color: white;
+    }
+    
+    .tag-filter-btn.done {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--done);
+    }
+    
+    .tag-filter-btn.done.active {
+      background: var(--done);
+      color: white;
+    }
+    
+    .tag-filter-btn.obsolete {
+      background: rgba(100, 116, 139, 0.2);
+      color: var(--obsolete);
+    }
+    
+    .tag-filter-btn.obsolete.active {
+      background: var(--obsolete);
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .news-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-container {
+        max-width: 100%;
+      }
+      
+      .modal-content {
+        width: 95%;
+      }
+      
+      .modal-title {
+        font-size: 1.5rem;
+      }
+      
+      .password-buttons {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header-content {
+        padding: 0 1rem;
+      }
+      
+      .modal-content {
+        width: 98%;
+        max-height: 90vh;
+      }
+      
+      .modal-header {
+        padding: 1rem 1rem 0.5rem;
+      }
+      
+      .modal-body {
+        padding: 0 1rem 1rem;
+      }
+      
+      .close-btn {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+      
+      .password-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wave-effect"></div>
+    <div class="header-content">
+      <h1><i class="fas fa-newspaper"></i> Tool Center News</h1>
+      <p class="subtitle">Les dernières mises à jour du projet</p>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" data-tab="public">
+        <i class="fas fa-globe"></i> Public
+      </div>
+      <div class="tab tab-private" data-tab="private">
+        <i class="fas fa-lock"></i> Privé
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="sort-options">
+        <button class="sort-btn active" data-sort="newest">
+          <i class="fas fa-arrow-down"></i> Récents
+        </button>
+        <button class="sort-btn" data-sort="oldest">
+          <i class="fas fa-arrow-up"></i> Anciens
+        </button>
+        <div class="tag-filter" id="tagFilter" style="display: none;">
+          <button class="tag-filter-btn pinned" data-tag="pinned">
+            <i class="fas fa-thumbtack"></i> Épinglé
+          </button>
+          <button class="tag-filter-btn urgent" data-tag="urgent">
+            <i class="fas fa-exclamation"></i> Urgent
+          </button>
+          <button class="tag-filter-btn important" data-tag="important">
+            <i class="fas fa-star"></i> Important
+          </button>
+          <button class="tag-filter-btn todo" data-tag="todo">
+            <i class="fas fa-circle"></i> À faire
+          </button>
+          <button class="tag-filter-btn inprogress" data-tag="inprogress">
+            <i class="fas fa-spinner"></i> En cours
+          </button>
+          <button class="tag-filter-btn done" data-tag="done">
+            <i class="fas fa-check"></i> Fini
+          </button>
+          <button class="tag-filter-btn obsolete" data-tag="obsolete">
+            <i class="fas fa-ban"></i> Obsolète
+          </button>
+        </div>
+      </div>
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Rechercher..." id="searchInput">
+      </div>
+      <button class="refresh-btn" id="refreshBtn" style="display: none;">
+        <i class="fas fa-sync-alt"></i> Rafraîchir
+      </button>
+    </div>
+    
+    <div id="privateInfo" class="private-info" style="display: none;">
+      <i class="fas fa-info-circle"></i> Le mot de passe peut être changé à tout moment. Si c'est le cas, vous devez mettre à jour le mot de passe dans le localStorage pour continuer à accéder aux articles privés.
+    </div>
+    
+    <div class="news-container" id="newsContainer">
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 Tool Center. Tous droits réservés.</p>
+  </footer>
+  
+  <div class="scroll-indicator" id="scrollIndicator"></div>
+  
+  <div class="modal" id="newsModal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modalTitle"></h3>
+          <div class="modal-date" id="modalDate"></div>
+          <div class="tags-container" id="modalTags"></div>
+        </div>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+  
+  <div class="password-modal" id="passwordModal">
+    <div class="password-content">
+      <h3 class="password-title"><i class="fas fa-lock"></i> Accès Privé</h3>
+      <div class="password-input-container">
+        <i class="fas fa-key password-icon"></i>
+        <input type="password" class="password-input" id="passwordInput" placeholder="Mot de passe">
+      </div>
+      <div class="password-error" id="passwordError"></div>
+      <div class="password-buttons">
+        <button class="password-btn password-submit" id="passwordSubmit">
+          <span id="submitText">Valider</span>
+          <span id="submitLoading" class="loading" style="display: none;"></span>
+        </button>
+        <button class="password-btn password-cancel" id="passwordCancel">Annuler</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let API_BASE_URL = '';
+    const PRIVATE_NEWS_ENDPOINT = '/utils/privates_news';
+      
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('https://tool-center.fr/ressources/utils/api')
+        .then(r => r.ok ? r.text() : Promise.reject("Impossible de récupérer l'URL d'API"))
+        .then(url => {
+          API_BASE_URL = url.trim();
+          displayArticles(getFilteredArticles());
+          setupEventListeners();
+
+          const savedPassword = localStorage.getItem('tc_news_password');
+          if (savedPassword) {
+            isAuthenticated = true;
+            loadPrivateArticles();
+          }
+        })
+        .catch(e => {
+          document.body.innerHTML = `<h1 style="color:red">Impossible de contacter le backend principal.<br>${e}</h1>`;
+        });
+    });
+    
+    let currentTab = 'public';
+    let currentSort = 'newest';
+    let currentSearch = '';
+    let currentTagFilter = null;
+    let privateArticles = [];
+    let isAuthenticated = false;
+    
+    const newsContainer = document.getElementById('newsContainer');
+    const newsModal = document.getElementById('newsModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalDate = document.getElementById('modalDate');
+    const modalTags = document.getElementById('modalTags');
+    const closeModal = document.getElementById('closeModal');
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordError = document.getElementById('passwordError');
+    const passwordSubmit = document.getElementById('passwordSubmit');
+    const passwordCancel = document.getElementById('passwordCancel');
+    const submitText = document.getElementById('submitText');
+    const submitLoading = document.getElementById('submitLoading');
+    const searchInput = document.getElementById('searchInput');
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    const tabs = document.querySelectorAll('.tab');
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const privateInfo = document.getElementById('privateInfo');
+    const tagFilter = document.getElementById('tagFilter');
+    const tagFilterButtons = document.querySelectorAll('.tag-filter-btn');
+    
+    const publicArticles = [
+      {
+        id: 4,
+        date: "2025-05-17",
+        displayDate: "17/05/2025",
+        title: "Changement d'adresse du site de news",
+        summary: "Le site de news a été déplacé de news.tool-center.fr vers tool-center.fr/news pour plus de praticité.",
+        content: "Le site de news était auparavant accessible à l'adresse <b>news.tool-center.fr</b>. Désormais, il est intégré directement au site principal et accessible via <b>tool-center.fr/news</b> afin de simplifier l'accès et la gestion des actualités.",
+        isNew: true,
+        isPrivate: false,
+        tags: []
+      },
+      {
+        id: 1,
+        date: "2025-03-31",
+        displayDate: "31/03/2025",
+        title: "Création du site de news",
+        summary: "Développement des fonctionnalités principales et gestion du contenu.",
+        content: "Création du site. Ce site ne sera pas mis à jour souvent au niveau du code, mais au niveau des actualités il le sera.",
+        isNew: true,
+        isPrivate: false,
+        tags: []
+      },
+      {
+        id: 2,
+        date: "2025-03-22",
+        displayDate: "22/03/2025",
+        title: "Avancement sur Tool Center",
+        summary: "Je travaille actuellement sur l'API, car l'API est pour le moment down.",
+        content: "Comme je refais toute l'API + certaines modifications, j'estime le retour de l'API fonctionnelle vers le 15/04/2025 ou en mai ou plus tard.",
+        isNew: true,
+        isPrivate: false,
+        tags: []
+      },
+      {
+        id: 3,
+        date: "2025-04-15",
+        displayDate: "15/04/2025",
+        title: "Nouvelle version de l'API",
+        summary: "L'API est maintenant disponible avec de nouvelles fonctionnalités.",
+        content: "La nouvelle version de l'API est enfin disponible après plusieurs semaines de travail. Elle inclut :<br><br>- Un système d'authentification plus sécurisé<br>- Des endpoints optimisés pour de meilleures performances<br>- Une documentation complète et interactive<br><br>N'hésitez pas à nous faire part de vos retours !",
+        isNew: true,
+        isPrivate: false,
+        tags: []
+      }
+    ];
+    
+    function setupEventListeners() {
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          if (this.classList.contains('active')) return;
+          
+          const tabType = this.getAttribute('data-tab');
+          
+          if (tabType === 'private') {
+            const savedPassword = localStorage.getItem('tc_news_password');
+            if (!savedPassword) {
+              showPasswordModal();
+              return;
+            }
+          }
+          
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          currentTab = tabType;
+          
+          if (tabType === 'private') {
+            refreshBtn.style.display = 'flex';
+            privateInfo.style.display = 'block';
+            tagFilter.style.display = 'flex';
+          } else {
+            refreshBtn.style.display = 'none';
+            privateInfo.style.display = 'none';
+            tagFilter.style.display = 'none';
+            currentTagFilter = null;
+            tagFilterButtons.forEach(btn => btn.classList.remove('active'));
+          }
+          
+          if (tabType === 'private' && privateArticles.length === 0) {
+            loadPrivateArticles();
+          } else {
+            displayArticles(getFilteredArticles());
+          }
+        });
+      });
+      
+      sortButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          sortButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          currentSort = this.getAttribute('data-sort');
+          displayArticles(getFilteredArticles());
+        });
+      });
+      
+      tagFilterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const tag = this.getAttribute('data-tag');
+          if (currentTagFilter === tag) {
+            currentTagFilter = null;
+            this.classList.remove('active');
+          } else {
+            currentTagFilter = tag;
+            tagFilterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+          }
+          displayArticles(getFilteredArticles());
+        });
+      });
+      
+      searchInput.addEventListener('input', function() {
+        currentSearch = this.value.toLowerCase();
+        displayArticles(getFilteredArticles());
+      });
+      
+      refreshBtn.addEventListener('click', function() {
+        loadPrivateArticles();
+      });
+      
+      closeModal.addEventListener('click', closeNewsModal);
+      newsModal.addEventListener('click', function(e) {
+        if (e.target === newsModal) closeNewsModal();
+      });
+      
+      passwordSubmit.addEventListener('click', authenticate);
+      passwordCancel.addEventListener('click', closePasswordModal);
+      passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') authenticate();
+      });
+      
+      window.addEventListener('scroll', handleScroll);
+      scrollIndicator.addEventListener('click', scrollToTop);
+    }
+    
+    function getFilteredArticles() {
+      let articles = currentTab === 'public' ? [...publicArticles] : [...privateArticles];
+      
+      if (currentSort === 'newest') {
+        articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else {
+        articles.sort((a, b) => new Date(a.date) - new Date(b.date));
+      }
+      
+      if (currentTagFilter) {
+        articles = articles.filter(article => 
+          article.tags && article.tags.includes(currentTagFilter)
+        );
+      }
+      
+      articles.sort((a, b) => {
+        const aPinned = a.tags && a.tags.includes('pinned');
+        const bPinned = b.tags && b.tags.includes('pinned');
+        if (aPinned && !bPinned) return -1;
+        if (!aPinned && bPinned) return 1;
+        return 0;
+      });
+      
+      if (currentSearch) {
+        articles = articles.filter(article => {
+          return (
+            article.title.toLowerCase().includes(currentSearch) ||
+            article.summary.toLowerCase().includes(currentSearch) ||
+            article.content.toLowerCase().includes(currentSearch) ||
+            (article.tags && article.tags.some(tag => tag.toLowerCase().includes(currentSearch)))
+          );
+        });
+      }
+      
+      return articles;
+    }
+    
+    function displayArticles(articles) {
+      newsContainer.innerHTML = '';
+      
+      if (articles.length === 0) {
+        newsContainer.innerHTML = `
+          <div class="col-span-full text-center py-10">
+            <i class="fas fa-newspaper text-4xl mb-4 text-gray-500"></i>
+            <h3 class="text-xl font-medium text-gray-400">Aucun article trouvé</h3>
+            <p class="text-gray-500 mt-2">${currentTab === 'public' ? 'Aucun article public disponible' : 'Aucun article privé disponible ou accès non autorisé'}</p>
+          </div>
+        `;
+        return;
+      }
+      
+      articles.forEach(article => {
+        const articleDate = new Date(article.date);
+        const currentDate = new Date();
+        const diffTime = currentDate - articleDate;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+        const isRecent = diffDays < 3;
+        
+        const articleElement = document.createElement('div');
+        const cardClasses = ['news-card'];
+        
+        if (article.isPrivate) cardClasses.push('private');
+        if (article.tags && article.tags.length > 0) {
+          cardClasses.push(article.tags[0]);
+        }
+        
+        articleElement.className = cardClasses.join(' ');
+        
+        const badges = [];
+        
+        if (isRecent) {
+          badges.push(`<span class="badge new-badge"><i class="fas fa-bolt"></i> Nouveau</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('pinned')) {
+          badges.push(`<span class="badge pinned-badge"><i class="fas fa-thumbtack"></i> Épinglé</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('urgent')) {
+          badges.push(`<span class="badge urgent-badge"><i class="fas fa-exclamation"></i> Urgent</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('important')) {
+          badges.push(`<span class="badge important-badge"><i class="fas fa-star"></i> Important</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('todo')) {
+          badges.push(`<span class="badge todo-badge"><i class="fas fa-circle"></i> À faire</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('inprogress')) {
+          badges.push(`<span class="badge inprogress-badge"><i class="fas fa-spinner"></i> En cours</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('done')) {
+          badges.push(`<span class="badge done-badge"><i class="fas fa-check"></i> Fini</span>`);
+        }
+        
+        if (article.tags && article.tags.includes('obsolete')) {
+          badges.push(`<span class="badge obsolete-badge"><i class="fas fa-ban"></i> Obsolète</span>`);
+        }
+        
+        articleElement.innerHTML = `
+          ${badges.join('')}
+          <div class="news-header">
+            <span class="news-date"><i class="far fa-calendar-alt"></i> ${article.displayDate}</span>
+          </div>
+          <div class="news-content">
+            <h3 class="news-title">${article.title}</h3>
+            <p class="news-text">${article.summary}</p>
+            <button class="btn read-more ${article.isPrivate ? 'private' : ''} ${article.tags && article.tags.length > 0 ? article.tags[0] : ''}" data-id="${article.id}">
+              <i class="fas fa-arrow-right"></i> Lire la suite
+            </button>
+          </div>
+        `;
+        
+        articleElement.addEventListener('mousemove', (e) => {
+          const rect = articleElement.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const angleX = (y - centerY) / 20;
+          const angleY = (centerX - x) / 20;
+          
+          articleElement.style.transform = `translateY(-5px) perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+        });
+        
+        articleElement.addEventListener('mouseleave', () => {
+          articleElement.style.transform = 'translateY(-5px) perspective(1000px) rotateX(0) rotateY(0)';
+        });
+        
+        newsContainer.appendChild(articleElement);
+      });
+      
+      document.querySelectorAll('.read-more').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const articleId = parseInt(this.getAttribute('data-id'));
+          const articles = currentTab === 'public' ? publicArticles : privateArticles;
+          const article = articles.find(a => a.id === articleId);
+          
+          if (article) {
+            openNewsModal(article);
+          }
+        });
+      });
+    }
+    
+    function loadPrivateArticles() {
+      const savedPassword = localStorage.getItem('tc_news_password');
+      if (!savedPassword) return;
+      
+      const loadingCard = document.createElement('div');
+      loadingCard.className = 'col-span-full text-center py-10';
+      loadingCard.innerHTML = `
+        <div class="inline-block loading mb-4"></div>
+        <p class="text-gray-400">Chargement des articles privés...</p>
+      `;
+      
+      newsContainer.innerHTML = '';
+      newsContainer.appendChild(loadingCard);
+      
+      fetch(API_BASE_URL + PRIVATE_NEWS_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: savedPassword })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur de réseau');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          privateArticles = data.articles.map(article => ({
+            ...article,
+            isPrivate: true
+          }));
+          displayArticles(getFilteredArticles());
+        } else {
+          localStorage.removeItem('tc_news_password');
+          location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+        if (currentTab === 'private') {
+          newsContainer.innerHTML = `
+            <div class="col-span-full text-center py-10">
+              <i class="fas fa-exclamation-triangle text-2xl mb-4 text-red-400"></i>
+              <h3 class="text-lg font-medium text-gray-400">Erreur de chargement</h3>
+              <p class="text-gray-500 mt-2">Impossible de charger les articles privés</p>
+              <button class="btn-outline mt-4" id="retryPrivate">
+                <i class="fas fa-sync-alt"></i> Réessayer
+              </button>
+            </div>
+          `;
+          
+          document.getElementById('retryPrivate').addEventListener('click', loadPrivateArticles);
+        }
+      });
+    }
+    
+    function showPasswordModal() {
+      passwordInput.value = '';
+      passwordError.textContent = '';
+      passwordModal.classList.add('active');
+      passwordInput.focus();
+    }
+    
+    function closePasswordModal() {
+      passwordModal.classList.remove('active');
+    }
+    
+    function authenticate() {
+      const password = passwordInput.value.trim();
+      
+      if (!password) {
+        passwordError.textContent = 'Veuillez entrer un mot de passe';
+        return;
+      }
+      
+      submitText.style.display = 'none';
+      submitLoading.style.display = 'inline-block';
+      
+      fetch(API_BASE_URL + PRIVATE_NEWS_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur de réseau');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          isAuthenticated = true;
+          localStorage.setItem('tc_news_password', password);
+          
+          tabs.forEach(t => t.classList.remove('active'));
+          document.querySelector('.tab[data-tab="private"]').classList.add('active');
+          currentTab = 'private';
+          
+          refreshBtn.style.display = 'flex';
+          privateInfo.style.display = 'block';
+          tagFilter.style.display = 'flex';
+          
+          closePasswordModal();
+          loadPrivateArticles();
+        } else {
+          throw new Error(data.message || 'Mot de passe incorrect');
+        }
+      })
+      .catch(error => {
+        passwordError.textContent = error.message;
+      })
+      .finally(() => {
+        submitText.style.display = 'inline';
+        submitLoading.style.display = 'none';
+      });
+    }
+    
+    function openNewsModal(article) {
+      modalTitle.textContent = article.title;
+      modalDate.innerHTML = `<i class="far fa-calendar-alt"></i> ${article.displayDate}`;
+      modalBody.innerHTML = `<p>${article.content.replace(/\n/g, '<br>')}</p>`;
+      
+      modalTags.innerHTML = '';
+      
+      if (article.tags && article.tags.length > 0) {
+        newsModal.className = 'modal';
+        
+        article.tags.forEach(tag => {
+          const tagElement = document.createElement('span');
+          tagElement.className = `tag tag-${tag}`;
+          
+          switch(tag) {
+            case 'pinned':
+              tagElement.innerHTML = '<i class="fas fa-thumbtack"></i> Épinglé';
+              newsModal.classList.add('pinned');
+              break;
+            case 'urgent':
+              tagElement.innerHTML = '<i class="fas fa-exclamation"></i> Urgent';
+              newsModal.classList.add('urgent');
+              break;
+            case 'important':
+              tagElement.innerHTML = '<i class="fas fa-star"></i> Important';
+              newsModal.classList.add('important');
+              break;
+            case 'todo':
+              tagElement.innerHTML = '<i class="fas fa-circle"></i> À faire';
+              newsModal.classList.add('todo');
+              break;
+            case 'inprogress':
+              tagElement.innerHTML = '<i class="fas fa-spinner"></i> En cours';
+              newsModal.classList.add('inprogress');
+              break;
+            case 'done':
+              tagElement.innerHTML = '<i class="fas fa-check"></i> Fini';
+              newsModal.classList.add('done');
+              break;
+            case 'obsolete':
+              tagElement.innerHTML = '<i class="fas fa-ban"></i> Obsolète';
+              newsModal.classList.add('obsolete');
+              break;
+          }
+          
+          modalTags.appendChild(tagElement);
+        });
+      } else if (article.isPrivate) {
+        newsModal.className = 'modal private';
+      } else {
+        newsModal.className = 'modal';
+      }
+      
+      document.body.style.overflow = 'hidden';
+      newsModal.classList.add('active');
+    }
+    
+    function closeNewsModal() {
+      document.body.style.overflow = 'auto';
+      newsModal.classList.remove('active');
+    }
+    
+    function handleScroll() {
+      const currentScroll = window.pageYOffset;
+      const header = document.querySelector('header');
+      
+      if (currentScroll <= 0) {
+        header.classList.remove('scrolled');
+        header.classList.remove('hidden');
+      } else if (currentScroll > 100) {
+        header.classList.remove('hidden');
+        header.classList.add('scrolled');
+      }
+      
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        scrollIndicator.style.display = 'none';
+      } else if (window.scrollY > 300) {
+        scrollIndicator.style.display = 'block';
+      } else {
+        scrollIndicator.style.display = 'none';
+      }
+    }
+    
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  </script>
+</body>
+</html>

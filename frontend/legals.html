@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mentions légales, CGU et politique de confidentialité de ToolCenter">
+  <title>Mentions légales – ToolCenter</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/ressources/CSS/index.css">
+  <style>
+    .legals-container {
+      max-width: 1000px;
+      margin: 120px auto 40px auto;
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(50,0,255,0.09), 0 2px 6px rgba(0,0,0,0.18);
+      padding: 38px 30px 32px 30px;
+      position: relative;
+      z-index: 1;
+    }
+    .legals-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .legals-tab {
+      font-size: 18px;
+      padding: 12px 34px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      background: #191919;
+      color: #b6b6b6;
+      font-weight: 600;
+      transition: background 0.22s, color 0.22s;
+      outline: none;
+    }
+    .legals-tab.active, .legals-tab:hover {
+      background: linear-gradient(95deg, #2a00d9 40%, #3000ff 100%);
+      color: #fff;
+    }
+    .legals-content {
+      margin-top: 0;
+      animation: fadeInUp 0.5s;
+    }
+    .legals-toggle {
+      display: flex;
+      gap: 16px;
+      margin: 18px 0 32px 0;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .toggle-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 7px 18px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #222;
+      color: #bdbdbd;
+      transition: background 0.2s, color 0.2s;
+    }
+    .toggle-btn.active, .toggle-btn:hover {
+      background: #2a00d9;
+      color: #fff;
+    }
+    .legals-short {
+      display: block;
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .legals-long {
+      display: none;
+      font-size: 16px;
+      color: #bbbbbb;
+      margin-top: 12px;
+      line-height: 1.65;
+      letter-spacing: 0.02em;
+    }
+    .legals-long.visible {
+      display: block;
+      animation: fadeInUp 0.4s;
+    }
+    .legals-short.visible {
+      display: block;
+      animation: fadeInUp 0.4s;
+    }
+    .legals-section-title {
+      font-size: 2.4rem;
+      color: #2a00d9;
+      margin-bottom: 24px;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-align: left;
+    }
+    @media (max-width: 600px) {
+      .legals-container { padding: 18px 7px 18px 7px; }
+      .legals-section-title { font-size: 1.3rem; }
+      .legals-tabs { gap: 7px; }
+      .legals-tab { padding: 7px 9px; font-size: 15px; }
+    }
+    .light-theme .legals-container { background: rgba(255,255,255,0.88); }
+    .light-theme .legals-short { color: #222; }
+    .light-theme .legals-long { color: #353535; }
+    .light-theme .legals-section-title { color: #2a00d9; }
+    .light-theme .legals-tab { background: #f4f4f4; color: #444; }
+    .light-theme .legals-tab.active, .light-theme .legals-tab:hover { background: linear-gradient(95deg, #2a00d9 40%, #3000ff 100%); color: #fff; }
+    .light-theme .toggle-btn { background: #eee; color: #444; }
+    .light-theme .toggle-btn.active, .light-theme .toggle-btn:hover { background: #2a00d9; color: #fff; }
+  </style>
+  <script src="/ressources/JS/main.js" defer></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-left">
+          <span class="menu-icon" id="menu-icon" onclick="toggleNav()"></span>
+          <a href="https://tool-center.fr" class="logo-link">
+            <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo">
+            <span class="logo-text">ToolCenter (BETA)</span>
+          </a>
+        </div>
+        <div class="nav-right">
+          <button class="theme-switcher" id="theme-switcher">
+            <img src="/assets/switcher.png" alt="Switcher Icon">
+          </button>
+          <div class="auth-buttons">
+            <a href="https://tool-center.fr/signin" class="btn btn-signin">Sign In</a>
+            <a href="https://tool-center.fr/signup" class="btn btn-signup">Sign Up</a>
+          </div>
+          <a href="https://tool-center.fr/account" class="account-icon">
+            <img src="/assets/account.png" alt="Account Icon">
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div id="side-menu" class="side-menu">
+    <a href="https://tool-center.fr">Home</a>
+    <a href="https://tool-center.fr/tools">Tools</a>
+    <a href="https://tool-center.fr/account">Account</a>
+    <a href="https://tool-center.fr/about">About</a>
+    <a href="https://tool-center.fr/legals">Légals</a>
+  </div>
+
+  <main>
+    <div class="legals-container">
+      <div class="legals-tabs">
+        <button class="legals-tab active" data-section="mentions">Mentions légales</button>
+        <button class="legals-tab" data-section="cgu">Conditions d’utilisation</button>
+        <button class="legals-tab" data-section="privacy">Politique de confidentialité</button>
+      </div>
+
+      <div class="legals-toggle">
+        <span style="font-size: 15px; opacity:0.8;">Mode :</span>
+        <button class="toggle-btn active" data-mode="short">Résumé simple</button>
+        <button class="toggle-btn" data-mode="long">Version juridique</button>
+      </div>
+
+      <div class="legals-content legals-section" id="section-mentions">
+        <div class="legals-section-title">Mentions légales</div>
+        <div class="legals-short visible">
+          <b>Résumé simple :</b><br>
+          ToolCenter (<a href="https://tool-center.fr">tool-center.fr</a>) est un site édité et hébergé en France.<br>
+          Pour toute question ou demande : contactez-nous via la page <a href="/contact" style="color:#2a00d9;text-decoration:underline;">Contact</a>.<br>
+          Tous droits réservés. Toute utilisation, reproduction ou diffusion du contenu est interdite sans autorisation préalable.
+        </div>
+        <div class="legals-long">
+          <b>Version juridique complète :</b><br>
+          <b>Éditeur du site :</b><br>
+          <b>Nom :</b> Gabriel B. (identité complète communiquée aux autorités compétentes en cas de demande légale)<br>
+          <b>Adresse :</b> Serveur auto-hébergé en France (adresse exacte communiquée uniquement sur réquisition judiciaire).<br>
+          <b>Contact :</b> via le formulaire dédié : <a href="/contact" style="color:#2a00d9;text-decoration:underline;">tool-center.fr/contact</a><br>
+          <b>Responsable de la publication :</b> Gabriel B.<br>
+          <b>Nom commercial :</b> ToolCenter<br>
+          <b>Hébergeur :</b> Hébergement personnel en France (pas de prestataire tiers).<br>
+          <br>
+          <b>Droits d’auteur & propriété intellectuelle :</b><br>
+          Tous les éléments du site (textes, images, code, logos, design, architecture, etc.) sont la propriété exclusive de ToolCenter sauf mention contraire.<br>
+          Toute reproduction, distribution, modification ou utilisation, totale ou partielle, sans accord écrit préalable, est strictement interdite (article L122-4 du Code de la propriété intellectuelle).<br>
+          <br>
+          <b>Protection des données personnelles :</b><br>
+          Les informations collectées sont traitées uniquement pour le bon fonctionnement du site et la sécurité des comptes utilisateurs.<br>
+          Conformément à la législation (RGPD), tout utilisateur peut demander l’accès, la rectification ou la suppression de ses données (voir onglet « Politique de confidentialité »).
+        </div>
+      </div>
+
+      <div class="legals-content legals-section" id="section-cgu" style="display:none;">
+        <div class="legals-section-title">Conditions d’utilisation</div>
+        <div class="legals-short visible">
+          <b>Résumé simple :</b><br>
+          L’accès à ToolCenter est gratuit.<br>
+          Chaque utilisateur s’engage à respecter la loi et la communauté. Aucun contenu illégal ou dangereux n’est toléré.<br>
+          En cas d’abus, le compte pourra être suspendu.<br>
+          L’équipe vérifie manuellement les outils publiés, mais l’utilisateur reste responsable de leur usage.
+        </div>
+        <div class="legals-long">
+          <b>Version juridique complète :</b><br>
+          <b>1. Objet :</b> Les présentes conditions régissent l’utilisation du site tool-center.fr.<br>
+          <b>2. Accès & compte :</b> La création d’un compte est gratuite et réservée aux personnes majeures ou avec autorisation parentale. L’utilisateur est seul responsable de son compte et de ses actions.<br>
+          <b>3. Contenus :</b> Toute publication (outil ou commentaire) engage la responsabilité de son auteur. Sont interdits : contenus illégaux, diffamatoires, dangereux ou portant atteinte aux droits de tiers.<br>
+          <b>4. Sanctions :</b> L’équipe se réserve le droit de suspendre ou supprimer tout compte ou contenu ne respectant pas les présentes conditions, sans préavis.<br>
+          <b>5. Limitation de responsabilité :</b> ToolCenter vérifie chaque outil proposé, mais décline toute responsabilité en cas d’incident résultant de leur utilisation. L’utilisateur reste seul responsable.<br>
+          <b>6. Modifications :</b> Ces conditions peuvent évoluer à tout moment ; l’utilisateur est invité à les consulter régulièrement.
+        </div>
+      </div>
+
+      <div class="legals-content legals-section" id="section-privacy" style="display:none;">
+        <div class="legals-section-title">Politique de confidentialité</div>
+        <div class="legals-short visible">
+          <b>Résumé simple :</b><br>
+          ToolCenter collecte uniquement les informations nécessaires à la gestion de votre compte (email, pseudo, IP pour la sécurité, avatar facultatif).<br>
+          Les données ne sont ni revendues ni partagées, sauf obligation légale. Vous pouvez demander la suppression de vos données à tout moment.
+        </div>
+        <div class="legals-long">
+          <b>Version juridique complète :</b><br>
+          <b>1. Données collectées :</b> ToolCenter collecte uniquement les données strictement nécessaires : pseudo, email, mot de passe (haché), adresse IP (logs de sécurité), avatar/bannière (facultatifs).<br>
+          <b>2. Utilisation des données :</b> Les données sont utilisées uniquement pour la gestion des comptes, la modération et la sécurité du site.<br>
+          <b>3. Partage des données :</b> Aucune donnée personnelle n’est vendue ou cédée à des tiers, sauf obligation judiciaire.<br>
+          <b>4. Droit d’accès et suppression :</b> Conformément au RGPD, chaque utilisateur peut accéder, modifier ou supprimer ses données sur simple demande via le <a href="/contact" style="color:#2a00d9;text-decoration:underline;">formulaire de contact</a> ou depuis son compte.<br>
+          <b>5. Sécurité :</b> Toutes les mesures techniques sont mises en œuvre pour protéger les données. Cependant, aucun système n’est totalement inviolable. En cas de faille, les utilisateurs concernés seront informés.<br>
+          <b>6. Cookies :</b> ToolCenter n’utilise que des cookies techniques nécessaires à la connexion. Aucun cookie publicitaire ou de suivi n’est utilisé.
+        </div>
+      </div>
+    </div>
+    <button id="back-to-top" onclick="scrollToTop()">
+      <img src="/assets/arrow-up.png" alt="Retour en haut">
+    </button>
+    <div class="footer-separator"></div>
+    <footer>
+      <p>
+        <a href="https://tool-center.fr/legals" target="_blank">Mentions légales</a> | 
+        <a href="https://tool-center.fr/contact" target="_blank">Contact</a> | 
+        <a href="https://tool-center.fr/about" target="_blank">À propos</a><br>
+        © 2024-2025, tool-center. Tous droits réservés.
+      </p>
+    </footer>
+  </main>
+  <script>
+    const tabs = document.querySelectorAll('.legals-tab');
+    const sections = document.querySelectorAll('.legals-section');
+    const toggles = document.querySelectorAll('.toggle-btn');
+
+    let currentSection = 'mentions';
+    let currentMode = 'short';
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentSection = tab.dataset.section;
+        sections.forEach(s => s.style.display = s.id === 'section-' + currentSection ? 'block' : 'none');
+        updateLegalsMode();
+      });
+    });
+
+    toggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        toggles.forEach(t => t.classList.remove('active'));
+        toggle.classList.add('active');
+        currentMode = toggle.dataset.mode;
+        updateLegalsMode();
+      });
+    });
+
+    function updateLegalsMode() {
+      document.querySelectorAll('.legals-section').forEach(section => {
+        const shortBlock = section.querySelector('.legals-short');
+        const longBlock = section.querySelector('.legals-long');
+        if (shortBlock) shortBlock.classList.remove('visible');
+        if (longBlock) longBlock.classList.remove('visible');
+        if (currentMode === 'short') {
+          if (shortBlock) shortBlock.classList.add('visible');
+        } else {
+          if (longBlock) longBlock.classList.add('visible');
+        }
+      });
+    }
+    updateLegalsMode();
+  </script>
+</body>
+</html>

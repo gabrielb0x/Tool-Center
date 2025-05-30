@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"errors"
 	"strings"
 	"time"
@@ -36,6 +38,8 @@ func Check(c *gin.Context, o CheckOpts) (string, bool, string, error) {
 			return "", false, "", ErrMissingToken
 		}
 		bearer = strings.TrimPrefix(h, "Bearer ")
+		hash := sha256.Sum256([]byte(bearer))
+		bearer = hex.EncodeToString(hash[:])
 	}
 
 	db, err := config.OpenDB()

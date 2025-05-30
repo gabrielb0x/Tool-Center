@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ToolCenter - Recherchez et découvrez les meilleurs outils en ligne">
+  <meta name="keywords" content="tools, outils, recherche, ToolCenter, en ligne, gratuit">
+  <meta property="og:title" content="ToolCenter - Recherche d'outils">
+  <meta property="og:description" content="Trouvez l'outil parfait pour vos besoins parmi notre sélection.">
+  <meta property="og:image" content="/assets/tc_logo.webp">
+  <meta property="og:url" content="https://tool-center.fr/tools">
+  <meta property="og:type" content="website">
+  <title>ToolCenter - Recherche d'outils</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="/assets/croix.png" as="image">
+  <link rel="preload" href="/assets/switcher-noir.png" as="image">
+  <link rel="stylesheet" href="/ressources/CSS/tools.css">
+  <script src="/ressources/JS/tools.js" defer></script>
+  <script src="/ressources/utils/anti-scam.js" defer></script>
+</head>
+<body>
+  <div id="preloader">
+    <div class="spinner"></div>
+    <div id="preloader-message">Le site est en train de charger, c'est selon votre connection...</div>
+  </div>
+  <header>
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-left">
+          <span class="menu-icon" id="menu-icon" onclick="toggleNav()"></span>
+          <a href="https://tool-center.fr" class="logo-link">
+            <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo">
+            <span class="logo-text">ToolCenter (BETA)</span>
+          </a>
+        </div>
+        <div class="nav-right">
+          <button class="theme-switcher" id="theme-switcher">
+            <img src="/assets/switcher.png" alt="Switcher Icon">
+          </button>
+          <div class="auth-buttons">
+            <a href="https://tool-center.fr/signin" class="btn btn-signin">Sign In</a>
+            <a href="https://tool-center.fr/signup" class="btn btn-signup">Sign Up</a>
+          </div>
+          <a href="https://tool-center.fr/account" class="account-icon">
+            <img src="/assets/account.png" alt="Account Icon">
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div id="side-menu" class="side-menu">
+    <a href="https://tool-center.fr">Home</a>
+    <a href="https://tool-center.fr/tools" class="active">Tools</a>
+    <a href="https://tool-center.fr/account">Account</a>
+    <a href="https://tool-center.fr/about">About</a>
+    <a href="https://tool-center.fr/legals">Légals</a>
+  </div>
+  <main>
+    <section class="search-section">
+      <h1 class="search-title">Trouvez l'<span>outil</span> parfait</h1>
+      <p class="search-subtitle">Recherchez parmi notre sélection d'outils gratuits et open-source pour trouver celui qui correspond à vos besoins.</p>
+      
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Rechercher un outil...">
+        <button class="search-btn">Rechercher</button>
+      </div>
+    </section>
+
+    <section class="tools-container">
+      <div class="filters">
+        <div class="filter-item active">Tous</div>
+        <div class="filter-item">Développement</div>
+        <div class="filter-item">Design</div>
+        <div class="filter-item">Productivité</div>
+        <div class="filter-item">Multimédia</div>
+        <div class="filter-item">Utilitaires</div>
+      </div>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <span class="tool-category">Développement</span>
+          <img src="/assets/code.png" alt="Code Editor Icon">
+          <h3>Éditeur de code</h3>
+          <p>Un éditeur de code en ligne avec coloration syntaxique pour plusieurs langages et sauvegarde automatique.</p>
+          <a href="#" class="tool-link">Utiliser l'outil →</a>
+        </div>
+
+        <div class="tool-card">
+          <span class="tool-category">Design</span>
+          <img src="/assets/design.png" alt="Color Picker Icon">
+          <h3>Sélecteur de couleurs</h3>
+          <p>Générez des palettes de couleurs harmonieuses et obtenez leurs codes HEX, RGB et HSL.</p>
+          <a href="#" class="tool-link">Utiliser l'outil →</a>
+        </div>
+
+        <div class="tool-card">
+          <span class="tool-category">Multimédia</span>
+          <img src="/assets/video.png" alt="Video Converter Icon">
+          <h3>Convertisseur vidéo</h3>
+          <p>Convertissez vos vidéos entre différents formats sans perte de qualité et sans limite de taille.</p>
+          <a href="#" class="tool-link">Utiliser l'outil →</a>
+        </div>
+
+        <div class="tool-card">
+          <span class="tool-category">Utilitaires</span>
+          <img src="/assets/qrcode.png" alt="QR Code Icon">
+          <h3>Générateur QR Code</h3>
+          <p>Créez des QR codes personnalisables en quelques secondes avec différents styles et couleurs.</p>
+          <a href="#" class="tool-link">Utiliser l'outil →</a>
+        </div>
+
+        <div class="tool-card">
+          <span class="tool-category">Productivité</span>
+          <img src="/assets/notes.png" alt="Notes Icon">
+          <h3>Bloc-notes collaboratif</h3>
+          <p>Prenez des notes en temps réel et collaborez avec d'autres utilisateurs sur le même document.</p>
+          <a href="#" class="tool-link">Utiliser l'outil →</a>
+        </div>
+
+        <div class="tool-card">
+          <span class="tool-category">Développement</span>
+          <img src="/assets/json.png" alt="JSON Formatter Icon">
+          <h3>Formateur JSON</h3>
+          <p>Formatez et validez vos données JSON pour une meilleure lisibilité et détection des erreurs.</p>
+          <a href="#" class="tool-link">Utiliser l'outil →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <button id="back-to-top" onclick="scrollToTop()">
+    <img src="/assets/arrow-up.png" alt="Retour en haut">
+  </button>
+  <div class="footer-separator"></div>
+  <footer>
+    <p>
+      <a href="https://tool-center.fr/legals" target="_blank">Mentions légales</a> | 
+      <a href="https://tool-center.fr/contact" target="_blank">Contact</a> | 
+      <a href="https://tool-center.fr/about" target="_blank">À propos</a><br>
+      © 2024-2025, tool-center. Tous droits réservés.
+    </p>
+  </footer>
+</html>

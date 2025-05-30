@@ -96,7 +96,7 @@ WHERE evt.token = ? LIMIT 1`
 		return
 	}
 
-	_, err = tx.Exec(`DELETE FROM email_verification_tokens WHERE token = ?`, token)
+	_, err = tx.Exec(`DELETE FROM email_verification_tokens WHERE token = ?`, tokenHash)
 	if err != nil {
 		tx.Rollback()
 		log.Println("Delete token:", err)
@@ -124,7 +124,7 @@ WHERE evt.token = ? LIMIT 1`
 	c.Redirect(http.StatusFound, redirectURL)
 }
 
-func redirectWithMsg(c *gin.Context, msg, token string) {
+func redirectWithMsg(c *gin.Context, msg, _ string) {
 	html := fmt.Sprintf(`<html><head><meta charset="utf-8"><title>Tool Center</title></head>
 <body><p>%s</p></body></html>`, msg)
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(html))

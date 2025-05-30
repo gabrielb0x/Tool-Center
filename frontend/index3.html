@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ToolCenter - La meilleure plateforme d'outils en ligne, simple, intuitive et 100% open-source.">
+  <meta name="keywords" content="tools, outils, open-source, ToolCenter, en ligne, gratuit">
+  <meta property="og:title" content="ToolCenter - Accueil">
+  <meta property="og:description" content="Découvrez la meilleure sélection d'outils en ligne pour simplifier votre vie.">
+  <meta property="og:image" content="/assets/tc_logo.webp">
+  <meta property="og:url" content="https://tool-center.fr">
+  <meta property="og:type" content="website">
+  <title>ToolCenter - Accueil</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3000FF',
+            primaryLight: '#4A25FF',
+            primaryDark: '#2A00D9',
+            darkBg: '#0F0F15',
+            darkCard: '#1A1A25',
+            lightBg: '#F8FAFF',
+            lightCard: '#FFFFFF'
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'slide-up': 'slideUp 0.5s ease-out forwards'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' }
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: #0F0F15;
+      color: #FFFFFF;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+    
+    body.light-theme {
+      background-color: #F8FAFF;
+      color: #1A1A25;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #3000FF 0%, #2A00D9 100%);
+    }
+    
+    .glass-effect {
+      background: rgba(26, 26, 37, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .light-theme .glass-effect {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .card {
+      background: #1A1A25;
+      border-radius: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .light-theme .card {
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .light-theme .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: rgba(48, 0, 255, 0.1);
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-icon img {
+      width: 50px;
+      height: 50px;
+    }
+    
+    .feature-item:hover .feature-icon {
+      transform: scale(1.1);
+    }
+    
+    .light-theme .feature-icon {
+      background: rgba(48, 0, 255, 0.05);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3000FF 0%, #2A00D9 100%);
+      color: white;
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #2A00D9 0%, #3000FF 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(48, 0, 255, 0.3);
+    }
+    
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .light-theme .btn-secondary {
+      background: rgba(26, 26, 37, 0.1);
+      color: #1A1A25;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px);
+    }
+    
+    .light-theme .btn-secondary:hover {
+      background: rgba(26, 26, 37, 0.2);
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .hero-pattern {
+      background-image: radial-gradient(circle at 10% 20%, rgba(48, 0, 255, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(48, 0, 255, 0.1) 0%, transparent 40%);
+    }
+    
+    .light-theme .hero-pattern {
+      background-image: radial-gradient(circle at 10% 20%, rgba(48, 0, 255, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(48, 0, 255, 0.05) 0%, transparent 40%);
+    }
+    
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    
+    .tool-card {
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .tool-card:hover {
+      transform: translateY(-10px);
+    }
+    
+    .tool-card img {
+      transition: transform 0.5s ease;
+    }
+    
+    .tool-card:hover img {
+      transform: scale(1.05);
+    }
+    
+    .faq-item {
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .faq-item:hover {
+      background: rgba(48, 0, 255, 0.1);
+    }
+    
+    .light-theme .faq-item:hover {
+      background: rgba(48, 0, 255, 0.05);
+    }
+    
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    
+    .faq-item.open .faq-content {
+      max-height: 200px;
+    }
+    
+    .nav-link {
+      position: relative;
+      padding: 10px 0;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #3000FF;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+    }
+    
+    .mobile-menu.open {
+      transform: translateX(0);
+    }
+    
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0F0F15;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    
+    .light-theme .preloader {
+      background: #F8FAFF;
+    }
+    
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(48, 0, 255, 0.2);
+      border-top: 4px solid #3000FF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .tool-highlight {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tool-highlight::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: rgba(48, 0, 255, 0.2);
+      transform: translateY(-50%) skewX(-15deg);
+      z-index: -1;
+      border-radius: 4px;
+    }
+    
+    .light-theme .tool-highlight::before {
+      background: rgba(48, 0, 255, 0.1);
+    }
+    
+    .tool-grid-item:nth-child(1) .tool-card { transition-delay: 0.1s; }
+    .tool-grid-item:nth-child(2) .tool-card { transition-delay: 0.2s; }
+    .tool-grid-item:nth-child(3) .tool-card { transition-delay: 0.3s; }
+    .tool-grid-item:nth-child(4) .tool-card { transition-delay: 0.4s; }
+    .tool-grid-item:nth-child(5) .tool-card { transition-delay: 0.5s; }
+    .tool-grid-item:nth-child(6) .tool-card { transition-delay: 0.6s; }
+    
+    .tool-card {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .hero-text {
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .light-theme .hero-text {
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #3000FF 0%, #00C2FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .community-stats {
+      background: linear-gradient(135deg, rgba(48, 0, 255, 0.1) 0%, rgba(0, 194, 255, 0.1) 100%);
+      border-radius: 20px;
+    }
+    
+    .light-theme .community-stats {
+      background: linear-gradient(135deg, rgba(48, 0, 255, 0.05) 0%, rgba(0, 194, 255, 0.05) 100%);
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="preloader" class="preloader fixed z-50">
+    <div class="spinner"></div>
+    <p id="preloader-message" class="mt-6 text-lg font-medium opacity-0 transition-opacity duration-500">Chargement des outils...</p>
+  </div>
+
+  <!-- Navigation -->
+  <header class="fixed w-full z-40 py-3 px-4 md:px-8">
+    <nav class="glass-effect max-w-7xl mx-auto rounded-2xl py-3 px-6 flex justify-between items-center">
+      <div class="flex items-center space-x-10">
+        <a href="/" class="flex items-center space-x-3">
+          <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="w-10 h-10">
+          <span class="text-xl font-bold">ToolCenter</span>
+        </a>
+        
+        <div class="hidden lg:flex space-x-8">
+          <a href="/" class="nav-link font-medium">Accueil</a>
+          <a href="/tools" class="nav-link font-medium">Outils</a>
+          <a href="/community" class="nav-link font-medium">Communauté</a>
+          <a href="/about" class="nav-link font-medium">À propos</a>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <button id="theme-switcher" class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        </button>
+        
+        <a href="/signin" class="btn-secondary hidden md:inline-block">Connexion</a>
+        <a href="/signup" class="btn-primary hidden md:inline-block">Inscription</a>
+        
+        <button id="mobile-menu-button" class="lg:hidden p-2 rounded-lg bg-white/10 hover:bg-white/20">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 z-30 bg-black/80 backdrop-blur-sm lg:hidden">
+    <div class="absolute right-0 top-0 h-full w-80 bg-darkCard">
+      <div class="p-8 h-full flex flex-col">
+        <button id="close-menu" class="self-end mb-12 p-2 rounded-full bg-white/10">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+        
+        <div class="flex flex-col space-y-6 mb-auto">
+          <a href="/" class="text-xl font-medium py-3 border-b border-white/10">Accueil</a>
+          <a href="/tools" class="text-xl font-medium py-3 border-b border-white/10">Outils</a>
+          <a href="/community" class="text-xl font-medium py-3 border-b border-white/10">Communauté</a>
+          <a href="/about" class="text-xl font-medium py-3 border-b border-white/10">À propos</a>
+        </div>
+        
+        <div class="flex flex-col space-y-4 mt-8">
+          <a href="/signin" class="btn-secondary text-center">Connexion</a>
+          <a href="/signup" class="btn-primary text-center">Inscription</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-pattern min-h-screen flex items-center pt-24 pb-20 px-4">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+      <div class="text-center md:text-left">
+        <h1 class="hero-text text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          Le meilleur des <span class="gradient-text">outils en ligne</span> à portée de main
+        </h1>
+        <p class="text-lg md:text-xl opacity-80 mb-10 max-w-2xl">
+          Découvrez une collection d'outils puissants, gratuits et open-source pour booster votre productivité et simplifier votre quotidien.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <a href="/tools" class="btn-primary inline-flex items-center justify-center">
+            Explorer les outils
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+          <a href="/signup" class="btn-secondary inline-flex items-center justify-center">
+            Créer un compte
+          </a>
+        </div>
+      </div>
+      
+      <div class="relative">
+        <div class="absolute top-0 left-0 w-full h-full bg-primary/10 rounded-3xl -rotate-6"></div>
+        <div class="card relative p-8 rounded-3xl">
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="tool-card bg-primary/10 rounded-xl p-4 flex flex-col items-center">
+              <img src="/assets/code.png" alt="Code Icon" class="w-12 h-12 mb-3">
+              <span class="font-medium">Générateur CSS</span>
+            </div>
+            <div class="tool-card bg-primary/10 rounded-xl p-4 flex flex-col items-center">
+              <img src="/assets/verified-icon.png" alt="Verified Icon" class="w-12 h-12 mb-3">
+              <span class="font-medium">Validateur JSON</span>
+            </div>
+            <div class="tool-card bg-primary/10 rounded-xl p-4 flex flex-col items-center">
+              <img src="/assets/facile.png" alt="Easy Icon" class="w-12 h-12 mb-3">
+              <span class="font-medium">Convertisseur</span>
+            </div>
+            <div class="tool-card bg-primary/10 rounded-xl p-4 flex flex-col items-center">
+              <img src="/assets/personnaliser.png" alt="Customize Icon" class="w-12 h-12 mb-3">
+              <span class="font-medium">Éditeur SVG</span>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="inline-flex items-center bg-primary/20 px-4 py-2 rounded-full mb-4">
+              <span class="text-sm font-medium">+100 outils disponibles</span>
+            </div>
+            <p class="opacity-80">Tous nos outils sont vérifiés, sécurisés et 100% gratuits</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Pourquoi choisir ToolCenter ?</h2>
+        <p class="text-lg opacity-80 max-w-2xl mx-auto">Une plateforme conçue pour les développeurs et créatifs exigeants</p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="feature-item card p-8 scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/code.png" alt="Diversité">
+          </div>
+          <h3 class="text-xl font-bold mb-3">Diversité des outils</h3>
+          <p class="opacity-80">Accédez à une large gamme d'outils conçus pour vous simplifier la vie et booster votre productivité.</p>
+        </div>
+        
+        <div class="feature-item card p-8 scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/verified-icon.png" alt="Vérifié">
+          </div>
+          <h3 class="text-xl font-bold mb-3">Outils vérifiés</h3>
+          <p class="opacity-80">Tous les outils sont vérifiés pour garantir qu'ils ne contiennent pas de virus et fonctionnent parfaitement.</p>
+        </div>
+        
+        <div class="feature-item card p-8 scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/facile.png" alt="Simple">
+          </div>
+          <h3 class="text-xl font-bold mb-3">Interface intuitive</h3>
+          <p class="opacity-80">Une interface épurée et intuitive pour une prise en main immédiate sans courbe d'apprentissage.</p>
+        </div>
+        
+        <div class="feature-item card p-8 scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/personnaliser.png" alt="Personnalisation">
+          </div>
+          <h3 class="text-xl font-bold mb-3">Personnalisation</h3>
+          <p class="opacity-80">Personnalisez vos outils selon vos préférences pour une expérience sur mesure.</p>
+        </div>
+        
+        <div class="feature-item card p-8 scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/open-source.png" alt="Open Source">
+          </div>
+          <h3 class="text-xl font-bold mb-3">100% Open-Source</h3>
+          <p class="opacity-80">Tous les outils sont open-source, vous pouvez les adapter et les réutiliser librement.</p>
+        </div>
+        
+        <div class="feature-item card p-8 scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/support.png" alt="Support">
+          </div>
+          <h3 class="text-xl font-bold mb-3">Support 24/7</h3>
+          <p class="opacity-80">Notre équipe est disponible 24h/24 et 7j/7 pour répondre à toutes vos questions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Tools -->
+  <section class="py-20 px-4 bg-darkCard">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Outils <span class="gradient-text">populaires</span></h2>
+        <p class="text-lg opacity-80 max-w-2xl mx-auto">Découvrez les outils les plus appréciés par notre communauté</p>
+      </div>
+      
+      <div class="tool-grid">
+        <div class="tool-grid-item">
+          <div class="tool-card card overflow-hidden">
+            <div class="h-48 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <img src="/assets/code.png" alt="Générateur CSS" class="w-20 h-20 floating">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">Générateur CSS</h3>
+              <p class="opacity-80 mb-4">Créez des styles CSS complexes en quelques clics sans écrire de code.</p>
+              <a href="#" class="text-primary font-medium inline-flex items-center">
+                Utiliser l'outil
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tool-grid-item">
+          <div class="tool-card card overflow-hidden">
+            <div class="h-48 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <img src="/assets/verified-icon.png" alt="Validateur JSON" class="w-20 h-20 floating">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">Validateur JSON</h3>
+              <p class="opacity-80 mb-4">Validez et formatez vos fichiers JSON instantanément.</p>
+              <a href="#" class="text-primary font-medium inline-flex items-center">
+                Utiliser l'outil
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tool-grid-item">
+          <div class="tool-card card overflow-hidden">
+            <div class="h-48 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <img src="/assets/facile.png" alt="Convertisseur" class="w-20 h-20 floating">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">Convertisseur universel</h3>
+              <p class="opacity-80 mb-4">Convertissez entre différents formats de fichiers en un instant.</p>
+              <a href="#" class="text-primary font-medium inline-flex items-center">
+                Utiliser l'outil
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tool-grid-item">
+          <div class="tool-card card overflow-hidden">
+            <div class="h-48 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <img src="/assets/personnaliser.png" alt="Éditeur SVG" class="w-20 h-20 floating">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">Éditeur SVG</h3>
+              <p class="opacity-80 mb-4">Créez et modifiez des fichiers SVG directement dans votre navigateur.</p>
+              <a href="#" class="text-primary font-medium inline-flex items-center">
+                Utiliser l'outil
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tool-grid-item">
+          <div class="tool-card card overflow-hidden">
+            <div class="h-48 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <img src="/assets/open-source.png" alt="Générateur QR" class="w-20 h-20 floating">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">Générateur QR Code</h3>
+              <p class="opacity-80 mb-4">Créez des codes QR personnalisés pour vos URLs, contacts ou Wi-Fi.</p>
+              <a href="#" class="text-primary font-medium inline-flex items-center">
+                Utiliser l'outil
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tool-grid-item">
+          <div class="tool-card card overflow-hidden">
+            <div class="h-48 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <img src="/assets/support.png" alt="Optimiseur" class="w-20 h-20 floating">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">Optimiseur d'images</h3>
+              <p class="opacity-80 mb-4">Réduisez la taille de vos images sans perte de qualité visible.</p>
+              <a href="#" class="text-primary font-medium inline-flex items-center">
+                Utiliser l'outil
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-16">
+        <a href="/tools" class="btn-primary inline-flex items-center">
+          Voir tous les outils
+          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Stats -->
+  <section class="py-20 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="community-stats p-8 md:p-12 rounded-3xl grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold mb-2">100+</div>
+          <div class="text-lg opacity-90">Outils disponibles</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold mb-2">50K+</div>
+          <div class="text-lg opacity-90">Utilisateurs actifs</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold mb-2">1M+</div>
+          <div class="text-lg opacity-90">Outils utilisés</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold mb-2">24/7</div>
+          <div class="text-lg opacity-90">Support disponible</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 px-4 bg-darkCard">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Questions <span class="gradient-text">fréquentes</span></h2>
+        <p class="text-lg opacity-80 max-w-2xl mx-auto">Trouvez les réponses aux questions les plus posées</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="faq-item card p-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">🛠️ C'est quoi ToolCenter ?</h3>
+            <svg class="faq-arrow w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content mt-4">
+            <p class="opacity-80">ToolCenter est une plateforme où vous pouvez retrouver, partager et utiliser des outils gratuits en ligne. Tous nos outils sont open-source et vérifiés par notre équipe.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item card p-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">💸 Est-ce que c'est payant ?</h3>
+            <svg class="faq-arrow w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content mt-4">
+            <p class="opacity-80">Non, tous les outils sont 100% gratuits à utiliser. Nous croyons en l'accès libre aux outils de productivité et nous nous engageons à maintenir cette gratuité.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item card p-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">🔐 Est-ce que les outils sont sûrs ?</h3>
+            <svg class="faq-arrow w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content mt-4">
+            <p class="opacity-80">Absolument ! Chaque outil est vérifié manuellement avant d'être publié pour éviter tout scam ou malware. De plus, étant open-source, le code est transparent et vérifiable par tous.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item card p-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">👥 Qui peut publier un outil ?</h3>
+            <svg class="faq-arrow w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content mt-4">
+            <p class="opacity-80">Tout le monde peut proposer un outil après inscription. Chaque proposition est examinée par notre équipe avant d'être mise en ligne pour garantir sa qualité et sa sécurité.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item card p-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">⚙️ Comment personnaliser les outils ?</h3>
+            <svg class="faq-arrow w-6 h-6 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content mt-4">
+            <p class="opacity-80">La plupart de nos outils offrent des options de personnalisation. Connectez-vous à votre compte pour accéder aux paramètres et enregistrer vos préférences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Prêt à <span class="tool-highlight">transformer votre workflow</span> ?</h2>
+      <p class="text-lg opacity-80 mb-10 max-w-2xl mx-auto">Rejoignez des milliers de créatifs et développeurs qui utilisent déjà ToolCenter au quotidien</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/signup" class="btn-primary">Créer un compte gratuit</a>
+        <a href="/tools" class="btn-secondary">Explorer les outils</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-4 border-t border-white/10">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div>
+          <div class="flex items-center space-x-3 mb-6">
+            <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="w-10 h-10">
+            <span class="text-xl font-bold">ToolCenter</span>
+          </div>
+          <p class="opacity-80 mb-6">La plateforme d'outils en ligne pour les créatifs et développeurs exigeants.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="p-2 rounded-full bg-white/10 hover:bg-white/20">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+              </svg>
+            </a>
+            <a href="#" class="p-2 rounded-full bg-white/10 hover:bg-white/20">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+              </svg>
+            </a>
+            <a href="#" class="p-2 rounded-full bg-white/10 hover:bg-white/20">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-bold mb-6">Navigation</h3>
+          <ul class="space-y-3">
+            <li><a href="/" class="opacity-80 hover:opacity-100">Accueil</a></li>
+            <li><a href="/tools" class="opacity-80 hover:opacity-100">Outils</a></li>
+            <li><a href="/community" class="opacity-80 hover:opacity-100">Communauté</a></li>
+            <li><a href="/about" class="opacity-80 hover:opacity-100">À propos</a></li>
+            <li><a href="/blog" class="opacity-80 hover:opacity-100">Blog</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-bold mb-6">Légal</h3>
+          <ul class="space-y-3">
+            <li><a href="/privacy" class="opacity-80 hover:opacity-100">Politique de confidentialité</a></li>
+            <li><a href="/terms" class="opacity-80 hover:opacity-100">Conditions d'utilisation</a></li>
+            <li><a href="/cookies" class="opacity-80 hover:opacity-100">Politique des cookies</a></li>
+            <li><a href="/legals" class="opacity-80 hover:opacity-100">Mentions légales</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-bold mb-6">Contact</h3>
+          <ul class="space-y-3">
+            <li class="opacity-80">support@tool-center.fr</li>
+            <li class="opacity-80">Paris, France</li>
+            <li><a href="/contact" class="opacity-80 hover:opacity-100">Formulaire de contact</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="pt-8 border-t border-white/10 text-center opacity-80">
+        <p>© 2024 ToolCenter. Tous droits réservés. Conçu avec ❤️ pour les créatifs.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top button -->
+  <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary p-3 rounded-full shadow-lg opacity-0 transition-opacity">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+    </svg>
+  </button>
+
+  <script>
+    // Theme switcher
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const body = document.body;
+    
+    if (localStorage.getItem('theme') === 'light') {
+      body.classList.add('light-theme');
+    }
+    
+    themeSwitcher.addEventListener('click', () => {
+      body.classList.toggle('light-theme');
+      localStorage.setItem('theme', body.classList.contains('light-theme') ? 'light' : 'dark');
+    });
+    
+    // Mobile menu
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+    });
+    
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+    });
+    
+    // FAQ functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('open');
+      });
+    });
+    
+    // Back to top button
+    const backToTop = document.getElementById('back-to-top');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.style.opacity = '1';
+      } else {
+        backToTop.style.opacity = '0';
+      }
+    });
+    
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Scroll reveal animation
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    
+    const revealOnScroll = () => {
+      scrollRevealElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+    };
+    
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+    
+    // Preloader
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      const preloaderMessage = document.getElementById('preloader-message');
+      
+      // Show message after 1s
+      setTimeout(() => {
+        preloaderMessage.style.opacity = '1';
+      }, 1000);
+      
+      // Hide preloader after 2s
+      setTimeout(() => {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }, 2000);
+    });
+    
+    // Tool card animations
+    const toolCards = document.querySelectorAll('.tool-card');
+    
+    toolCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-10px)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
+</body>
+</html>
