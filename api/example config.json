@@ -25,5 +25,7 @@
     "username": "user@example.com",
     "password": "emailpassword",
     "from": "user@example.com"
-  }
+  },
+  "discord_webhook_url": "",
+  "webhook_secret": ""
 }

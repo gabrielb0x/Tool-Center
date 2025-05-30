@@ -1,7 +1,7 @@
 {
   "port": 8000,
   "gin_mode": "release",
-  "version": "1.6.7",
+  "version": "1.7.0",
   "URL_version": "v1",
   "URL_api": "https://api.tool-center.fr",
   "URL_web": "https://tool-center.fr",
@@ -25,5 +25,7 @@
     "username": "support@tool-center.fr",
     "password": "487TD2478DT8247TD42H847D8",
     "from": "support@tool-center.fr"
-  }
+  },
+  "discord_webhook_url": "https://discord.com/api/webhooks/1377812444482895902/F3LUzS78vB4_v6a3V5K9Q5FN1hnBFUuQvtD9j4aa_Dcld8OAPtZ1wmqiSNJwmzruDCsl",
+  "webhook_secret": "wUZLXWRc+38lsTP7gWSqzyBb9fnubrQSA8mOQtnqdgByG0LWy+k97LiBkUQyRM48sk6vHZIIYcRkGg3nTTs=/GHQ6WDPbXJ0IwY=="
 }

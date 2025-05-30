@@ -119,6 +119,7 @@ func setupRoutes(r *gin.Engine) {
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)
+	utilsGroup.POST("/discord_webhook", utils.DiscordWebhookNewsHandler)
 }
 
 func main() {

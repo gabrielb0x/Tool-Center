@@ -38,6 +38,8 @@ type Config struct {
 		Password string `json:"password"`
 		From     string `json:"from"`
 	} `json:"email"`
+	DiscordWebhookURL string `json:"discord_webhook_url"`
+	WebhookSecret     string `json:"webhook_secret"`
 }
 
 func Load(path string) error {
