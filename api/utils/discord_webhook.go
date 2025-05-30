@@ -2,8 +2,12 @@ package utils
 
 import (
 	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -28,7 +32,6 @@ type DiscordEmbed struct {
 	Thumbnail struct {
 		URL string `json:"url"`
 	} `json:"thumbnail"`
-	// Fields removed
 }
 
 type DiscordWebhookPayload struct {
@@ -38,7 +41,33 @@ type DiscordWebhookPayload struct {
 	Content   string         `json:"content,omitempty"`
 }
 
+func verifyGitHubSignature(secret string, body []byte, sigHeader string) bool {
+	if !strings.HasPrefix(sigHeader, "sha256=") || secret == "" {
+		return false
+	}
+	signature := sigHeader[len("sha256="):]
+	mac := hmac.New(sha256.New, []byte(secret))
+	mac.Write(body)
+	expected := hex.EncodeToString(mac.Sum(nil))
+	return hmac.Equal([]byte(expected), []byte(signature))
+}
+
 func DiscordWebhookNewsHandler(c *gin.Context) {
+	cfg := config.Get()
+
+	rawBody, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to read body"})
+		return
+	}
+
+	if !verifyGitHubSignature(cfg.WebhookSecret, rawBody, c.GetHeader("X-Hub-Signature-256")) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(rawBody))
+
 	var githubPayload struct {
 		HeadCommit struct {
 			Message string `json:"message"`
@@ -62,51 +91,42 @@ func DiscordWebhookNewsHandler(c *gin.Context) {
 			AvatarURL string `json:"avatar_url"`
 		} `json:"sender"`
 	}
-
-	if err := c.ShouldBindJSON(&githubPayload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid GitHub payload"})
+	if err := json.Unmarshal(rawBody, &githubPayload); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON"})
 		return
 	}
 
-	cfg := config.Get()
-
-	diff := ""
-	if len(githubPayload.HeadCommit.Added) > 0 || len(githubPayload.HeadCommit.Removed) > 0 || len(githubPayload.HeadCommit.Modified) > 0 {
-	}
+	var diff strings.Builder
 	if len(githubPayload.HeadCommit.Added) > 0 {
-		diff += "### ✅ Fichiers ajoutés :\n"
-		diff += "```diff\n"
+		diff.WriteString("### ✅ Fichiers ajoutés :\n```diff\n")
 		for _, f := range githubPayload.HeadCommit.Added {
-			diff += fmt.Sprintf("+ %s\n", f)
+			diff.WriteString("+ " + f + "\n")
 		}
-		diff += "```\n"
+		diff.WriteString("```\n")
 	}
 	if len(githubPayload.HeadCommit.Removed) > 0 {
-		diff += "### 🚫 Fichiers retirés :\n"
-		diff += "```diff\n"
+		diff.WriteString("### 🚫 Fichiers retirés :\n```diff\n")
 		for _, f := range githubPayload.HeadCommit.Removed {
-			diff += fmt.Sprintf("- %s\n", f)
+			diff.WriteString("- " + f + "\n")
 		}
-		diff += "```\n"
+		diff.WriteString("```\n")
 	}
 	if len(githubPayload.HeadCommit.Modified) > 0 {
-		diff += "### 💱 Fichiers modifiés :\n"
-		diff += "```diff\n"
+		diff.WriteString("### 💱 Fichiers modifiés :\n```diff\n")
 		for _, f := range githubPayload.HeadCommit.Modified {
-			diff += fmt.Sprintf("~ %s\n", f)
+			diff.WriteString("~ " + f + "\n")
 		}
-		diff += "```\n"
+		diff.WriteString("```\n")
 	}
 
 	lockEmoji := ""
 	if githubPayload.Repository.Private {
 		lockEmoji = " 🔒"
 	}
-
 	description := fmt.Sprintf(
 		"# 📨 Message sur le commit :\n```%s```\n%s\n### 👤 Auteur du push\n> ### %s\n### 🔗 Lien vers le commit\n> ### [Clique ici](%s)",
 		githubPayload.HeadCommit.Message,
-		strings.TrimSpace(diff),
+		strings.TrimSpace(diff.String()),
 		githubPayload.Pusher.Name,
 		githubPayload.HeadCommit.URL,
 	)
@@ -116,7 +136,6 @@ func DiscordWebhookNewsHandler(c *gin.Context) {
 		Color:       0x00b0f4,
 		Timestamp:   time.Now().Format(time.RFC3339),
 	}
-
 	embed.Footer.Text = "ℹ️ Webhook envoyé automatiquement par ToolCenter"
 	embed.Thumbnail.URL = githubPayload.Sender.AvatarURL
 
@@ -127,23 +146,15 @@ func DiscordWebhookNewsHandler(c *gin.Context) {
 		Content:   fmt.Sprintf("## 🛠️ Nouveau commit sur `%s`%s !", githubPayload.Repository.FullName, lockEmoji),
 	}
 
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		log.Println("❌ Erreur marshalling payload Discord:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
-		return
-	}
-
-	discordURL := cfg.DiscordWebhookURL
-	if discordURL == "" {
-		c.Status(http.StatusNoContent)
-		return
-	}
-	resp, err := http.Post(discordURL, "application/json", bytes.NewBuffer(jsonPayload))
-	if err != nil || resp.StatusCode >= 300 {
-		log.Println("❌ Erreur envoi vers Discord:", err, "Status:", resp.Status)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send webhook"})
-		return
+	/* 7. Send to Discord */
+	jsonPayload, _ := json.Marshal(payload)
+	if cfg.DiscordWebhookURL != "" {
+		r, err := http.Post(cfg.DiscordWebhookURL, "application/json", bytes.NewBuffer(jsonPayload))
+		if err != nil || r.StatusCode >= 300 {
+			log.Println("❌ Discord webhook error:", err, r.Status)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send webhook"})
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "message envoyé à Discord avec succès"})

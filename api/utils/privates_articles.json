@@ -53,5 +53,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 16,
+        "date": "2025-05-30",
+        "displayDate": "30/05/2025",
+        "title": "Ajout d'un script pour utiliser les webhooks Discord (expérimental)",
+        "summary": "Un script expérimental a été ajouté pour permettre l'utilisation des webhooks Discord.",
+        "content": "Un nouveau script permet désormais d'envoyer des notifications via les webhooks Discord. Cette fonctionnalité est en phase d'expérimentation et peut évoluer. N'hésitez pas à faire des retours si vous l'utilisez.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": ["inprogress"]
     }
 ]
