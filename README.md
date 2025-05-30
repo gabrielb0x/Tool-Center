@@ -1,6 +1,6 @@
 # 🚀 **Tool Center**
 
-![Tool Center Banner](./frontend/assets/Bannière-TC.png)
+![Tool Center Banner](./frontend/assets/Banniere-TC.png)
 
 > **Tool Center**, c’est **LE** projet phare de **[@gabex749](https://github.com/gabex749)**.  
 > Un concentré de **code**, de **passion**, et d’**utilité**, taillé pour ceux qui veulent des outils de qualitée.
