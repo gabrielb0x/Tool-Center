@@ -2,6 +2,7 @@ package auth
 
 import (
 	"crypto/rand"
+	"crypto/sha256"
 	"database/sql"
 	"encoding/hex"
 	"net/http"
@@ -91,11 +92,13 @@ func LoginHandler(c *gin.Context) {
 	b := make([]byte, 64)
 	_, _ = rand.Read(b)
 	token := hex.EncodeToString(b)
+	hash := sha256.Sum256([]byte(token))
+	tokenHash := hex.EncodeToString(hash[:])
 
 	_, err = db.Exec(`
 INSERT INTO user_tokens (user_id, token, device_info, expires_at)
 VALUES (?, ?, ?, ?)`,
-		uid, token,
+		uid, tokenHash,
 		c.Request.UserAgent()+" | "+c.ClientIP(),
 		time.Now().Add(30*24*time.Hour),
 	)
