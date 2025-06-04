@@ -63,6 +63,28 @@
         "content": "Un nouveau script permet désormais d'envoyer des notifications via les webhooks Discord. Cette fonctionnalité est en phase d'expérimentation et peut évoluer. N'hésitez pas à faire des retours si vous l'utilisez.",
         "isNew": true,
         "isPrivate": true,
-        "tags": ["inprogress"]
+        "tags": ["done"]
+    },
+    {
+        "id": 17,
+        "date": "2025-06-04",
+        "displayDate": "04/06/2025",
+        "title": "Corrections d'affichage et nouvel endpoint API pour vos tools",
+        "summary": "Corrections des bugs d'affichage sur la page tools et ajout du handler API pour récupérer vos propres tools.",
+        "content": "Les bugs d'affichage sur tool-center.fr/account/tools ont été corrigés. Un nouveau handler API permet maintenant de récupérer vos propres tools. Prochainement, un endpoint pour soumettre des tools sera ajouté.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
+    },
+    {
+        "id": 18,
+        "date": "2025-06-04",
+        "displayDate": "04/06/2025",
+        "title": "Le login est enfin réparé",
+        "summary": "Le problème empêchant la connexion, même avec le bon mot de passe, est corrigé.",
+        "content": "Un bug empêchait la connexion des utilisateurs, affichant 'la requête a expiré' même si le bon mot de passe était entré. Ce problème est maintenant résolu et la connexion fonctionne normalement.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
     }
 ]

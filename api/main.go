@@ -118,7 +118,7 @@ func setupRoutes(r *gin.Engine) {
 	userGroup.POST("/avatar", user.UploadAvatar)
 
 	toolsGroup := api.Group("/tools")
-	toolsGroup.GET("/", tools.MyToolsHandler)
+	toolsGroup.GET("/me", tools.MyToolsHandler)
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)

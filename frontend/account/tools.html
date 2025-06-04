@@ -482,6 +482,10 @@
             margin-top: 20px;
         }
 
+        .tools-grid.hidden {
+            display: none !important;
+        }
+
         .no-tools {
             display: flex;
             flex-direction: column;
@@ -492,6 +496,10 @@
             background-color: rgba(255, 255, 255, 0.03);
             border-radius: var(--radius);
             border: 1px dashed var(--dark-border);
+        }
+        
+        .no-tools.hidden {
+            display: none !important;
         }
 
         .light-mode .no-tools {
@@ -783,6 +791,22 @@
 
         .modal-body {
             margin-bottom: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
         }
 
         .form-group {
@@ -942,6 +966,10 @@
             display: inline-block;
             vertical-align: middle;
             margin-right: 8px;
+        }
+        
+        .spinner.hidden {
+            display: none !important;
         }
         
         @keyframes spin {
@@ -1178,7 +1206,6 @@
                 <div id="errorContainer" class="hidden"></div>
 
                 <div id="toolsContainer">
-                    <!-- Skeleton loading -->
                     <div class="tools-grid" id="skeletonGrid">
                         <div class="tool-card">
                             <div class="skeleton skeleton-image"></div>
@@ -1224,24 +1251,21 @@
                         </div>
                     </div>
 
-                    <!-- Empty state (hidden by default) -->
                     <div class="no-tools hidden" id="noTools">
-                        <img src="/assets/no-tools.png" alt="Aucun tool" class="no-tools-icon">
+                        <img src="/assets/no-tools-icon.png" alt="Aucun tool" class="no-tools-icon">
                         <h3 class="no-tools-title">Aucun tool publié</h3>
                         <p class="no-tools-text">Vous n'avez pas encore publié de tool sur ToolCenter. Commencez par en créer un !</p>
                         <button class="add-tool-btn" id="addToolBtnEmpty">
-                            <img src="/assets/add.png" alt="Ajouter" class="add-tool-icon">
+                            <img src="/assets/upload-icon.png" alt="Ajouter" class="add-tool-icon">
                             Publier votre premier tool
                         </button>
                     </div>
 
-                    <!-- Tools grid (hidden by default) -->
                     <div class="tools-grid hidden" id="toolsGrid"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Add/Edit Tool Modal -->
         <div class="modal-overlay" id="toolModal">
             <div class="modal">
                 <div class="modal-header">
@@ -1306,7 +1330,6 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
         <div class="modal-overlay" id="deleteModal">
             <div class="modal">
                 <div class="modal-header">
@@ -1421,7 +1444,7 @@
             const noTools = document.getElementById('noTools');
             const toolsGrid = document.getElementById('toolsGrid');
             
-            return fetch(`${apiBaseURL}/user/tools`, {
+            return fetch(`${apiBaseURL}/tools/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -1441,14 +1464,11 @@
                 if (data.success) {
                     currentUserTools = data.tools;
                     
-                    // Hide skeleton
                     skeletonGrid.classList.add('hidden');
                     
                     if (data.tools.length === 0) {
-                        // Show empty state
                         noTools.classList.remove('hidden');
                     } else {
-                        // Show tools grid
                         toolsGrid.classList.remove('hidden');
                         renderTools(data.tools);
                     }
@@ -1468,7 +1488,6 @@
                 const toolCard = document.createElement('div');
                 toolCard.className = 'tool-card';
                 
-                // Format date
                 const createdAt = new Date(tool.created_at);
                 const formattedDate = createdAt.toLocaleDateString('fr-FR', {
                     day: 'numeric',
@@ -1476,7 +1495,6 @@
                     year: 'numeric'
                 });
                 
-                // Status badge
                 let statusText = '';
                 let statusClass = '';
                 
@@ -1499,7 +1517,6 @@
                         break;
                 }
                 
-                // Default image if not provided
                 const imageUrl = tool.image_url || '/assets/default-tool.png';
                 
                 toolCard.innerHTML = `
@@ -1526,7 +1543,6 @@
                 toolsGrid.appendChild(toolCard);
             });
             
-            // Add event listeners to action buttons
             document.querySelectorAll('.edit-tool').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const toolId = e.currentTarget.getAttribute('data-id');
@@ -1595,7 +1611,6 @@
             const toolForm = document.getElementById('toolForm');
             const toolModalTitle = document.getElementById('toolModalTitle');
             
-            // Open modal for new tool
             addToolBtn.addEventListener('click', () => {
                 currentEditingToolId = null;
                 toolModalTitle.textContent = 'Publier un nouveau tool';
@@ -1606,7 +1621,6 @@
                 toolModal.classList.add('active');
             });
             
-            // Same but from empty state
             addToolBtnEmpty.addEventListener('click', () => {
                 currentEditingToolId = null;
                 toolModalTitle.textContent = 'Publier un nouveau tool';
@@ -1617,7 +1631,6 @@
                 toolModal.classList.add('active');
             });
             
-            // Close modal
             closeToolModal.addEventListener('click', () => {
                 toolModal.classList.remove('active');
             });
@@ -1626,7 +1639,6 @@
                 toolModal.classList.remove('active');
             });
             
-            // Submit form
             submitToolForm.addEventListener('click', () => {
                 const title = document.getElementById('toolTitle').value.trim();
                 const description = document.getElementById('toolDescription').value.trim();
@@ -1678,12 +1690,10 @@
                             'Tool mis à jour avec succès !' : 
                             'Tool soumis avec succès ! Il sera publié après modération.');
                         
-                        // Reset form
                         if (!currentEditingToolId) {
                             toolForm.reset();
                         }
                         
-                        // Refresh tools list
                         setTimeout(() => {
                             fetchUserTools().then(() => {
                                 toolModal.classList.remove('active');
@@ -1720,7 +1730,6 @@
             document.getElementById('toolModalError').classList.add('hidden');
             document.getElementById('toolModalSuccess').classList.add('hidden');
             
-            // Fill form with tool data
             document.getElementById('toolTitle').value = tool.title;
             document.getElementById('toolDescription').value = tool.description;
             document.getElementById('toolCategory').value = tool.category;
@@ -1770,7 +1779,6 @@
                         showSuccess('Tool supprimé avec succès');
                         deleteModal.classList.remove('active');
                         
-                        // Refresh tools list
                         fetchUserTools();
                     } else {
                         throw new Error(data.message || 'Erreur lors de la suppression du tool');

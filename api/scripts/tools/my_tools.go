@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -24,6 +25,17 @@ type Tool struct {
 }
 
 func MyToolsHandler(c *gin.Context) {
+	uid, _, _, err := utils.Check(c, utils.CheckOpts{
+		RequireToken:     true,
+		RequireVerified:  true,
+		RequireNotBanned: true,
+		UpdateLastLogin:  true,
+	})
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": err.Error()})
+		return
+	}
+
 	db, err := config.OpenDB()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
@@ -31,7 +43,7 @@ func MyToolsHandler(c *gin.Context) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query(`SELECT tool_id, user_id, title, description, content_url, thumbnail_url, status, views, created_at, updated_at FROM tools ORDER BY created_at DESC`)
+	rows, err := db.Query(`SELECT tool_id, user_id, title, description, content_url, thumbnail_url, status, views, created_at, updated_at FROM tools WHERE user_id = ? ORDER BY created_at DESC`, uid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
