@@ -7,6 +7,7 @@ import (
 
 	"toolcenter/config"
 	"toolcenter/scripts/auth"
+	"toolcenter/scripts/tools"
 	"toolcenter/scripts/user"
 	"toolcenter/utils"
 
@@ -115,7 +116,9 @@ func setupRoutes(r *gin.Engine) {
 	userGroup.GET("/verify_email", user.VerifyEmailHandler)
 	userGroup.GET(("/me"), user.MeHandler)
 	userGroup.POST("/avatar", user.UploadAvatar)
-	// userGroup.GET("/my_tools", user.MyToolsHandler)
+
+	toolsGroup := api.Group("/tools")
+	toolsGroup.GET("/", tools.MyToolsHandler)
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)

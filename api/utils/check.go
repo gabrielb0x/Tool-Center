@@ -57,17 +57,24 @@ func Check(c *gin.Context, o CheckOpts) (string, bool, string, error) {
 
 	if o.RequireToken {
 		err = db.QueryRow(`
-			SELECT u.user_id, ut.expires_at, u.email_verified_at, u.account_status
-			FROM user_tokens ut
-			JOIN users u ON u.user_id = ut.user_id
-			WHERE ut.token = ? LIMIT 1`, bearer).
+                        SELECT u.user_id, ut.expires_at, u.email_verified_at, u.account_status
+                        FROM user_tokens ut
+                        JOIN users u ON u.user_id = ut.user_id
+                        WHERE ut.token = ? LIMIT 1`, bearer).
 			Scan(&uid, &expires, &verifiedAt, &accountStatus)
 	} else {
-		var payload struct {
-			UserID string `json:"user_id"`
+		if v, ok := c.Get("user_id_override"); ok {
+			if s, ok := v.(string); ok {
+				uid = s
+			}
 		}
-		_ = c.ShouldBindJSON(&payload)
-		uid = payload.UserID
+		if uid == "" {
+			var payload struct {
+				UserID string `json:"user_id"`
+			}
+			_ = c.ShouldBindJSON(&payload)
+			uid = payload.UserID
+		}
 		err = db.QueryRow(`SELECT email_verified_at, account_status FROM users WHERE user_id = ?`, uid).
 			Scan(&verifiedAt, &accountStatus)
 	}
