@@ -1,5 +1,5 @@
 # 🚀 **ToolCenter API v1**  
-⏱️ **Date de dernière modification : 24/05/2025**
+⏱️ **Date de dernière modification : 04/06/2025**
 
 API **ultra‑rapide** en **Go** 🐹 pour gérer tes **utilisateurs**, tes **outils** et tout le bazar autour (auth, réservations, stats, etc.).
 
@@ -114,6 +114,31 @@ Réponse :
         "favorites": 4
     },
     "role": "User"
+} 
+```
+
+### Publier un tool ↦ `/api/tools`
+
+Envoi d'un tool (form‑data).
+
+```bash
+curl -X POST https://api.tool-center.fr/api/tools \
+    -H "Authorization: Bearer <token>" \
+    -F "title=Mon super tool" \
+    -F "description=C'est trop cool" \
+    -F "category=development" \
+    -F "url=https://example.com" \
+    -F "tags=cli,open-source" \
+    -F "image=@/chemin/image.png"
+```
+
+Réponse :
+
+```json
+{
+    "success": true,
+    "tool_id": 123,
+    "image_url": "https://tool-center.fr/tool_images/abcd.webp"
 }
 ```
 
