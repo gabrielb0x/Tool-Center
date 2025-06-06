@@ -39,7 +39,7 @@ Parce que le monde avait besoin :
 |-------------------|-------------------------------------|
 | **Backend API**   | Go (Golang) + MariaDB               |
 | **Frontend**      | HTML, JS, CSS (vanilla stylé)       |
-| **Auth**          | Email, tokens JWT, vérif,sessions   |
+| **Auth**          | Email, tokens SHA-256 hashés, IDs UUIDv7, vérif,sessions   |
 | **Hosting**       | Raspberry Pi 5                      |
 | **Proxy / HTTPS** | Nginx + SSL via Cloudflare          |
 | **Domaines**      | [tool-center.fr](https://tool-center.fr) & [gabex.xyz](https://gabex.xyz) |
