@@ -1517,7 +1517,7 @@
                         break;
                 }
                 
-                const imageUrl = tool.image_url || '/assets/default-tool.png';
+                const imageUrl = tool.thumbnail_url || '/assets/default-tool.png';
                 
                 toolCard.innerHTML = `
                     <div class="tool-status ${statusClass}">${statusText}</div>
@@ -1528,13 +1528,13 @@
                         <span class="tool-date">${formattedDate}</span>
                         <div class="tool-actions">
                             <button class="tool-action-btn view-tool" data-id="${tool.id}">
-                                <img src="/assets/view.png" alt="Voir" class="tool-action-icon view-icon">
+                                <img src="/assets/show.png" alt="Voir" class="tool-action-icon view-icon">
                             </button>
                             <button class="tool-action-btn edit-tool" data-id="${tool.id}">
-                                <img src="/assets/edit.png" alt="Éditer" class="tool-action-icon edit-icon">
+                                <img src="/assets/edit-icon.png" alt="Éditer" class="tool-action-icon edit-icon">
                             </button>
                             <button class="tool-action-btn delete-tool" data-id="${tool.id}">
-                                <img src="/assets/delete.png" alt="Supprimer" class="tool-action-icon delete-icon">
+                                <img src="/assets/trash.png" alt="Supprimer" class="tool-action-icon delete-icon">
                             </button>
                         </div>
                     </div>
@@ -1668,7 +1668,7 @@
                 if (tags) formData.append('tags', tags);
                 if (imageFile) formData.append('image', imageFile);
                 
-                let apiEndpoint = `${apiBaseURL}/tools`;
+                let apiEndpoint = `${apiBaseURL}/tools/add`;
                 let method = 'POST';
                 
                 if (currentEditingToolId) {

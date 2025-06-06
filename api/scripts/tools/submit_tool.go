@@ -19,8 +19,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const toolImageDir = "/var/www/toolcenter/storage/tool_images"
-const toolImageRelPath = "/tool_images/"
+const toolImageDir = "/var/www/toolcenter/storage/tools_images"
+const toolImageRelPath = "/tools_images/"
 
 func rnd() string {
 	b := make([]byte, 16)
