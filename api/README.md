@@ -34,7 +34,7 @@ API **ultra‑rapide** en **Go** 🐹 pour gérer tes **utilisateurs**, tes **o
 * Stats utilisateur intégrées (posts, likes, favoris…) 📊
 * Système de reports & modération 🕵️
 * Service **systemd** prêt à l'emploi 🚀
-* Script **`worker.py`** : purge auto des comptes non vérifiés 🧹
+* Worker interne en Go : purge auto des comptes non vérifiés 🧹
 
 ---
 
@@ -48,7 +48,7 @@ API **ultra‑rapide** en **Go** 🐹 pour gérer tes **utilisateurs**, tes **o
 │   ├── tools/        # my_tools.go
 │   └── user/         # avatar.go, me.go, profile.go, verify_email.go
 ├── utils/            # check.go (middlewares & helpers)
-├── worker.py         # purge comptes non vérifiés
+├── worker/           # cleanup worker intégré
 ├── start.sh          # démarrage dev "go run main.go"
 ├── main.go           # point d'entrée
 └── README.md         # ce fichier
@@ -180,6 +180,10 @@ cp config.sample.json config.json && nano config.json
         "port": 465,
         "username": "support@tool-center.fr",
         "password": "***"
+    },
+    "cleanup": {
+        "check_interval": 600,
+        "grace_period": 10
     }
 }
 ```
@@ -238,7 +242,7 @@ curl -H "Authorization: Bearer <token>" https://api.tool-center.fr/api/user/me |
 
 ## 🧹 Worker de nettoyage <a name="worker-de-nettoyage"></a>
 
-`worker.py` tourne chaque nuit (via cron ou `systemd.timer`) et **supprime** les comptes **non vérifiés** après X jours, ainsi que toutes les données liées (tokens, tools, comments…).
+Le worker Go embarqué tourne en continu et **supprime** les comptes **non vérifiés** après la période configurée. Il traite aussi la file d'attente d'emails.
 
 ---
 

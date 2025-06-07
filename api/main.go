@@ -10,6 +10,7 @@ import (
 	"toolcenter/scripts/tools"
 	"toolcenter/scripts/user"
 	"toolcenter/utils"
+	"toolcenter/worker"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
@@ -138,6 +139,7 @@ func main() {
 
 	setupLogger()
 	go watchConfig(cfgPath)
+	go worker.Start()
 
 	cfg := config.Get()
 	if cfg.GinMode != "" {
