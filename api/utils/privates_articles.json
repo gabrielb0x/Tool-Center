@@ -86,5 +86,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 19,
+        "date": "2025-06-07",
+        "displayDate": "07/06/2025",
+        "title": "Corrections de bugs sur la page tools et suppression d'image lors du delete",
+        "summary": "Corrections sur la page des tools dans le compte, suppression de l'image associée lors de la suppression d'un tool, et planification d'un nouveau système pour les comptes non vérifiés.",
+        "content": "Plusieurs bugs ont été corrigés sur la page des tools dans votre compte. Désormais, la suppression d'un tool supprime aussi l'image associée. Prochainement, un nouveau système sera mis en place pour supprimer les comptes non vérifiés, car le worker actuel ne fonctionne pas correctement.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
     }
 ]
