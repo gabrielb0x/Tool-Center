@@ -10,6 +10,7 @@ import (
 
 	"crypto/sha256"
 	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -19,9 +20,10 @@ import (
 )
 
 type RegisterRequest struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Username       string `json:"username"`
+	Email          string `json:"email"`
+	Password       string `json:"password"`
+	TurnstileToken string `json:"turnstile_token"`
 }
 
 func validUsername(u string) bool {
@@ -45,7 +47,7 @@ func hashToken(t string) string {
 
 func RegisterHandler(c *gin.Context) {
 	var req RegisterRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&req); err != nil || req.TurnstileToken == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Requête invalide."})
 		return
 	}
@@ -62,6 +64,12 @@ func RegisterHandler(c *gin.Context) {
 	}
 	if len(req.Password) < 7 || len(req.Password) > 30 {
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Le mot de passe doit faire entre 7 et 30 caractères."})
+		return
+	}
+
+	ok, err := utils.VerifyTurnstile(req.TurnstileToken, config.Get().Turnstile.SignUpSecret, c.ClientIP())
+	if err != nil || !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Captcha invalide"})
 		return
 	}
 

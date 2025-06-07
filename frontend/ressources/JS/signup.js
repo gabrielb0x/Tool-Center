@@ -31,6 +31,8 @@ const formError = document.getElementById('form-error');
 const errorText = document.getElementById('error-text');
 const signupForm = document.getElementById('signup-form');
 const successState = document.getElementById('success-state');
+let captchaToken = '';
+window.onCaptchaSuccess = function(token){ captchaToken = token; };
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
@@ -112,6 +114,10 @@ signupForm.addEventListener('submit', async function(e) {
     showError("Les mots de passe ne correspondent pas");
     return;
   }
+  if (!captchaToken) {
+    showError("Veuillez compléter le captcha");
+    return;
+  }
   signupButton.disabled = true;
   signupButton.innerHTML = "<span>Inscription en cours...</span>";
   try {
@@ -123,7 +129,8 @@ signupForm.addEventListener('submit', async function(e) {
       body: JSON.stringify({
         username: usernameInput.value.trim(),
         email: emailInput.value.trim(),
-        password: passwordInput.value.trim()
+        password: passwordInput.value.trim(),
+        turnstile_token: captchaToken
       })
     });
     const data = await response.json();
@@ -137,9 +144,13 @@ signupForm.addEventListener('submit', async function(e) {
       signupButton.disabled = false;
       signupButton.innerHTML = "<span>S'inscrire</span>";
     }
+    turnstile.reset('#signup-turnstile');
+    captchaToken = '';
   } catch (error) {
     showError("Erreur de connexion au serveur");
     signupButton.disabled = false;
     signupButton.innerHTML = "<span>S'inscrire</span>";
+    turnstile.reset('#signup-turnstile');
+    captchaToken = '';
   }
 });

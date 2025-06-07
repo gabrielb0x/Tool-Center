@@ -28,6 +28,8 @@ const passwordInput = document.querySelector('input[name="password"]');
 const formError = document.getElementById('form-error');
 const errorText = document.getElementById('error-text');
 const loginForm = document.getElementById('login-form');
+let captchaToken = '';
+window.onCaptchaSuccess = function(token){ captchaToken = token; };
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
@@ -70,6 +72,10 @@ loginForm.addEventListener('submit', async function(e) {
     showError("Le mot de passe doit contenir au moins 6 caractères");
     return;
   }
+  if (!captchaToken) {
+    showError("Veuillez compléter le captcha");
+    return;
+  }
   loginButton.disabled = true;
   loginButton.innerHTML = '<span>Connexion en cours...</span>';
   try {
@@ -80,7 +86,8 @@ loginForm.addEventListener('submit', async function(e) {
       },
       body: JSON.stringify({
         email: emailInput.value.trim(),
-        password: passwordInput.value.trim()
+        password: passwordInput.value.trim(),
+        turnstile_token: captchaToken
       })
     });
     const data = await response.json();
@@ -97,9 +104,13 @@ loginForm.addEventListener('submit', async function(e) {
       loginButton.disabled = false;
       loginButton.innerHTML = '<span>Connexion</span>';
     }
+    turnstile.reset('#signin-turnstile');
+    captchaToken = '';
   } catch (error) {
     showError("Erreur de connexion au serveur");
     loginButton.disabled = false;
     loginButton.innerHTML = '<span>Connexion</span>';
+    turnstile.reset('#signin-turnstile');
+    captchaToken = '';
   }
 });

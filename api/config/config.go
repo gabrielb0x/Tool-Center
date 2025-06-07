@@ -40,6 +40,10 @@ type Config struct {
 	} `json:"email"`
 	DiscordWebhookURL string `json:"discord_webhook_url"`
 	WebhookSecret     string `json:"webhook_secret"`
+	Turnstile         struct {
+		SignInSecret string `json:"signin_secret"`
+		SignUpSecret string `json:"signup_secret"`
+	} `json:"turnstile"`
 }
 
 func Load(path string) error {
