@@ -122,7 +122,7 @@ func setupRoutes(r *gin.Engine) {
 	toolsGroup := api.Group("/tools")
 	toolsGroup.POST("/add", tools.SubmitToolHandler)
 	toolsGroup.GET("/me", tools.MyToolsHandler)
-	toolsGroup.DELETE("/:id", tools.DeleteToolHandler)
+	toolsGroup.DELETE("/delete/:id", tools.DeleteToolHandler)
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)

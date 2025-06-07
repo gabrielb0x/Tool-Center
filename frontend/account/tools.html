@@ -1235,20 +1235,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tool-card">
-                            <div class="skeleton skeleton-image"></div>
-                            <div class="skeleton skeleton-title"></div>
-                            <div class="skeleton skeleton-text"></div>
-                            <div class="skeleton skeleton-text"></div>
-                            <div class="skeleton skeleton-text" style="width: 60%;"></div>
-                            <div class="tool-meta">
-                                <div class="skeleton skeleton-text-sm"></div>
-                                <div class="tool-actions">
-                                    <div class="skeleton skeleton-button"></div>
-                                    <div class="skeleton skeleton-button"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="no-tools hidden" id="noTools">
@@ -1466,13 +1452,16 @@
                     
                     skeletonGrid.classList.add('hidden');
                     
+                    noTools.classList.add('hidden');
+                    toolsGrid.classList.add('hidden');
+
                     if (data.tools.length === 0) {
                         noTools.classList.remove('hidden');
                     } else {
                         toolsGrid.classList.remove('hidden');
                         renderTools(data.tools);
                     }
-                    
+                                    
                     return data;
                 } else {
                     throw new Error(data.message || "Erreur lors de la récupération des tools");
@@ -1561,7 +1550,8 @@
             document.querySelectorAll('.view-tool').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const toolId = e.currentTarget.getAttribute('data-id');
-                    const tool = currentUserTools.find(t => t.id === toolId);
+                    const tool = currentUserTools.find(t => t.id === toolId || t.tool_id === toolId);
+
                     if (tool) {
                         window.open(tool.url, '_blank');
                     }
@@ -1735,7 +1725,7 @@
         }
         
         function openEditToolModal(toolId) {
-            const tool = currentUserTools.find(t => t.id === toolId);
+            const tool = currentUserTools.find(t => t.id === toolId || t.tool_id === toolId);
             if (!tool) return;
             
             currentEditingToolId = toolId;
@@ -1785,7 +1775,7 @@
                 
                 const token = localStorage.getItem('token');
                 
-                fetch(`${apiBaseURL}/tools/${toolId}`, {
+                fetch(`${apiBaseURL}/tools/delete/${toolId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`

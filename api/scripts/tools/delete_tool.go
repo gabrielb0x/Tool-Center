@@ -6,6 +6,9 @@ import (
 	"toolcenter/config"
 	"toolcenter/utils"
 
+	"os"
+	"path/filepath"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -41,6 +44,13 @@ func DeleteToolHandler(c *gin.Context) {
 	}
 	defer db.Close()
 
+	var imagePath string
+	err = db.QueryRow(`SELECT thumbnail_url FROM tools WHERE tool_id = ? AND user_id = ?`, toolID, uid).Scan(&imagePath)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "Outil introuvable"})
+		return
+	}
+
 	res, err := db.Exec(`DELETE FROM tools WHERE tool_id = ? AND user_id = ?`, toolID, uid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
@@ -51,5 +61,11 @@ func DeleteToolHandler(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "Outil introuvable"})
 		return
 	}
+
+	if imagePath != "" {
+		absPath := filepath.Join("/var/www/toolcenter/storage/", imagePath)
+		_ = os.Remove(absPath)
+	}
+
 	c.JSON(http.StatusOK, gin.H{"success": true})
 }
