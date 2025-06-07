@@ -10,7 +10,6 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-// Start launches a periodic cleanup worker based on configuration values.
 func Start() {
 	cfg := config.Get()
 	if cfg.Cleanup.CheckInterval == 0 {
