@@ -44,6 +44,10 @@ type Config struct {
 		SignInSecret string `json:"signin_secret"`
 		SignUpSecret string `json:"signup_secret"`
 	} `json:"turnstile"`
+	Cleanup struct {
+		CheckInterval int `json:"check_interval"`
+		GracePeriod   int `json:"grace_period"`
+	} `json:"cleanup"`
 }
 
 func Load(path string) error {

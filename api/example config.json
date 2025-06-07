@@ -31,5 +31,9 @@
   "turnstile": {
     "signin_secret": "YOUR_SIGNIN_SECRET_KEY",
     "signup_secret": "YOUR_SIGNUP_SECRET_KEY"
+  },
+  "cleanup": {
+    "check_interval": 600,
+    "grace_period": 10
   }
 }
