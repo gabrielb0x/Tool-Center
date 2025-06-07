@@ -22,8 +22,6 @@ type LoginRequest struct {
 	TurnstileToken string `json:"turnstile_token"`
 }
 
-const missingCaptchaMsg = "Captcha manquant."
-
 func LoginHandler(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -36,7 +34,7 @@ func LoginHandler(c *gin.Context) {
 	if req.TurnstileToken == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
-			"message": missingCaptchaMsg,
+			"message": "Captcha manquant.",
 		})
 		return
 	}

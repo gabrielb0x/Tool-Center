@@ -26,8 +26,6 @@ type RegisterRequest struct {
 	TurnstileToken string `json:"turnstile_token"`
 }
 
-const missingCaptchaMsg = "Captcha manquant."
-
 func validUsername(u string) bool {
 	return len(u) >= 3 && len(u) <= 50 && !strings.ContainsAny(u, " ")
 }
@@ -54,7 +52,7 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 	if req.TurnstileToken == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": missingCaptchaMsg})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Captcha manquant."})
 		return
 	}
 
@@ -105,9 +103,8 @@ func RegisterHandler(c *gin.Context) {
 	verifyTokenHash := hashToken(verifyToken)
 	expires := time.Now().Add(10 * time.Minute)
 
-	// ===== génération de l’UUID v7 =====
-	uuidV7, _ := uuid.NewV7() // (retourne uuid.UUID, error)
-	userID := uuidV7.String() // forme texte 36 caractères
+	uuidV7, _ := uuid.NewV7()
+	userID := uuidV7.String()
 
 	tx, err := db.Begin()
 	if err != nil {
