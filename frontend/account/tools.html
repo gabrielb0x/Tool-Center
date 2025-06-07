@@ -1498,26 +1498,27 @@
                 let statusText = '';
                 let statusClass = '';
                 
-                switch(tool.status) {
+                switch (tool.status && tool.status.toLowerCase()) {
                     case 'published':
                         statusText = 'Publié';
                         statusClass = 'status-published';
                         break;
-                    case 'pending':
+                    case 'moderated':
                         statusText = 'En attente';
                         statusClass = 'status-pending';
                         break;
-                    case 'rejected':
-                        statusText = 'Rejeté';
+                    case 'hidden':
+                        statusText = 'REFUSE';
                         statusClass = 'status-rejected';
                         break;
-                    case 'draft':
-                        statusText = 'Brouillon';
+                    default:
+                        statusText = tool.status || 'INCONNU';
                         statusClass = 'status-draft';
                         break;
                 }
                 
                 const imageUrl = tool.thumbnail_url || '/assets/default-tool.png';
+                const toolId = tool.tool_id || tool.id;
                 
                 toolCard.innerHTML = `
                     <div class="tool-status ${statusClass}">${statusText}</div>
@@ -1527,13 +1528,13 @@
                     <div class="tool-meta">
                         <span class="tool-date">${formattedDate}</span>
                         <div class="tool-actions">
-                            <button class="tool-action-btn view-tool" data-id="${tool.id}">
+                            <button class="tool-action-btn view-tool" data-id="${toolId}">
                                 <img src="/assets/show.png" alt="Voir" class="tool-action-icon view-icon">
                             </button>
-                            <button class="tool-action-btn edit-tool" data-id="${tool.id}">
+                            <button class="tool-action-btn edit-tool" data-id="${toolId}">
                                 <img src="/assets/edit-icon.png" alt="Éditer" class="tool-action-icon edit-icon">
                             </button>
-                            <button class="tool-action-btn delete-tool" data-id="${tool.id}">
+                            <button class="tool-action-btn delete-tool" data-id="${toolId}">
                                 <img src="/assets/trash.png" alt="Supprimer" class="tool-action-icon delete-icon">
                             </button>
                         </div>
@@ -1692,6 +1693,8 @@
                         
                         if (!currentEditingToolId) {
                             toolForm.reset();
+                            document.getElementById('noTools').classList.add('hidden');
+                            document.getElementById('toolsGrid').classList.remove('hidden');
                         }
                         
                         setTimeout(() => {
@@ -1700,7 +1703,22 @@
                             });
                         }, 1500);
                     } else {
-                        throw new Error(data.message || 'Erreur lors de la soumission du tool');
+                        if (typeof data.retry_after_seconds !== "undefined") {
+                            let seconds = parseInt(data.retry_after_seconds, 10);
+                            let hours = Math.floor(seconds / 3600);
+                            let minutes = Math.floor((seconds % 3600) / 60);
+                            let s = seconds % 60;
+                            let timeStr = [];
+                            if (hours > 0) timeStr.push(hours + "h");
+                            if (minutes > 0) timeStr.push(minutes + "min");
+                            if (s > 0 && hours === 0) timeStr.push(s + "s");
+                            showModalError(
+                                (data.message || "Vous devez attendre avant de soumettre un nouvel outil.") +
+                                "<br>Veuillez réessayer dans " + timeStr.join(" ") + "."
+                            );
+                        } else {
+                            throw new Error(data.message || 'Erreur lors de la soumission du tool');
+                        }
                     }
                 })
                 .catch(error => {
@@ -1732,9 +1750,9 @@
             
             document.getElementById('toolTitle').value = tool.title;
             document.getElementById('toolDescription').value = tool.description;
-            document.getElementById('toolCategory').value = tool.category;
-            document.getElementById('toolUrl').value = tool.url;
-            document.getElementById('toolTags').value = tool.tags ? tool.tags.join(', ') : '';
+            document.getElementById('toolCategory').value = tool.category || '';
+            document.getElementById('toolUrl').value = tool.content_url || tool.url;
+            document.getElementById('toolTags').value = tool.tags ? (Array.isArray(tool.tags) ? tool.tags.join(', ') : tool.tags) : '';
             
             toolModal.classList.add('active');
         }

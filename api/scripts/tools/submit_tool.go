@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"toolcenter/config"
 	"toolcenter/utils"
@@ -51,6 +52,25 @@ func SubmitToolHandler(c *gin.Context) {
 	category := c.PostForm("category")
 	url := c.PostForm("url")
 	tagsRaw := c.PostForm("tags")
+
+	var lastPosted sql.NullTime
+	dbCheck, err := config.OpenDB()
+	if err == nil {
+		defer dbCheck.Close()
+		err = dbCheck.QueryRow("SELECT last_tool_posted FROM users WHERE user_id = ?", uid).Scan(&lastPosted)
+	}
+	if err == nil && lastPosted.Valid {
+		cooldown := 24 * 60 * 60
+		remaining := int(time.Until(lastPosted.Time.Add(time.Duration(cooldown) * time.Second)).Seconds())
+		if remaining > 0 {
+			c.JSON(http.StatusTooManyRequests, gin.H{
+				"success":             false,
+				"message":             "Vous devez attendre avant de soumettre un nouvel outil.",
+				"retry_after_seconds": remaining,
+			})
+			return
+		}
+	}
 
 	if title == "" || desc == "" || category == "" || url == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "champs manquants"})
@@ -140,6 +160,8 @@ func SubmitToolHandler(c *gin.Context) {
 		}
 		_, _ = db.Exec(`INSERT INTO tool_tags (tool_id, tag_id) VALUES (?, ?)`, toolID64, tagID)
 	}
+
+	_, _ = db.Exec(`UPDATE users SET last_tool_posted = NOW() WHERE user_id = ?`, uid)
 
 	base := config.Get().URLweb
 	c.JSON(http.StatusOK, gin.H{
