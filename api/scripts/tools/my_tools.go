@@ -12,7 +12,7 @@ import (
 )
 
 type Tool struct {
-	ID           int       `json:"tool_id"`
+	ID           string    `json:"tool_id"`
 	UserID       string    `json:"user_id"`
 	Title        string    `json:"title"`
 	Description  string    `json:"description"`

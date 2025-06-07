@@ -18,6 +18,7 @@ import (
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 )
 
 const toolImageDir = "/var/www/toolcenter/storage/tools_images"
@@ -129,13 +130,15 @@ func SubmitToolHandler(c *gin.Context) {
 	}
 	defer db.Close()
 
-	res, err := db.Exec(`INSERT INTO tools (user_id, title, description, content_url, thumbnail_url, status) VALUES (?, ?, ?, ?, ?, 'Moderated')`,
-		uid, title, desc, url, imageRel)
+	uuidV7, _ := uuid.NewV7()
+	toolID := uuidV7.String()
+
+	_, err = db.Exec(`INSERT INTO tools (tool_id, user_id, title, description, content_url, thumbnail_url, status) VALUES (?, ?, ?, ?, ?, ?, 'Moderated')`,
+		toolID, uid, title, desc, url, imageRel)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
-	toolID64, _ := res.LastInsertId()
 
 	tags := []string{category}
 	if tagsRaw != "" {
@@ -158,7 +161,7 @@ func SubmitToolHandler(c *gin.Context) {
 		} else if err != nil {
 			continue
 		}
-		_, _ = db.Exec(`INSERT INTO tool_tags (tool_id, tag_id) VALUES (?, ?)`, toolID64, tagID)
+		_, _ = db.Exec(`INSERT INTO tool_tags (tool_id, tag_id) VALUES (?, ?)`, toolID, tagID)
 	}
 
 	_, _ = db.Exec(`UPDATE users SET last_tool_posted = NOW() WHERE user_id = ?`, uid)
@@ -166,7 +169,7 @@ func SubmitToolHandler(c *gin.Context) {
 	base := config.Get().URLweb
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-		"tool_id": toolID64,
+		"tool_id": toolID,
 		"image_url": func() string {
 			if imageRel != "" {
 				return base + imageRel

@@ -69,7 +69,7 @@ CREATE TABLE tags (
 ) ENGINE = InnoDB;
 
 CREATE TABLE tools (
-  tool_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  tool_id CHAR(36) PRIMARY KEY,
   user_id CHAR(36) NOT NULL,
   title VARCHAR(100),
   description TEXT,
@@ -83,7 +83,7 @@ CREATE TABLE tools (
 ) ENGINE = InnoDB ROW_FORMAT = COMPRESSED;
 
 CREATE TABLE tool_tags (
-  tool_id INT UNSIGNED NOT NULL,
+  tool_id CHAR(36) NOT NULL,
   tag_id  INT UNSIGNED NOT NULL,
   PRIMARY KEY (tool_id, tag_id),
   FOREIGN KEY (tool_id) REFERENCES tools (tool_id) ON DELETE CASCADE,
@@ -92,7 +92,7 @@ CREATE TABLE tool_tags (
 
 CREATE TABLE tool_versions (
   version_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  tool_id INT UNSIGNED NOT NULL,
+  tool_id CHAR(36) NOT NULL,
   title VARCHAR(100),
   description TEXT,
   content_url VARCHAR(255),
@@ -104,7 +104,7 @@ CREATE TABLE tool_versions (
 -- ========= SOCIAL =========
 CREATE TABLE comments (
   comment_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  tool_id INT UNSIGNED NOT NULL,
+  tool_id CHAR(36) NOT NULL,
   user_id CHAR(36) NOT NULL,
   parent_comment_id INT UNSIGNED,
   content TEXT,
@@ -119,7 +119,7 @@ CREATE TABLE comments (
 
 CREATE TABLE favorites (
   favorite_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  tool_id INT UNSIGNED NOT NULL,
+  tool_id CHAR(36) NOT NULL,
   user_id CHAR(36) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (tool_id, user_id),
@@ -130,7 +130,7 @@ CREATE TABLE favorites (
 
 CREATE TABLE likes (
   like_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  tool_id INT UNSIGNED NOT NULL,
+  tool_id CHAR(36) NOT NULL,
   user_id CHAR(36) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (tool_id, user_id),
