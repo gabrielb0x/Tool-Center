@@ -33,6 +33,7 @@ const signupForm = document.getElementById('signup-form');
 const successState = document.getElementById('success-state');
 let captchaToken = '';
 window.onCaptchaSuccess = function(token){ captchaToken = token; };
+const CAPTCHA_MISSING_MSG = 'Veuillez compléter le captcha';
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
@@ -115,7 +116,7 @@ signupForm.addEventListener('submit', async function(e) {
     return;
   }
   if (!captchaToken) {
-    showError("Veuillez compléter le captcha");
+    showError(CAPTCHA_MISSING_MSG);
     return;
   }
   signupButton.disabled = true;

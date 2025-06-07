@@ -30,6 +30,7 @@ const errorText = document.getElementById('error-text');
 const loginForm = document.getElementById('login-form');
 let captchaToken = '';
 window.onCaptchaSuccess = function(token){ captchaToken = token; };
+const CAPTCHA_MISSING_MSG = 'Veuillez compléter le captcha';
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
@@ -73,7 +74,7 @@ loginForm.addEventListener('submit', async function(e) {
     return;
   }
   if (!captchaToken) {
-    showError("Veuillez compléter le captcha");
+    showError(CAPTCHA_MISSING_MSG);
     return;
   }
   loginButton.disabled = true;

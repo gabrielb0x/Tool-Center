@@ -26,6 +26,8 @@ type RegisterRequest struct {
 	TurnstileToken string `json:"turnstile_token"`
 }
 
+const missingCaptchaMsg = "Captcha manquant."
+
 func validUsername(u string) bool {
 	return len(u) >= 3 && len(u) <= 50 && !strings.ContainsAny(u, " ")
 }
@@ -47,8 +49,12 @@ func hashToken(t string) string {
 
 func RegisterHandler(c *gin.Context) {
 	var req RegisterRequest
-	if err := c.ShouldBindJSON(&req); err != nil || req.TurnstileToken == "" {
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Requête invalide."})
+		return
+	}
+	if req.TurnstileToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": missingCaptchaMsg})
 		return
 	}
 

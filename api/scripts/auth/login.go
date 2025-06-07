@@ -22,10 +22,25 @@ type LoginRequest struct {
 	TurnstileToken string `json:"turnstile_token"`
 }
 
+const missingCaptchaMsg = "Captcha manquant."
+
 func LoginHandler(c *gin.Context) {
 	var req LoginRequest
-	if err := c.ShouldBindJSON(&req); err != nil ||
-		req.Email == "" || req.Password == "" || req.TurnstileToken == "" {
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "Requête invalide.",
+		})
+		return
+	}
+	if req.TurnstileToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": missingCaptchaMsg,
+		})
+		return
+	}
+	if req.Email == "" || req.Password == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"message": "Requête invalide.",
