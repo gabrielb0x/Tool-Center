@@ -27,5 +27,9 @@
     "from": "user@example.com"
   },
   "discord_webhook_url": "",
-  "webhook_secret": ""
+  "webhook_secret": "",
+  "turnstile": {
+    "signin_secret": "YOUR_SIGNIN_SECRET_KEY",
+    "signup_secret": "YOUR_SIGNUP_SECRET_KEY"
+  }
 }

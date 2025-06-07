@@ -17,18 +17,25 @@ import (
 )
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email          string `json:"email"`
+	Password       string `json:"password"`
+	TurnstileToken string `json:"turnstile_token"`
 }
 
 func LoginHandler(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil ||
-		req.Email == "" || req.Password == "" {
+		req.Email == "" || req.Password == "" || req.TurnstileToken == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"message": "Requête invalide.",
 		})
+		return
+	}
+
+	ok, err := utils.VerifyTurnstile(req.TurnstileToken, config.Get().Turnstile.SignInSecret, c.ClientIP())
+	if err != nil || !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Captcha invalide"})
 		return
 	}
 

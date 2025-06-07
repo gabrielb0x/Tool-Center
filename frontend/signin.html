@@ -9,6 +9,7 @@
   <link rel="preload" href="/assets/switcher-noir.png" as="image">
   <link rel="preload" href="/assets/error.png" as="image">
   <link rel="stylesheet" href="/ressources/CSS/signin.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="/ressources/JS/signin.js" defer></script>
   <script src="/ressources/utils/anti-scam.js" defer></script>
 </head>
@@ -37,6 +38,9 @@
         <div class="input-group">
           <img src="/assets/password.png" alt="Password Icon" class="input-icon">
           <input type="password" name="password" placeholder="Mot de passe" required>
+        </div>
+        <div class="captcha-wrapper">
+          <div id="signin-turnstile" class="cf-turnstile" data-sitekey="YOUR_SIGNIN_SITE_KEY" data-callback="onCaptchaSuccess"></div>
         </div>
         <button type="submit" class="login-button" id="login-button" disabled>
           <span>Connexion</span>
