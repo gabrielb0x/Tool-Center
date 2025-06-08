@@ -1199,8 +1199,9 @@
   <div class="toast-container" id="toast-container">
   </div>
 
+  <script src="panel-config.js"></script>
   <script>
-    let BASE_API_URL = '';
+    const BASE_API_URL = PANEL_CONFIG.ADMIN_BASE;
     let currentUserId = null;
     let currentPage = 1;
     let currentUserRole = null;
@@ -1270,20 +1271,6 @@
       });
     }
 
-    async function getBaseApiUrl() {
-      try {
-        const response = await fetch('/ressources/utils/api');
-        if (!response.ok) {
-          throw new Error('Failed to fetch API URL');
-        }
-        const textResponse = await response.text();
-        return textResponse.trim() || 'https://api.tool-center.fr/v1';
-        } catch (error) {
-        console.error('Error fetching API URL:', error);
-        showToast('error', 'Erreur de connexion à l\'API');
-        return 'https://api.tool-center.fr/v1';
-      }
-    }
 
     async function checkAdminPermissions() {
       try {
@@ -1882,12 +1869,6 @@
     }
 
     async function initAdminPanel() {
-      BASE_API_URL = await getBaseApiUrl();
-      if (!BASE_API_URL) {
-        showToast('error', 'Impossible de se connecter à l\'API');
-        return;
-      }
-      
       const isAdmin = await checkAdminPermissions();
       if (!isAdmin) {
         preloader.style.display = 'none';

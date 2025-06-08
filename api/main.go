@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"toolcenter/config"
+	"toolcenter/scripts/admin"
 	"toolcenter/scripts/auth"
 	"toolcenter/scripts/tools"
 	"toolcenter/scripts/user"
@@ -124,6 +125,14 @@ func setupRoutes(r *gin.Engine) {
 	toolsGroup.POST("/add", tools.SubmitToolHandler)
 	toolsGroup.GET("/me", tools.MyToolsHandler)
 	toolsGroup.DELETE("/delete/:id", tools.DeleteToolHandler)
+
+	adminGroup := api.Group("/admin")
+	adminGroup.Use(utils.RequireRole("Admin"))
+	adminGroup.GET("/users", admin.UserListHandler)
+	adminGroup.POST("/users/:id/ban", admin.BanUserHandler)
+
+	moderationGroup := api.Group("/moderation")
+	moderationGroup.Use(utils.RequireRole("Admin", "Moderator"))
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)

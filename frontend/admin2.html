@@ -1038,6 +1038,7 @@
     <!-- Toasts will be added here dynamically -->
   </div>
 
+  <script src="panel-config.js"></script>
   <script>
     // Preloader
     window.addEventListener('load', function() {
@@ -1060,7 +1061,7 @@
     }
 
     // API functions
-    const API_BASE_URL = '/api/admin';
+    const API_BASE_URL = PANEL_CONFIG.ADMIN_BASE;
 
     async function fetchUsers(search = '', page = 1) {
       try {
@@ -1176,6 +1177,31 @@
         console.error('Error banning user:', error);
         return null;
       }
+    }
+
+    async function fetchStats() {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_BASE_URL}/stats`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) {
+          throw new Error(`Erreur HTTP: ${res.status}`);
+        }
+        return await res.json();
+      } catch (err) {
+        console.error('Error fetching stats:', err);
+        return null;
+      }
+    }
+
+    async function loadStats() {
+      const stats = await fetchStats();
+      if (!stats) return;
+      document.getElementById('total-users').textContent = stats.total_users;
+      document.getElementById('new-users').textContent = stats.new_users;
+      document.getElementById('banned-users').textContent = stats.banned_users;
+      document.getElementById('moderators-count').textContent = stats.moderators;
     }
 
     // UI functions
@@ -1466,132 +1492,11 @@
       setupTabs();
       setupSearch();
       setupPagination();
-      
+
+      loadStats();
       loadUsers();
       loadSystemLogs();
-      
-      // Simulate stats loading
-      setTimeout(() => {
-        document.getElementById('total-users').textContent = '1,452';
-        document.getElementById('new-users').textContent = '124';
-        document.getElementById('banned-users').textContent = '23';
-        document.getElementById('moderators-count').textContent = '15';
-      }, 1000);
     });
-
-    // Simulate API data
-    window.mockUsers = [
-      {
-        _id: '1',
-        username: 'jdupont',
-        fullName: 'Jean Dupont',
-        email: 'jean.dupont@example.com',
-        avatar: '/assets/account.png',
-        createdAt: '2023-05-12T10:00:00Z',
-        status: 'active',
-        role: 'user'
-      },
-      {
-        _id: '2',
-        username: 'mleclerc',
-        fullName: 'Marie Leclerc',
-        email: 'marie.leclerc@example.com',
-        avatar: '/assets/account.png',
-        createdAt: '2023-06-15T14:30:00Z',
-        status: 'active',
-        role: 'moderator'
-      },
-      {
-        _id: '3',
-        username: 'pdurand',
-        fullName: 'Pierre Durand',
-        email: 'pierre.durand@example.com',
-        avatar: '/assets/account.png',
-        createdAt: '2023-07-20T09:15:00Z',
-        status: 'banned',
-        role: 'user',
-        banReason: 'Spam'
-      },
-      {
-        _id: '4',
-        username: 'lmoreau',
-        fullName: 'Lucie Moreau',
-        email: 'lucie.moreau@example.com',
-        avatar: '/assets/account.png',
-        createdAt: '2023-08-05T16:45:00Z',
-        status: 'active',
-        role: 'user'
-      },
-      {
-        _id: '5',
-        username: 'admin',
-        fullName: 'Admin ToolCenter',
-        email: 'admin@tool-center.fr',
-        avatar: '/assets/account.png',
-        createdAt: '2023-01-10T08:00:00Z',
-        status: 'active',
-        role: 'admin'
-      }
-    ];
-
-    window.mockLogs = [
-      {
-        _id: '1',
-        timestamp: '2023-11-15T09:30:00Z',
-        user: {
-          _id: '1',
-          username: 'jdupont',
-          avatar: '/assets/account.png'
-        },
-        action: 'Connexion',
-        details: 'Connexion réussie',
-        ipAddress: '192.168.1.1'
-      },
-      {
-        _id: '2',
-        timestamp: '2023-11-15T10:15:00Z',
-        user: {
-          _id: '5',
-          username: 'admin',
-          avatar: '/assets/account.png'
-        },
-        action: 'Modification utilisateur',
-        details: 'A modifié les permissions de l\'utilisateur mleclerc',
-        ipAddress: '192.168.1.100'
-      },
-      {
-        _id: '3',
-        timestamp: '2023-11-15T11:20:00Z',
-        user: null,
-        action: 'Maintenance',
-        details: 'Sauvegarde automatique de la base de données',
-        ipAddress: null
-      },
-      {
-        _id: '4',
-        timestamp: '2023-11-15T12:45:00Z',
-        user: {
-          _id: '3',
-          username: 'pdurand',
-          avatar: '/assets/account.png'
-        },
-        action: 'Ban',
-        details: 'A été banni pour spam',
-        ipAddress: '192.168.1.50'
-      },
-      {
-        _id: '5',
-        timestamp: '2023-11-15T14:00:00Z',
-        user: {
-          _id: '2',
-          username: 'mleclerc',
-          avatar: '/assets/account.png'
-        },
-        action: 'Modération',
-        details: 'A supprimé un commentaire inapproprié',
-        ipAddress: '192.168.1.75'
-      }
-    ];
   </script>
 </body>
 </html>

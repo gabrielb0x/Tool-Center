@@ -16,7 +16,7 @@ type deleteAccountRequest struct {
 }
 
 func DeleteAccountHandler(c *gin.Context) {
-	uid, _, _, err := utils.Check(c, utils.CheckOpts{
+	uid, _, _, _, err := utils.Check(c, utils.CheckOpts{
 		RequireToken:     true,
 		RequireVerified:  true,
 		RequireNotBanned: true,

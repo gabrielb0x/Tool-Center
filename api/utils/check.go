@@ -29,13 +29,13 @@ var (
 	ErrAccountBanned    = errors.New("compte banni")
 )
 
-func Check(c *gin.Context, o CheckOpts) (string, bool, string, error) {
+func Check(c *gin.Context, o CheckOpts) (string, bool, string, string, error) {
 	var bearer string
 
 	if o.RequireToken {
 		h := c.GetHeader("Authorization")
 		if !strings.HasPrefix(h, "Bearer ") {
-			return "", false, "", ErrMissingToken
+			return "", false, "", "", ErrMissingToken
 		}
 		bearer = strings.TrimPrefix(h, "Bearer ")
 		hash := sha256.Sum256([]byte(bearer))
@@ -44,7 +44,7 @@ func Check(c *gin.Context, o CheckOpts) (string, bool, string, error) {
 
 	db, err := config.OpenDB()
 	if err != nil {
-		return "", false, "", err
+		return "", false, "", "", err
 	}
 	defer db.Close()
 
@@ -53,15 +53,16 @@ func Check(c *gin.Context, o CheckOpts) (string, bool, string, error) {
 		expires       sql.NullTime
 		verifiedAt    sql.NullTime
 		accountStatus string
+		role          string
 	)
 
 	if o.RequireToken {
 		err = db.QueryRow(`
-                        SELECT u.user_id, ut.expires_at, u.email_verified_at, u.account_status
+                        SELECT u.user_id, ut.expires_at, u.email_verified_at, u.account_status, u.role
                         FROM user_tokens ut
                         JOIN users u ON u.user_id = ut.user_id
                         WHERE ut.token = ? LIMIT 1`, bearer).
-			Scan(&uid, &expires, &verifiedAt, &accountStatus)
+			Scan(&uid, &expires, &verifiedAt, &accountStatus, &role)
 	} else {
 		if v, ok := c.Get("user_id_override"); ok {
 			if s, ok := v.(string); ok {
@@ -75,30 +76,30 @@ func Check(c *gin.Context, o CheckOpts) (string, bool, string, error) {
 			_ = c.ShouldBindJSON(&payload)
 			uid = payload.UserID
 		}
-		err = db.QueryRow(`SELECT email_verified_at, account_status FROM users WHERE user_id = ?`, uid).
-			Scan(&verifiedAt, &accountStatus)
+		err = db.QueryRow(`SELECT role, email_verified_at, account_status FROM users WHERE user_id = ?`, uid).
+			Scan(&role, &verifiedAt, &accountStatus)
 	}
 
 	switch {
 	case err == sql.ErrNoRows:
-		return "", false, "", ErrInvalidToken
+		return "", false, "", "", ErrInvalidToken
 	case err != nil:
-		return "", false, "", err
+		return "", false, "", "", err
 	}
 
 	if o.RequireToken && expires.Valid && time.Now().After(expires.Time) {
-		return "", false, "", ErrExpiredToken
+		return "", false, "", "", ErrExpiredToken
 	}
 	if o.RequireVerified && !verifiedAt.Valid {
-		return "", false, "", ErrEmailNotVerified
+		return "", false, "", "", ErrEmailNotVerified
 	}
 	if o.RequireNotBanned && accountStatus == "Banned" {
-		return "", false, "", ErrAccountBanned
+		return "", false, "", "", ErrAccountBanned
 	}
 
 	if o.UpdateLastLogin {
 		_, _ = db.Exec(`UPDATE users SET last_login = NOW() WHERE user_id = ?`, uid)
 	}
 
-	return uid, verifiedAt.Valid, accountStatus, nil
+	return uid, verifiedAt.Valid, role, accountStatus, nil
 }
