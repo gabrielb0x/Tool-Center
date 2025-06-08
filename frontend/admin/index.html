@@ -1118,10 +1118,7 @@
 
         <div class="tab-content active" id="info-tab">
           <div class="form-row">
-            <div class="form-group">
-              <label>Nom complet</label>
-              <input type="text" class="form-control" id="full-name" placeholder="Chargement...">
-            </div>
+            <!-- Champ nom complet retiré car absent de la base -->
             <div class="form-group">
               <label>Nom d'utilisateur</label>
               <input type="text" class="form-control" id="username" placeholder="Chargement...">
@@ -1131,6 +1128,7 @@
             <label>Email</label>
             <input type="email" class="form-control" id="email" placeholder="Chargement...">
           </div>
+          <!-- Champs personnels non disponibles dans l'API
           <div class="form-row">
             <div class="form-group">
               <label>Date de naissance</label>
@@ -1141,6 +1139,7 @@
               <input type="text" class="form-control" id="country" placeholder="Chargement...">
             </div>
           </div>
+          -->
           <div class="form-group">
             <label>Bio</label>
             <textarea class="form-control" id="bio" rows="3" placeholder="Chargement..."></textarea>
@@ -1155,31 +1154,22 @@
           <div class="form-group">
             <label>Rôle</label>
             <select class="form-control" id="user-role">
-              <option value="user">Utilisateur</option>
-              <option value="moderator">Modérateur</option>
-              <option value="admin">Administrateur</option>
+              <option value="User">Utilisateur</option>
+              <option value="Moderator">Modérateur</option>
+              <option value="Admin">Administrateur</option>
             </select>
           </div>
           <div class="form-group">
             <label>Status du compte</label>
             <select class="form-control" id="account-status">
-              <option value="active">Actif</option>
-              <option value="banned">Banni</option>
-              <option value="suspended">Suspendu</option>
+              <option value="Good">Actif</option>
+              <option value="Limited">Limité</option>
+              <option value="Very Limited">Très limité</option>
+              <option value="At Risk">À risque</option>
+              <option value="Banned">Banni</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Raison du ban/suspension</label>
-            <textarea class="form-control" id="ban-reason" rows="2" placeholder="Si le compte est banni ou suspendu, indiquez la raison..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>Permissions spéciales</label>
-            <div>
-              <label><input type="checkbox" id="can-upload"> Peut uploader des outils</label><br>
-              <label><input type="checkbox" id="can-moderate"> Peut modérer le contenu</label><br>
-              <label><input type="checkbox" id="can-admin"> Accès administrateur</label>
-            </div>
-          </div>
+          <!-- Champs supplémentaires retirés car non gérés par l'API -->
         </div>
       </div>
       <div class="modal-footer">
@@ -1453,6 +1443,30 @@
       }
     }
 
+    async function unbanUser(userId) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/unban`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        showToast('success', 'Utilisateur débanni avec succès');
+        return result;
+      } catch (error) {
+        showToast('error', `Erreur lors du débannissement: ${error.message}`);
+        console.error('Error unbanning user:', error);
+        return null;
+      }
+    }
+
     function showLoadingSkeleton(type) {
       if (type === 'stats') {
         const statsCards = document.querySelector('.stats-cards');
@@ -1630,7 +1644,7 @@
                   ${user.role === 'admin' ? 'color:#ef4444;font-weight:600;' : 
                     user.role === 'moderator' ? 'color:#f59e0b;font-weight:600;' : ''}
                 ">
-                  ${user.fullName || user.username}
+                  ${user.username}
                   ${user.role === 'admin' ? ' (Admin)' : user.role === 'moderator' ? ' (Mod)' : ''}
                 </span>
                 <span class="user-email">@${user.username}</span>
@@ -1670,11 +1684,11 @@
               <i class="fas fa-edit"></i>
             </button>
             ${user.status === 'Banned' ? `
-            <button class="action-btn delete" data-user-id="${user.user_id}" title="Débannir">
+            <button class="action-btn delete" data-user-id="${user.user_id}" data-action="unban" title="Débannir">
               <i class="fas fa-unlock"></i>
             </button>
             ` : `
-            <button class="action-btn delete" data-user-id="${user.user_id}" title="Bannir"> <!--Change this later -->
+            <button class="action-btn delete" data-user-id="${user.user_id}" data-action="ban" title="Bannir">
               <i class="fas fa-ban"></i>
             </button>
             `}
@@ -1693,10 +1707,20 @@
       container.querySelectorAll('.action-btn.delete').forEach(btn => {
         btn.addEventListener('click', async () => {
           const userId = btn.getAttribute('data-user-id');
-          if (confirm('Êtes-vous sûr de vouloir bannir cet utilisateur ?')) {
-            const result = await banUser(userId, 'Raison non spécifiée');
-            if (result) {
-              loadUsers();
+          const action = btn.getAttribute('data-action');
+          if (action === 'ban') {
+            if (confirm('Êtes-vous sûr de vouloir bannir cet utilisateur ?')) {
+              const result = await banUser(userId, 'Raison non spécifiée');
+              if (result) {
+                loadUsers();
+              }
+            }
+          } else {
+            if (confirm('Débannir cet utilisateur ?')) {
+              const result = await unbanUser(userId);
+              if (result) {
+                loadUsers();
+              }
             }
           }
         });
@@ -1813,35 +1837,26 @@
       const user = await fetchUserDetails(userId);
       if (!user) return;
       
-      document.getElementById('modal-user-name').textContent = user.fullName || user.username;
+      document.getElementById('modal-user-name').textContent = user.username;
       document.getElementById('modal-avatar').src = user.avatar || 'https://tool-center.fr/assets/account.png';
       
       const roleBadge = document.getElementById('modal-user-role');
-      roleBadge.textContent = 
-        user.role === 'admin' ? 'Administrateur' : 
-        user.role === 'moderator' ? 'Modérateur' : 'Utilisateur';
-      roleBadge.className = 
-        `user-role ${user.role === 'admin' ? 'role-admin' : 
-        user.role === 'moderator' ? 'role-moderator' : 'role-user'}`;
+      roleBadge.textContent =
+        user.role === 'Admin' ? 'Administrateur' :
+        user.role === 'Moderator' ? 'Modérateur' : 'Utilisateur';
+      roleBadge.className =
+        `user-role ${user.role === 'Admin' ? 'role-admin' :
+        user.role === 'Moderator' ? 'role-moderator' : 'role-user'}`;
       
       document.getElementById('tools-count').textContent = user.toolsCount || 0;
       document.getElementById('reports-count').textContent = user.reportsCount || 0;
       document.getElementById('joined-date').textContent = new Date(user.createdAt).toLocaleDateString();
       
-      document.getElementById('full-name').value = user.fullName || '';
       document.getElementById('username').value = user.username;
       document.getElementById('email').value = user.email;
-      document.getElementById('birthdate').value = user.birthdate ? new Date(user.birthdate).toISOString().split('T')[0] : '';
-      document.getElementById('country').value = user.country || '';
       document.getElementById('bio').value = user.bio || '';
-      
-      document.getElementById('user-role').value = user.role || 'user';
-      document.getElementById('account-status').value = user.status || 'active';
-      document.getElementById('ban-reason').value = user.banReason || '';
-      
-      document.getElementById('can-upload').checked = user.permissions?.canUpload || false;
-      document.getElementById('can-moderate').checked = user.permissions?.canModerate || false;
-      document.getElementById('can-admin').checked = user.permissions?.canAdmin || false;
+      document.getElementById('user-role').value = user.role || 'User';
+      document.getElementById('account-status').value = user.status || 'Good';
     }
 
     function closeUserModal() {
@@ -1923,20 +1938,11 @@
         if (!currentUserId) return;
         
         const userData = {
-          fullName: document.getElementById('full-name').value,
           username: document.getElementById('username').value,
           email: document.getElementById('email').value,
-          birthdate: document.getElementById('birthdate').value,
-          country: document.getElementById('country').value,
           bio: document.getElementById('bio').value,
           role: document.getElementById('user-role').value,
-          status: document.getElementById('account-status').value,
-          banReason: document.getElementById('ban-reason').value,
-          permissions: {
-            canUpload: document.getElementById('can-upload').checked,
-            canModerate: document.getElementById('can-moderate').checked,
-            canAdmin: document.getElementById('can-admin').checked
-          }
+          status: document.getElementById('account-status').value
         };
         
         const result = await updateUser(currentUserId, userData);
@@ -1953,15 +1959,22 @@
       
       document.getElementById('ban-user').addEventListener('click', async () => {
         if (!currentUserId) return;
-        
-        const reason = prompt('Entrez la raison du ban:');
-        if (reason) {
-          const result = await banUser(currentUserId, reason);
-          if (result) {
-            closeUserModal();
-            const usersTable = document.querySelector('#users-table-body');
-            if (usersTable) {
-              usersTable.innerHTML = '';
+        const status = document.getElementById('account-status').value;
+        if (status === 'Banned') {
+          if (confirm('Débannir cet utilisateur ?')) {
+            const result = await unbanUser(currentUserId);
+            if (result) {
+              closeUserModal();
+              const { users } = await fetchUsers();
+              renderUsersTable(users);
+            }
+          }
+        } else {
+          const reason = prompt('Entrez la raison du ban:');
+          if (reason) {
+            const result = await banUser(currentUserId, reason);
+            if (result) {
+              closeUserModal();
               const { users } = await fetchUsers();
               renderUsersTable(users);
             }
