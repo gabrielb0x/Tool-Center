@@ -1624,34 +1624,61 @@
         tr.innerHTML = `
           <td>
             <div class="user-cell">
-              <img src="${user.avatar || 'https://tool-center.fr/assets/account.png'}" alt="${user.username}" class="user-avatar-sm">
+              <img src="${user.avatar_url || 'https://tool-center.fr/assets/account.png'}" alt="${user.username}" class="user-avatar-sm">
               <div class="user-info">
-                <span class="user-name">${user.fullName || user.username}</span>
+                <span class="user-name" style="
+                  ${user.role === 'admin' ? 'color:#ef4444;font-weight:600;' : 
+                    user.role === 'moderator' ? 'color:#f59e0b;font-weight:600;' : ''}
+                ">
+                  ${user.fullName || user.username}
+                  ${user.role === 'admin' ? ' (Admin)' : user.role === 'moderator' ? ' (Mod)' : ''}
+                </span>
                 <span class="user-email">@${user.username}</span>
               </div>
             </div>
           </td>
           <td>${user.email}</td>
-          <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+          <td>${new Date(user.created_at).toLocaleDateString()}</td>
           <td>
-            <span class="status-badge ${user.status === 'active' ? 'status-active' : user.status === 'banned' ? 'status-banned' : 'status-pending'}">
-              <i class="fas fa-${user.status === 'active' ? 'check-circle' : user.status === 'banned' ? 'ban' : 'clock'}"></i>
-              ${user.status === 'active' ? 'Actif' : user.status === 'banned' ? 'Banni' : 'En attente'}
+            <span class="status-badge 
+              ${user.status === 'Good' ? 'status-active' : 
+                user.status === 'Limited' ? 'status-pending' : 
+                user.status === 'Very Limited' ? 'status-pending' : 
+                user.status === 'At Risk' ? 'status-pending' : 
+                user.status === 'Banned' ? 'status-banned' : 'status-pending'}">
+              <i class="fas fa-${
+                user.status === 'Good' ? 'check-circle' : 
+                user.status === 'Limited' ? 'exclamation-triangle' : 
+                user.status === 'Very Limited' ? 'exclamation-triangle' : 
+                user.status === 'At Risk' ? 'exclamation-circle' : 
+                user.status === 'Banned' ? 'ban' : 'clock'
+              }"></i>
+              ${
+                user.status === 'Good' ? 'Actif' : 
+                user.status === 'Limited' ? 'Limité' : 
+                user.status === 'Very Limited' ? 'Très limité' : 
+                user.status === 'At Risk' ? 'À risque' : 
+                user.status === 'Banned' ? 'Banni' : 'En attente'
+              }
             </span>
           </td>
-          <td>
-            <button class="action-btn view" data-user-id="${user._id}" title="Voir">
+            <td>
+            <button class="action-btn view" data-user-id="${user.user_id}" title="Voir">
               <i class="fas fa-eye"></i>
             </button>
-            <button class="action-btn edit" data-user-id="${user._id}" title="Modifier">
+            <button class="action-btn edit" data-user-id="${user.user_id}" title="Modifier">
               <i class="fas fa-edit"></i>
             </button>
-            ${user.status !== 'banned' ? `
-            <button class="action-btn delete" data-user-id="${user._id}" title="Bannir">
+            ${user.status === 'Banned' ? `
+            <button class="action-btn delete" data-user-id="${user.user_id}" title="Débannir">
+              <i class="fas fa-unlock"></i>
+            </button>
+            ` : `
+            <button class="action-btn delete" data-user-id="${user.user_id}" title="Bannir"> <!--Change this later -->
               <i class="fas fa-ban"></i>
             </button>
-            ` : ''}
-          </td>
+            `}
+            </td>
         `;
         tbody.appendChild(tr);
       });
@@ -1736,7 +1763,7 @@
           <td>
             ${log.user ? `
             <div class="user-cell">
-              <img src="${log.user.avatar || 'https://tool-center.fr/assets/account.png'}" alt="${log.user.username}" class="user-avatar-sm">
+              <img src="${log.user.avatar_url || 'https://tool-center.fr/assets/account.png'}" alt="${log.user.username}" class="user-avatar-sm">
               <span class="user-name">${log.user.username}</span>
             </div>
             ` : 'Système'}
