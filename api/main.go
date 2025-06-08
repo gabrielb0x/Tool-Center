@@ -129,7 +129,10 @@ func setupRoutes(r *gin.Engine) {
 	adminGroup := api.Group("/admin")
 	adminGroup.Use(utils.RequireRole("Admin"))
 	adminGroup.GET("/users", admin.UserListHandler)
+	adminGroup.GET("/users/:id", admin.UserDetailsHandler)
 	adminGroup.POST("/users/:id/ban", admin.BanUserHandler)
+	adminGroup.GET("/logs", admin.LogsHandler)
+	adminGroup.GET("/stats", admin.StatsHandler)
 
 	moderationGroup := api.Group("/moderation")
 	moderationGroup.Use(utils.RequireRole("Admin", "Moderator"))
