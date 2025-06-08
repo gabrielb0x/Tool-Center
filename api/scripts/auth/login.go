@@ -92,7 +92,7 @@ func LoginHandler(c *gin.Context) {
 	c.Request.Body = http.NoBody
 	c.Set("user_id_override", uid)
 
-	if _, _, _, err = utils.Check(c, utils.CheckOpts{
+	if _, _, _, _, err = utils.Check(c, utils.CheckOpts{
 		RequireToken:     false,
 		RequireVerified:  true,
 		RequireNotBanned: true,
