@@ -32,12 +32,14 @@ func UploadAvatar(c *gin.Context) {
 		case utils.ErrEmailNotVerified, utils.ErrAccountBanned:
 			code = http.StatusForbidden
 		}
+		utils.LogActivity(c, uid, "upload_avatar", false, err.Error())
 		c.JSON(code, gin.H{"success": false, "message": err.Error()})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, uid, "upload_avatar", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -47,6 +49,7 @@ func UploadAvatar(c *gin.Context) {
 	err = db.QueryRow(`SELECT avatar_changed_at FROM users WHERE user_id = ?`, uid).Scan(&lastChangedAt)
 	if err == nil && !lastChangedAt.IsZero() && time.Since(lastChangedAt) < time.Hour {
 		retryAt := lastChangedAt.Add(time.Hour)
+		utils.LogActivity(c, uid, "upload_avatar", false, "cooldown")
 		c.JSON(http.StatusTooManyRequests, gin.H{
 			"success":  false,
 			"message":  "Vous ne pouvez changer votre photo de profil qu'une fois par heure.",
@@ -59,6 +62,7 @@ func UploadAvatar(c *gin.Context) {
 		path := "/var/www/toolcenter/storage/avatars/" + uid + ".webp"
 		_ = os.Remove(path)
 		_, _ = db.Exec(`UPDATE users SET avatar_url = NULL, avatar_changed_at = NOW() WHERE user_id = ?`, uid)
+		utils.LogActivity(c, uid, "upload_avatar", true, "delete")
 		c.JSON(http.StatusOK, gin.H{"success": true})
 		return
 	}
@@ -66,6 +70,7 @@ func UploadAvatar(c *gin.Context) {
 	c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, 5<<20)
 	file, header, err := c.Request.FormFile("avatar")
 	if err != nil {
+		utils.LogActivity(c, uid, "upload_avatar", false, "file missing")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "fichier manquant"})
 		return
 	}
@@ -73,6 +78,7 @@ func UploadAvatar(c *gin.Context) {
 
 	ext := strings.ToLower(filepath.Ext(header.Filename))
 	if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
+		utils.LogActivity(c, uid, "upload_avatar", false, "bad format")
 		c.JSON(http.StatusUnsupportedMediaType, gin.H{"success": false, "message": "format non supporté"})
 		return
 	}
@@ -80,12 +86,14 @@ func UploadAvatar(c *gin.Context) {
 	tmp := "/tmp/" + rnd() + ext
 	out, err := os.Create(tmp)
 	if err != nil {
+		utils.LogActivity(c, uid, "upload_avatar", false, "tmp create")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
 	if _, err = io.Copy(out, file); err != nil {
 		out.Close()
 		os.Remove(tmp)
+		utils.LogActivity(c, uid, "upload_avatar", false, "tmp copy")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -94,6 +102,7 @@ func UploadAvatar(c *gin.Context) {
 	img, err := imaging.Open(tmp)
 	os.Remove(tmp)
 	if err != nil {
+		utils.LogActivity(c, uid, "upload_avatar", false, "invalid image")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "image invalide"})
 		return
 	}
@@ -104,11 +113,13 @@ func UploadAvatar(c *gin.Context) {
 	finalPath := dir + "/" + uid + ".webp"
 	fp, err := os.Create(finalPath)
 	if err != nil {
+		utils.LogActivity(c, uid, "upload_avatar", false, "create final")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
 	if err = webp.Encode(fp, img, &webp.Options{Lossless: true}); err != nil {
 		fp.Close()
+		utils.LogActivity(c, uid, "upload_avatar", false, "encode error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -116,6 +127,7 @@ func UploadAvatar(c *gin.Context) {
 
 	rel := "/avatars/" + uid + ".webp"
 	_, _ = db.Exec(`UPDATE users SET avatar_url = ?, avatar_changed_at = NOW() WHERE user_id = ?`, rel, uid)
+	utils.LogActivity(c, uid, "upload_avatar", true, "")
 
 	base := config.Get().URLweb
 	c.JSON(http.StatusOK, gin.H{"success": true, "avatar_url": base + rel})

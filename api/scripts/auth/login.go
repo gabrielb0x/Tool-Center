@@ -25,6 +25,7 @@ type LoginRequest struct {
 func LoginHandler(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.LogActivity(c, "", "login_attempt", false, "invalid request")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"message": "Requête invalide.",
@@ -32,6 +33,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	if req.TurnstileToken == "" {
+		utils.LogActivity(c, "", "login_attempt", false, "missing captcha")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"message": "Captcha manquant.",
@@ -39,6 +41,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	if req.Email == "" || req.Password == "" {
+		utils.LogActivity(c, "", "login_attempt", false, "missing fields")
 		c.JSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"message": "Requête invalide.",
@@ -48,12 +51,14 @@ func LoginHandler(c *gin.Context) {
 
 	ok, err := utils.VerifyTurnstile(req.TurnstileToken, config.Get().Turnstile.SignInSecret, c.ClientIP())
 	if err != nil || !ok {
+		utils.LogActivity(c, "", "login_attempt", false, "captcha invalid")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Captcha invalide"})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, "", "login_attempt", false, "db error")
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": "Erreur DB.",
@@ -69,6 +74,7 @@ func LoginHandler(c *gin.Context) {
 	err = db.QueryRow(`SELECT user_id, password_hash FROM users WHERE email = ?`, req.Email).
 		Scan(&uid, &storedHash)
 	if err == sql.ErrNoRows {
+		utils.LogActivity(c, "", "login_attempt", false, "unknown user")
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"success": false,
 			"message": "Utilisateur ou mot de passe incorrect.",
@@ -76,11 +82,13 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	if err != nil {
+		utils.LogActivity(c, "", "login_attempt", false, "db error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(req.Password)) != nil {
+		utils.LogActivity(c, uid, "login_attempt", false, "wrong password")
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"success": false,
 			"message": "Utilisateur ou mot de passe incorrect.",
@@ -106,6 +114,7 @@ func LoginHandler(c *gin.Context) {
 			code = http.StatusInternalServerError
 		}
 		c.JSON(code, gin.H{"success": false, "message": err.Error()})
+		utils.LogActivity(c, uid, "login_attempt", false, err.Error())
 		return
 	}
 
@@ -123,6 +132,7 @@ VALUES (?, ?, ?, ?)`,
 		time.Now().Add(30*24*time.Hour),
 	)
 	if err != nil {
+		utils.LogActivity(c, uid, "login", false, "session insert error")
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": "Erreur lors de l'enregistrement de la session.",
@@ -130,6 +140,7 @@ VALUES (?, ?, ?, ?)`,
 		return
 	}
 
+	utils.LogActivity(c, uid, "login", true, "")
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"token":   token,

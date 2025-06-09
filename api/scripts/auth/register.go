@@ -48,10 +48,12 @@ func hashToken(t string) string {
 func RegisterHandler(c *gin.Context) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.LogActivity(c, "", "register_attempt", false, "invalid request")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Requête invalide."})
 		return
 	}
 	if req.TurnstileToken == "" {
+		utils.LogActivity(c, "", "register_attempt", false, "captcha missing")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Captcha manquant."})
 		return
 	}
@@ -59,26 +61,31 @@ func RegisterHandler(c *gin.Context) {
 	ip := c.ClientIP()
 
 	if !validUsername(req.Username) {
+		utils.LogActivity(c, "", "register_attempt", false, "invalid username")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Nom d'utilisateur invalide."})
 		return
 	}
 	if !validEmail(req.Email) {
+		utils.LogActivity(c, "", "register_attempt", false, "invalid email")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Adresse email invalide."})
 		return
 	}
 	if len(req.Password) < 7 || len(req.Password) > 30 {
+		utils.LogActivity(c, "", "register_attempt", false, "bad password length")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Le mot de passe doit faire entre 7 et 30 caractères."})
 		return
 	}
 
 	ok, err := utils.VerifyTurnstile(req.TurnstileToken, config.Get().Turnstile.SignUpSecret, c.ClientIP())
 	if err != nil || !ok {
+		utils.LogActivity(c, "", "register_attempt", false, "captcha invalid")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Captcha invalide"})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, "", "register_attempt", false, "db error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -87,6 +94,7 @@ func RegisterHandler(c *gin.Context) {
 	var ipCount int
 	db.QueryRow("SELECT COUNT(*) FROM users WHERE ip_address = ?", ip).Scan(&ipCount)
 	if ipCount > 0 {
+		utils.LogActivity(c, "", "register_attempt", false, "ip exists")
 		c.JSON(http.StatusForbidden, gin.H{"success": false, "message": "Compte déjà créé."})
 		return
 	}
@@ -94,6 +102,7 @@ func RegisterHandler(c *gin.Context) {
 	var dup int
 	db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?", req.Username, req.Email).Scan(&dup)
 	if dup > 0 {
+		utils.LogActivity(c, "", "register_attempt", false, "duplicate user")
 		c.JSON(http.StatusForbidden, gin.H{"success": false, "message": "Nom d'utilisateur ou email déjà pris."})
 		return
 	}
@@ -108,6 +117,7 @@ func RegisterHandler(c *gin.Context) {
 
 	tx, err := db.Begin()
 	if err != nil {
+		utils.LogActivity(c, "", "register_attempt", false, "tx begin error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
 		return
 	}
@@ -118,6 +128,7 @@ func RegisterHandler(c *gin.Context) {
 		userID, req.Username, req.Email, pwHash, ip)
 	if err != nil {
 		tx.Rollback()
+		utils.LogActivity(c, "", "register_attempt", false, "insert user error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur création utilisateur."})
 		return
 	}
@@ -128,17 +139,19 @@ func RegisterHandler(c *gin.Context) {
 		userID, verifyTokenHash, expires)
 	if err != nil {
 		tx.Rollback()
+		utils.LogActivity(c, "", "register_attempt", false, "token creation error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur création token."})
 		return
 	}
 
 	if err := tx.Commit(); err != nil {
+		utils.LogActivity(c, "", "register_attempt", false, "commit error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur commit."})
 		return
 	}
 
 	go sendVerificationEmail(req.Email, req.Username, verifyToken)
-
+	utils.LogActivity(c, userID, "register", true, "")
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "Inscription réussie. Vérifie ton email."})
 }
 
