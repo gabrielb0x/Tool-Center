@@ -44,6 +44,7 @@ func SubmitToolHandler(c *gin.Context) {
 		case utils.ErrEmailNotVerified, utils.ErrAccountBanned:
 			code = http.StatusForbidden
 		}
+		utils.LogActivity(c, uid, "submit_tool", false, err.Error())
 		c.JSON(code, gin.H{"success": false, "message": err.Error()})
 		return
 	}
@@ -64,6 +65,7 @@ func SubmitToolHandler(c *gin.Context) {
 		cooldown := 24 * 60 * 60
 		remaining := int(time.Until(lastPosted.Time.Add(time.Duration(cooldown) * time.Second)).Seconds())
 		if remaining > 0 {
+			utils.LogActivity(c, uid, "submit_tool", false, "cooldown")
 			c.JSON(http.StatusTooManyRequests, gin.H{
 				"success":             false,
 				"message":             "Vous devez attendre avant de soumettre un nouvel outil.",
@@ -74,6 +76,7 @@ func SubmitToolHandler(c *gin.Context) {
 	}
 
 	if title == "" || desc == "" || category == "" || url == "" {
+		utils.LogActivity(c, uid, "submit_tool", false, "missing fields")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "champs manquants"})
 		return
 	}
@@ -83,18 +86,21 @@ func SubmitToolHandler(c *gin.Context) {
 		defer file.Close()
 		ext := strings.ToLower(filepath.Ext(header.Filename))
 		if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
+			utils.LogActivity(c, uid, "submit_tool", false, "bad image format")
 			c.JSON(http.StatusUnsupportedMediaType, gin.H{"success": false, "message": "format non supporté"})
 			return
 		}
 		tmp := filepath.Join(os.TempDir(), rnd()+ext)
 		out, err := os.Create(tmp)
 		if err != nil {
+			utils.LogActivity(c, uid, "submit_tool", false, "file create temp")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 			return
 		}
 		if _, err = io.Copy(out, file); err != nil {
 			out.Close()
 			os.Remove(tmp)
+			utils.LogActivity(c, uid, "submit_tool", false, "copy temp error")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 			return
 		}
@@ -102,6 +108,7 @@ func SubmitToolHandler(c *gin.Context) {
 		img, err := imaging.Open(tmp)
 		os.Remove(tmp)
 		if err != nil {
+			utils.LogActivity(c, uid, "submit_tool", false, "invalid image")
 			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "image invalide"})
 			return
 		}
@@ -111,11 +118,13 @@ func SubmitToolHandler(c *gin.Context) {
 		final := filepath.Join(toolImageDir, filename)
 		fp, err := os.Create(final)
 		if err != nil {
+			utils.LogActivity(c, uid, "submit_tool", false, "file create final")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 			return
 		}
 		if err = webp.Encode(fp, img, &webp.Options{Lossless: true}); err != nil {
 			fp.Close()
+			utils.LogActivity(c, uid, "submit_tool", false, "webp encode error")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 			return
 		}
@@ -125,6 +134,7 @@ func SubmitToolHandler(c *gin.Context) {
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, uid, "submit_tool", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -136,6 +146,7 @@ func SubmitToolHandler(c *gin.Context) {
 	_, err = db.Exec(`INSERT INTO tools (tool_id, user_id, title, description, content_url, thumbnail_url, status) VALUES (?, ?, ?, ?, ?, ?, 'Moderated')`,
 		toolID, uid, title, desc, url, imageRel)
 	if err != nil {
+		utils.LogActivity(c, uid, "submit_tool", false, "insert error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -167,6 +178,7 @@ func SubmitToolHandler(c *gin.Context) {
 	_, _ = db.Exec(`UPDATE users SET last_tool_posted = NOW() WHERE user_id = ?`, uid)
 
 	base := config.Get().URLweb
+	utils.LogActivity(c, uid, "submit_tool", true, "")
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"tool_id": toolID,

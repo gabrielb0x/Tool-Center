@@ -239,6 +239,19 @@ CREATE TABLE audit_logs (
   FOREIGN KEY (target_user_id) REFERENCES users (user_id) ON DELETE SET NULL
 ) ENGINE = InnoDB ROW_FORMAT = COMPRESSED;
 
+CREATE TABLE activity_logs (
+  log_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id CHAR(36),
+  ip_address VARCHAR(45),
+  user_agent VARCHAR(255),
+  action VARCHAR(50),
+  success BOOLEAN,
+  message TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_activity_user (user_id, created_at),
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE SET NULL
+) ENGINE = InnoDB ROW_FORMAT = COMPRESSED;
+
 -- ========= STATS & SOCIAL =========
 CREATE TABLE user_stats (
   stat_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
