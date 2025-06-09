@@ -1261,7 +1261,6 @@
       });
     }
 
-
     async function checkAdminPermissions() {
       try {
         const token = localStorage.getItem('token');
@@ -1832,13 +1831,17 @@
       modal.classList.add('active');
       
       document.getElementById('modal-user-name').textContent = 'Chargement...';
-      document.getElementById('modal-avatar').src = 'https://tool-center.fr/assets/account.png';
+      document.getElementById('modal-avatar').src = '/assets/account.png';
       
-      const user = await fetchUserDetails(userId);
-      if (!user) return;
+      const data = await fetchUserDetails(userId);
+      if (!data || !data.user) {
+        console.error('Failed to load user details');
+        return;
+      }
+      const user = data.user;
       
       document.getElementById('modal-user-name').textContent = user.username;
-      document.getElementById('modal-avatar').src = user.avatar || 'https://tool-center.fr/assets/account.png';
+      document.getElementById('modal-avatar').src = user.avatar || '/assets/account.png';
       
       const roleBadge = document.getElementById('modal-user-role');
       roleBadge.textContent =
