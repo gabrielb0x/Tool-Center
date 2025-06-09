@@ -1192,6 +1192,7 @@
   <script src="/ressources/utils/panel-config.js"></script>
   <script>
     const BASE_API_URL = PANEL_CONFIG.API_BASE;
+    const SECTION_IDS = { users: 'users-section', logs: 'logs-section' };
     let currentUserId = null;
     let currentPage = 1;
     let currentUserRole = null;
@@ -1889,28 +1890,46 @@
     }
 
     async function loadUsers(search = '') {
+      const existing = document.getElementById(SECTION_IDS.users);
+      if (existing) existing.remove();
+
+      const placeholder = renderUsersTable([]);
+      placeholder.id = SECTION_IDS.users;
+      adminContent.appendChild(placeholder);
+      showLoadingSkeleton('users');
+
       const { users } = await fetchUsers(search);
       const usersElement = renderUsersTable(users);
-      
+      usersElement.id = SECTION_IDS.users;
+
       if (!document.querySelector('.stats-cards')) {
         await loadStats();
       }
-      
-      adminContent.appendChild(usersElement);
+
+      placeholder.replaceWith(usersElement);
     }
 
-    async function loadSystemLogs() {
-      const { logs } = await fetchSystemLogs();
+    async function loadSystemLogs(page = 1) {
+      const existing = document.getElementById(SECTION_IDS.logs);
+      if (existing) existing.remove();
+
+      const placeholder = renderSystemLogs([]);
+      placeholder.id = SECTION_IDS.logs;
+      adminContent.appendChild(placeholder);
+      showLoadingSkeleton('logs');
+
+      const { logs } = await fetchSystemLogs(page);
       const logsElement = renderSystemLogs(logs);
-      
+      logsElement.id = SECTION_IDS.logs;
+
       if (!document.querySelector('.stats-cards')) {
         await loadStats();
       }
-      if (!document.querySelector('#users-table-body')) {
+      if (!document.getElementById(SECTION_IDS.users)) {
         await loadUsers();
       }
-      
-      adminContent.appendChild(logsElement);
+
+      placeholder.replaceWith(logsElement);
     }
 
     async function initAdminPanel() {
@@ -1939,7 +1958,7 @@
       
       document.getElementById('save-changes').addEventListener('click', async () => {
         if (!currentUserId) return;
-        
+
         const userData = {
           username: document.getElementById('username').value,
           email: document.getElementById('email').value,
@@ -1947,16 +1966,11 @@
           role: document.getElementById('user-role').value,
           status: document.getElementById('account-status').value
         };
-        
+
         const result = await updateUser(currentUserId, userData);
         if (result) {
           closeUserModal();
-          const usersTable = document.querySelector('#users-table-body');
-          if (usersTable) {
-            usersTable.innerHTML = '';
-            const { users } = await fetchUsers();
-            renderUsersTable(users);
-          }
+          await loadUsers();
         }
       });
       
@@ -1968,8 +1982,7 @@
             const result = await unbanUser(currentUserId);
             if (result) {
               closeUserModal();
-              const { users } = await fetchUsers();
-              renderUsersTable(users);
+              await loadUsers();
             }
           }
         } else {
@@ -1978,8 +1991,7 @@
             const result = await banUser(currentUserId, reason);
             if (result) {
               closeUserModal();
-              const { users } = await fetchUsers();
-              renderUsersTable(users);
+              await loadUsers();
             }
           }
         }
