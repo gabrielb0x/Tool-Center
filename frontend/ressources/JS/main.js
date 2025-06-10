@@ -15,6 +15,19 @@ async function fetchUserInfo() {
           accountIcon.src = data.user.avatar_url;
         }
         document.querySelector('.auth-buttons').style.display = 'none';
+
+        if (data.user.role && data.user.role === 'Admin') {
+          if (!document.getElementById('admin-panel-btn')) {
+            const navRight = document.querySelector('.nav-right');
+            const adminBtn = document.createElement('a');
+            adminBtn.href = '/admin/';
+            adminBtn.id = 'admin-panel-btn';
+            adminBtn.className = 'btn btn-admin';
+            adminBtn.style.marginBottom = '5px';
+            adminBtn.textContent = 'Admin Panel';
+            navRight.insertBefore(adminBtn, navRight.children[1]);
+          }
+        }
       }
     } catch (error) {
       console.log('[TC LOGS] Error when fetching acc :', error);

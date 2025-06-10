@@ -576,3 +576,15 @@ footer a:hover {
 .light-theme .faq-item p {
     color: #333;
 }
+.btn-admin {
+  background: linear-gradient(135deg, #c70000, #c70000);
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 9999px;
+  transition: background 0.3s ease, transform 0.3s ease;
+  font-weight: bold;
+}
+.btn-admin:hover {
+  background: linear-gradient(135deg, #820000, #820000);
+}
