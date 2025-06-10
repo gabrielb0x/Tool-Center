@@ -12,7 +12,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func LogsHandler(c *gin.Context) {
+// UserLogsHandler returns activity logs for a specific user
+func UserLogsHandler(c *gin.Context) {
+	uid := c.Param("id")
+	if uid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "id manquant"})
+		return
+	}
+
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if page < 1 {
 		page = 1
@@ -28,12 +35,13 @@ func LogsHandler(c *gin.Context) {
 	defer db.Close()
 
 	rows, err := db.Query(`
-       SELECT al.created_at, al.action, al.message, al.ip_address,
-              al.user_id, u.username, u.avatar_url
-       FROM activity_logs al
-       LEFT JOIN users u ON u.user_id = al.user_id
-       ORDER BY al.created_at DESC
-       LIMIT ? OFFSET ?`, limit, offset)
+        SELECT al.created_at, al.action, al.message, al.ip_address, al.success,
+               u.user_id, u.username, u.avatar_url
+        FROM activity_logs al
+        LEFT JOIN users u ON u.user_id = al.user_id
+        WHERE al.user_id = ?
+        ORDER BY al.created_at DESC
+        LIMIT ? OFFSET ?`, uid, limit, offset)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
@@ -44,8 +52,9 @@ func LogsHandler(c *gin.Context) {
 	for rows.Next() {
 		var ts time.Time
 		var action, message, ip string
+		var success bool
 		var userID, username, avatar sql.NullString
-		if err := rows.Scan(&ts, &action, &message, &ip, &userID, &username, &avatar); err != nil {
+		if err := rows.Scan(&ts, &action, &message, &ip, &success, &userID, &username, &avatar); err != nil {
 			continue
 		}
 		entry := gin.H{
@@ -53,6 +62,7 @@ func LogsHandler(c *gin.Context) {
 			"action":    action,
 			"details":   message,
 			"ipAddress": ip,
+			"success":   success,
 		}
 		if userID.Valid {
 			user := gin.H{"user_id": userID.String, "username": username.String}

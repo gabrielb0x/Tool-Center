@@ -1192,6 +1192,7 @@
   <script src="/ressources/utils/panel-config.js"></script>
   <script>
     const BASE_API_URL = PANEL_CONFIG.API_BASE;
+    const SECTION_IDS = { users: 'users-section', logs: 'logs-section' };
     let currentUserId = null;
     let currentPage = 1;
     let currentUserRole = null;
@@ -1363,8 +1364,30 @@
       } catch (error) {
         showToast('error', `Erreur lors du chargement des logs: ${error.message}`);
         console.error('Error fetching system logs:', error);
-        return { logs: [], total: 0 };
+      return { logs: [], total: 0 };
+    }
+
+    async function fetchUserLogs(userId, page = 1) {
+      showLoadingSkeleton('activity');
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/logs?page=${page}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        return await response.json();
+      } catch (error) {
+        showToast('error', `Erreur lors du chargement de l'activité: ${error.message}`);
+        console.error('Error fetching user logs:', error);
+        return { logs: [] };
       }
+    }
     }
 
     async function fetchStats() {
@@ -1543,6 +1566,11 @@
             `;
             tbody.appendChild(row);
           }
+        }
+      } else if (type === 'activity') {
+        const tab = document.getElementById('activity-tab');
+        if (tab) {
+          tab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
         }
       }
     }
@@ -1825,10 +1853,53 @@
       return container;
     }
 
+    function renderUserActivity(logs) {
+      const wrapper = document.createElement('div');
+      if (!logs.length) {
+        wrapper.innerHTML = '<p style="text-align:center">Aucune activité récente.</p>';
+        return wrapper;
+      }
+
+      const table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Détails</th>
+            <th>Succès</th>
+            <th>IP</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+      const tbody = table.querySelector('tbody');
+      logs.forEach(log => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${new Date(log.timestamp).toLocaleString()}</td>
+          <td>${log.action}</td>
+          <td>${log.details || ''}</td>
+          <td>${log.success ? 'Oui' : 'Non'}</td>
+          <td>${log.ipAddress || 'N/A'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      wrapper.appendChild(table);
+      return wrapper;
+    }
+
     async function openUserModal(userId) {
       currentUserId = userId;
       const modal = document.getElementById('user-modal');
       modal.classList.add('active');
+
+      document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelector('.user-tab[data-tab="info"]').classList.add('active');
+      document.getElementById('info-tab').classList.add('active');
+      document.getElementById('activity-tab').innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
       
       document.getElementById('modal-user-name').textContent = 'Chargement...';
       document.getElementById('modal-avatar').src = '/assets/account.png';
@@ -1872,10 +1943,13 @@
         tab.addEventListener('click', () => {
           document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
           document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-          
+
           tab.classList.add('active');
           const tabId = tab.getAttribute('data-tab');
           document.getElementById(`${tabId}-tab`).classList.add('active');
+          if (tabId === 'activity' && currentUserId) {
+            loadUserActivity(currentUserId);
+          }
         });
       });
     }
@@ -1889,28 +1963,55 @@
     }
 
     async function loadUsers(search = '') {
+      const existing = document.getElementById(SECTION_IDS.users);
+      if (existing) existing.remove();
+
+      const placeholder = renderUsersTable([]);
+      placeholder.id = SECTION_IDS.users;
+      adminContent.appendChild(placeholder);
+      showLoadingSkeleton('users');
+
       const { users } = await fetchUsers(search);
       const usersElement = renderUsersTable(users);
-      
+      usersElement.id = SECTION_IDS.users;
+
       if (!document.querySelector('.stats-cards')) {
         await loadStats();
       }
-      
-      adminContent.appendChild(usersElement);
+
+      placeholder.replaceWith(usersElement);
     }
 
-    async function loadSystemLogs() {
-      const { logs } = await fetchSystemLogs();
+    async function loadSystemLogs(page = 1) {
+      const existing = document.getElementById(SECTION_IDS.logs);
+      if (existing) existing.remove();
+
+      const placeholder = renderSystemLogs([]);
+      placeholder.id = SECTION_IDS.logs;
+      adminContent.appendChild(placeholder);
+      showLoadingSkeleton('logs');
+
+      const { logs } = await fetchSystemLogs(page);
       const logsElement = renderSystemLogs(logs);
-      
+      logsElement.id = SECTION_IDS.logs;
+
       if (!document.querySelector('.stats-cards')) {
         await loadStats();
       }
-      if (!document.querySelector('#users-table-body')) {
+      if (!document.getElementById(SECTION_IDS.users)) {
         await loadUsers();
       }
-      
-      adminContent.appendChild(logsElement);
+
+      placeholder.replaceWith(logsElement);
+    }
+
+    async function loadUserActivity(userId) {
+      const tab = document.getElementById('activity-tab');
+      tab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
+      const { logs } = await fetchUserLogs(userId);
+      const activityElement = renderUserActivity(logs);
+      tab.innerHTML = '';
+      tab.appendChild(activityElement);
     }
 
     async function initAdminPanel() {
@@ -1939,7 +2040,7 @@
       
       document.getElementById('save-changes').addEventListener('click', async () => {
         if (!currentUserId) return;
-        
+
         const userData = {
           username: document.getElementById('username').value,
           email: document.getElementById('email').value,
@@ -1947,16 +2048,11 @@
           role: document.getElementById('user-role').value,
           status: document.getElementById('account-status').value
         };
-        
+
         const result = await updateUser(currentUserId, userData);
         if (result) {
           closeUserModal();
-          const usersTable = document.querySelector('#users-table-body');
-          if (usersTable) {
-            usersTable.innerHTML = '';
-            const { users } = await fetchUsers();
-            renderUsersTable(users);
-          }
+          await loadUsers();
         }
       });
       
@@ -1968,8 +2064,7 @@
             const result = await unbanUser(currentUserId);
             if (result) {
               closeUserModal();
-              const { users } = await fetchUsers();
-              renderUsersTable(users);
+              await loadUsers();
             }
           }
         } else {
@@ -1978,8 +2073,7 @@
             const result = await banUser(currentUserId, reason);
             if (result) {
               closeUserModal();
-              const { users } = await fetchUsers();
-              renderUsersTable(users);
+              await loadUsers();
             }
           }
         }

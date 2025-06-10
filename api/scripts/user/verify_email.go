@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -31,6 +32,7 @@ func VerifyEmailHandler(c *gin.Context) {
 	token := c.Query("token")
 	tokenHash := hashToken(token)
 	if token == "" {
+		utils.LogActivity(c, "", "verify_email", false, "token missing")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "Token manquant."})
 		return
 	}
@@ -38,6 +40,7 @@ func VerifyEmailHandler(c *gin.Context) {
 	db, err := config.OpenDB()
 	if err != nil {
 		log.Println("DB open:", err)
+		utils.LogActivity(c, "", "verify_email", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -56,21 +59,25 @@ WHERE evt.token = ? LIMIT 1`
 	err = db.QueryRow(query, tokenHash).Scan(&userID, &expiresAt, &verifiedAt)
 	switch {
 	case err == sql.ErrNoRows:
+		utils.LogActivity(c, "", "verify_email", false, "invalid token")
 		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "Token invalide."})
 		return
 	case err != nil:
 		log.Println("Scan:", err)
+		utils.LogActivity(c, "", "verify_email", false, "scan error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
 		return
 	}
 
 	if verifiedAt.Valid {
+		utils.LogActivity(c, userID, "verify_email", false, "already verified")
 		redirectWithMsg(c, "Compte déjà vérifié.", "")
 		return
 	}
 
 	if time.Now().After(expiresAt) {
 		db.Exec("DELETE FROM email_verification_tokens WHERE token = ?", tokenHash)
+		utils.LogActivity(c, userID, "verify_email", false, "token expired")
 		redirectWithMsg(c, "Token expiré.", "")
 		return
 	}
@@ -84,6 +91,7 @@ WHERE evt.token = ? LIMIT 1`
 	tx, err := db.Begin()
 	if err != nil {
 		log.Println("Begin:", err)
+		utils.LogActivity(c, userID, "verify_email", false, "tx begin error")
 		redirectWithMsg(c, "Erreur interne.", "")
 		return
 	}
@@ -92,6 +100,7 @@ WHERE evt.token = ? LIMIT 1`
 	if err != nil {
 		tx.Rollback()
 		log.Println("Update user:", err)
+		utils.LogActivity(c, userID, "verify_email", false, "update user error")
 		redirectWithMsg(c, "Erreur interne.", "")
 		return
 	}
@@ -100,22 +109,26 @@ WHERE evt.token = ? LIMIT 1`
 	if err != nil {
 		tx.Rollback()
 		log.Println("Delete token:", err)
+		utils.LogActivity(c, userID, "verify_email", false, "delete token error")
 		redirectWithMsg(c, "Erreur interne.", "")
 		return
 	}
 
 	_, err = tx.Exec(`
-		INSERT INTO user_tokens (user_id, token, device_info, expires_at)
-		VALUES (?, ?, ?, ?)`,
+               INSERT INTO user_tokens (user_id, token, device_info, expires_at)
+               VALUES (?, ?, ?, ?)`,
 		userID, sessionTokenHash, deviceInfo+" | "+ip, sessionExpire)
 	if err != nil {
 		tx.Rollback()
 		log.Println("Insert session token:", err)
+		utils.LogActivity(c, userID, "verify_email", false, "insert session error")
 		redirectWithMsg(c, "Erreur interne.", "")
 		return
 	}
 
 	tx.Commit()
+
+	utils.LogActivity(c, userID, "verify_email", true, "")
 
 	redirectURL := fmt.Sprintf(
 		"https://tool-center.fr/account/?event=email_verified&token=%s",
