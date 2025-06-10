@@ -102,6 +102,11 @@ func setupLogger() {
 
 func setupRoutes(r *gin.Engine) {
 	cfg := config.Get()
+
+	r.GET("/", func(c *gin.Context) {
+		c.Redirect(302, fmt.Sprintf("/%s", cfg.URLVersion))
+	})
+
 	api := r.Group("/" + cfg.URLVersion)
 
 	api.GET("/", func(c *gin.Context) {
