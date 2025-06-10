@@ -12,12 +12,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+const logsPerPage = 50
+
 func LogsHandler(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if page < 1 {
 		page = 1
 	}
-	limit := 50
+	limit := logsPerPage
 	offset := (page - 1) * limit
 
 	db, err := config.OpenDB()
@@ -28,10 +30,10 @@ func LogsHandler(c *gin.Context) {
 	defer db.Close()
 
 	rows, err := db.Query(`
-        SELECT al.created_at, al.event_type, al.target_resource, al.payload,
-               al.actor_user_id, u.username, u.avatar_url
-        FROM audit_logs al
-        LEFT JOIN users u ON u.user_id = al.actor_user_id
+        SELECT al.created_at, al.action, al.message, al.success, al.ip_address,
+               al.user_id, u.username, u.avatar_url
+        FROM activity_logs al
+        LEFT JOIN users u ON u.user_id = al.user_id
         ORDER BY al.created_at DESC
         LIMIT ? OFFSET ?`, limit, offset)
 	if err != nil {
@@ -43,22 +45,26 @@ func LogsHandler(c *gin.Context) {
 	logs := make([]gin.H, 0)
 	for rows.Next() {
 		var ts time.Time
-		var eventType, targetRes string
-		var payload sql.NullString
-		var actorID, username, avatar sql.NullString
-		if err := rows.Scan(&ts, &eventType, &targetRes, &payload, &actorID, &username, &avatar); err != nil {
+		var action, message string
+		var success bool
+		var ip sql.NullString
+		var userID, username, avatar sql.NullString
+		if err := rows.Scan(&ts, &action, &message, &success, &ip, &userID, &username, &avatar); err != nil {
 			continue
 		}
 		entry := gin.H{
 			"timestamp": ts,
-			"action":    eventType,
-			"details":   targetRes,
+			"action":    action,
+			"success":   success,
 		}
-		if payload.Valid && payload.String != "" {
-			entry["details"] = payload.String
+		if message != "" {
+			entry["details"] = message
 		}
-		if actorID.Valid {
-			user := gin.H{"user_id": actorID.String, "username": username.String}
+		if ip.Valid {
+			entry["ip"] = ip.String
+		}
+		if userID.Valid {
+			user := gin.H{"user_id": userID.String, "username": username.String}
 			if avatar.Valid {
 				user["avatar"] = avatar.String
 			}
