@@ -373,6 +373,43 @@
       flex: 1;
     }
 
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-date {
+      width: 130px;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .activity-action {
+      flex: 1;
+      margin: 0 10px;
+    }
+
+    .activity-success {
+      color: var(--success-color);
+    }
+
+    .activity-fail {
+      color: var(--error-color);
+    }
+
     .admin-table-container {
       background: var(--card-bg);
       border-radius: 12px;
@@ -1345,6 +1382,23 @@
       }
     }
 
+    async function fetchUserActivity(userId) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/activity`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        showToast('error', `Erreur lors du chargement de l'activité: ${error.message}`);
+        console.error('Error fetching user activity:', error);
+        return { logs: [] };
+      }
+    }
+
     async function fetchSystemLogs(page = 1) {
       showLoadingSkeleton('logs');
       
@@ -1793,8 +1847,8 @@
             ` : 'Système'}
           </td>
           <td>${log.action}</td>
-          <td>${log.details}</td>
-          <td>${log.ipAddress || 'N/A'}</td>
+          <td>${log.details || ''}</td>
+          <td>${log.ip || 'N/A'}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -1809,6 +1863,29 @@
         }, 500);
       });
       
+      return container;
+    }
+
+    function renderUserActivity(logs) {
+      const container = document.createElement('div');
+      if (!logs.length) {
+        container.innerHTML = '<p>Aucune activité récente.</p>';
+        return container;
+      }
+      const list = document.createElement('ul');
+      list.className = 'activity-list';
+      logs.forEach(log => {
+        const li = document.createElement('li');
+        li.className = 'activity-item';
+        li.innerHTML = `
+          <span class="activity-date">${new Date(log.timestamp).toLocaleString()}</span>
+          <span class="activity-action">${log.action}${log.message ? ' - ' + log.message : ''}</span>
+          <span class="${log.success ? 'activity-success' : 'activity-fail'}">
+            <i class="fas fa-${log.success ? 'check-circle' : 'times-circle'}"></i>
+          </span>`;
+        list.appendChild(li);
+      });
+      container.appendChild(list);
       return container;
     }
 
@@ -1861,6 +1938,12 @@
       document.getElementById('bio').value = user.bio || '';
       document.getElementById('user-role').value = user.role || 'User';
       document.getElementById('account-status').value = user.status || 'Good';
+
+      const activityTab = document.getElementById('activity-tab');
+      activityTab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
+      const activityData = await fetchUserActivity(userId);
+      activityTab.innerHTML = '';
+      activityTab.appendChild(renderUserActivity(activityData.logs || []));
     }
 
     function closeUserModal() {
