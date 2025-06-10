@@ -1841,7 +1841,7 @@
           <td>
             ${log.user ? `
             <div class="user-cell">
-              <img src="${log.user.avatar_url || 'https://tool-center.fr/assets/account.png'}" alt="${log.user.username}" class="user-avatar-sm">
+              <img src="${log.user.avatar || 'https://tool-center.fr/assets/account.png'}" alt="${log.user.username}" class="user-avatar-sm">
               <span class="user-name">${log.user.username}</span>
             </div>
             ` : 'Système'}
