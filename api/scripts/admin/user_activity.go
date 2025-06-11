@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const userActivityPerPage = 20
+const userActivityPerPage = 10
 
 func UserActivityHandler(c *gin.Context) {
 	adminID, _ := c.Get("user_id")

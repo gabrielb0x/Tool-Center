@@ -13,7 +13,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const logsPerPage = 50
+const logsPerPage = 10
 
 func LogsHandler(c *gin.Context) {
 	adminID, _ := c.Get("user_id")

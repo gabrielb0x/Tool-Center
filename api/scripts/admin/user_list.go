@@ -41,7 +41,7 @@ func UserListHandler(c *gin.Context) {
 	if page < 1 {
 		page = 1
 	}
-	limit := 50
+	limit := 10
 	offset := (page - 1) * limit
 
 	var rows *sql.Rows
