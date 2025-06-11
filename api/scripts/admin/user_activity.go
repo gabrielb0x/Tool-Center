@@ -14,8 +14,12 @@ import (
 const userActivityPerPage = 20
 
 func UserActivityHandler(c *gin.Context) {
+	adminID, _ := c.Get("user_id")
+	modID, _ := adminID.(string)
+
 	uid := c.Param("id")
 	if uid == "" {
+		utils.LogActivity(c, modID, "user_activity", false, "id manquant")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "id manquant"})
 		return
 	}
@@ -29,6 +33,7 @@ func UserActivityHandler(c *gin.Context) {
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, modID, "user_activity", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -39,6 +44,7 @@ func UserActivityHandler(c *gin.Context) {
         ORDER BY created_at DESC LIMIT ? OFFSET ?`,
 		uid, limit, offset)
 	if err != nil {
+		utils.LogActivity(c, modID, "user_activity", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -71,6 +77,8 @@ func UserActivityHandler(c *gin.Context) {
 		}
 		logs = append(logs, entry)
 	}
+
+	utils.LogActivity(c, modID, "user_activity", true, "")
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "logs": logs})
 }

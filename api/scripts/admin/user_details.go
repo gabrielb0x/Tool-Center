@@ -11,14 +11,19 @@ import (
 )
 
 func UserDetailsHandler(c *gin.Context) {
+	adminID, _ := c.Get("user_id")
+	modID, _ := adminID.(string)
+
 	uid := c.Param("id")
 	if uid == "" {
+		utils.LogActivity(c, modID, "user_details", false, "id manquant")
 		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "id manquant"})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, modID, "user_details", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -33,10 +38,12 @@ func UserDetailsHandler(c *gin.Context) {
 	err = db.QueryRow(`SELECT username,email,role,account_status,avatar_url,bio,created_at FROM users WHERE user_id = ?`, uid).
 		Scan(&username, &email, &role, &status, &avatar, &bio, &created)
 	if err == sql.ErrNoRows {
+		utils.LogActivity(c, modID, "user_details", false, "not found")
 		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "not found"})
 		return
 	}
 	if err != nil {
+		utils.LogActivity(c, modID, "user_details", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -62,6 +69,8 @@ func UserDetailsHandler(c *gin.Context) {
 	if created.Valid {
 		user["createdAt"] = created.Time
 	}
+
+	utils.LogActivity(c, modID, "user_details", true, "")
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "user": user})
 }
