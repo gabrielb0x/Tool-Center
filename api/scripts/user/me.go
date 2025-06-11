@@ -40,12 +40,14 @@ func MeHandler(c *gin.Context) {
 		case utils.ErrEmailNotVerified, utils.ErrAccountBanned:
 			code = http.StatusForbidden
 		}
+		utils.LogActivity(c, uid, "get_me", false, err.Error())
 		c.JSON(code, gin.H{"success": false, "message": err.Error()})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, uid, "get_me", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -76,6 +78,7 @@ func MeHandler(c *gin.Context) {
 		&passChg, &lastLogin, &lastPost, &lastUp,
 		&blueCheck,
 	); err != nil {
+		utils.LogActivity(c, uid, "get_me", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
 		return
 	}
@@ -108,9 +111,12 @@ FROM user_stats WHERE user_id = ?`, uid).
 						"reason":    reason,
 						"warn_date": warnDate,
 					})
+				} else {
+					utils.LogActivity(c, uid, "get_me", false, "scan warn")
 				}
 			}
 		} else {
+			utils.LogActivity(c, uid, "get_me", false, "warns query")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
 			return
 		}
@@ -150,5 +156,6 @@ FROM user_stats WHERE user_id = ?`, uid).
 		resp["sanctions"] = sanctions
 	}
 
+	utils.LogActivity(c, uid, "get_me", true, "")
 	c.JSON(http.StatusOK, gin.H{"success": true, "user": resp})
 }

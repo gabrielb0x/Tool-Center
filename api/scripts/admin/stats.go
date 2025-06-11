@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -21,8 +22,11 @@ func percentChange(curr, prev int) int {
 }
 
 func StatsHandler(c *gin.Context) {
+	adminID, _ := c.Get("user_id")
+
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, adminID.(string), "view_stats", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -56,4 +60,5 @@ func StatsHandler(c *gin.Context) {
 		"moderators":        moderators,
 		"timestamp":         time.Now(),
 	})
+	utils.LogActivity(c, adminID.(string), "view_stats", true, "")
 }

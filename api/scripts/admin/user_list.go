@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -23,9 +24,14 @@ type UserInfo struct {
 	AvatarURL string    `json:"avatar_url"`
 }
 
+const usersPerPage = 50
+
 func UserListHandler(c *gin.Context) {
+	adminID, _ := c.Get("user_id")
+
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, adminID.(string), "list_users", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -36,7 +42,7 @@ func UserListHandler(c *gin.Context) {
 	if page < 1 {
 		page = 1
 	}
-	limit := 50
+	limit := usersPerPage
 	offset := (page - 1) * limit
 
 	var rows *sql.Rows
@@ -46,6 +52,7 @@ func UserListHandler(c *gin.Context) {
 		rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?`, limit, offset)
 	}
 	if err != nil {
+		utils.LogActivity(c, adminID.(string), "list_users", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -61,5 +68,6 @@ func UserListHandler(c *gin.Context) {
 		users = append(users, u)
 	}
 
+	utils.LogActivity(c, adminID.(string), "list_users", true, "")
 	c.JSON(http.StatusOK, gin.H{"success": true, "users": users})
 }

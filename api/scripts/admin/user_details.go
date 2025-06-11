@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -17,8 +18,11 @@ func UserDetailsHandler(c *gin.Context) {
 		return
 	}
 
+	adminID, _ := c.Get("user_id")
+
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, adminID.(string), "view_user_details", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -37,6 +41,7 @@ func UserDetailsHandler(c *gin.Context) {
 		return
 	}
 	if err != nil {
+		utils.LogActivity(c, adminID.(string), "view_user_details", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -63,5 +68,6 @@ func UserDetailsHandler(c *gin.Context) {
 		user["createdAt"] = created.Time
 	}
 
+	utils.LogActivity(c, adminID.(string), "view_user_details", true, "")
 	c.JSON(http.StatusOK, gin.H{"success": true, "user": user})
 }

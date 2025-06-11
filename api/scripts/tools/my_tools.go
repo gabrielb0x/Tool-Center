@@ -32,12 +32,14 @@ func MyToolsHandler(c *gin.Context) {
 		UpdateLastLogin:  true,
 	})
 	if err != nil {
+		utils.LogActivity(c, uid, "my_tools", false, err.Error())
 		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": err.Error()})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, uid, "my_tools", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -45,6 +47,7 @@ func MyToolsHandler(c *gin.Context) {
 
 	rows, err := db.Query(`SELECT tool_id, user_id, title, description, content_url, thumbnail_url, status, views, created_at, updated_at FROM tools WHERE user_id = ? ORDER BY created_at DESC`, uid)
 	if err != nil {
+		utils.LogActivity(c, uid, "my_tools", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 		return
 	}
@@ -54,11 +57,13 @@ func MyToolsHandler(c *gin.Context) {
 	for rows.Next() {
 		var t Tool
 		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.ContentURL, &t.ThumbnailURL, &t.Status, &t.Views, &t.CreatedAt, &t.UpdatedAt); err != nil {
+			utils.LogActivity(c, uid, "my_tools", false, "scan error")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur DB."})
 			return
 		}
 		tools = append(tools, t)
 	}
 
+	utils.LogActivity(c, uid, "my_tools", true, "")
 	c.JSON(http.StatusOK, gin.H{"success": true, "tools": tools})
 }
