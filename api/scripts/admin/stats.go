@@ -21,8 +21,12 @@ func percentChange(curr, prev int) int {
 }
 
 func StatsHandler(c *gin.Context) {
+	adminID, _ := c.Get("user_id")
+	uid, _ := adminID.(string)
+
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, uid, "view_stats", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -44,6 +48,8 @@ func StatsHandler(c *gin.Context) {
 	var bannedMonth, bannedPrevMonth int
 	_ = db.QueryRow("SELECT COUNT(*) FROM users WHERE account_status = 'Banned' AND created_at >= DATE_FORMAT(NOW(), '%Y-%m-01')").Scan(&bannedMonth)
 	_ = db.QueryRow("SELECT COUNT(*) FROM users WHERE account_status = 'Banned' AND created_at >= DATE_SUB(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH) AND created_at < DATE_FORMAT(NOW(), '%Y-%m-01')").Scan(&bannedPrevMonth)
+
+	utils.LogActivity(c, uid, "view_stats", true, "")
 
 	c.JSON(http.StatusOK, gin.H{
 		"success":           true,

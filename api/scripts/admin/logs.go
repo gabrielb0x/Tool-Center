@@ -15,6 +15,9 @@ import (
 const logsPerPage = 50
 
 func LogsHandler(c *gin.Context) {
+	adminID, _ := c.Get("user_id")
+	uid, _ := adminID.(string)
+
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if page < 1 {
 		page = 1
@@ -24,6 +27,7 @@ func LogsHandler(c *gin.Context) {
 
 	db, err := config.OpenDB()
 	if err != nil {
+		utils.LogActivity(c, uid, "view_logs", false, "db open error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -37,6 +41,7 @@ func LogsHandler(c *gin.Context) {
         ORDER BY al.created_at DESC
         LIMIT ? OFFSET ?`, limit, offset)
 	if err != nil {
+		utils.LogActivity(c, uid, "view_logs", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
 	}
@@ -72,6 +77,8 @@ func LogsHandler(c *gin.Context) {
 		}
 		logs = append(logs, entry)
 	}
+
+	utils.LogActivity(c, uid, "view_logs", true, "")
 
 	c.JSON(http.StatusOK, gin.H{"success": true, "logs": logs})
 }
