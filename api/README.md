@@ -142,6 +142,28 @@ Réponse :
 }
 ```
 
+### Modifier son pseudo ↦ `/api/user/update_username`
+
+`POST` avec un champ `username` (3-50 caractères). Limité à **une fois tous les 30 jours**.
+
+```
+curl -X POST https://api.tool-center.fr/api/user/update_username \
+    -H "Authorization: Bearer <token>" \
+    -H "Content-Type: application/json" \
+    -d '{"username":"nouveauPseudo"}'
+```
+
+### Modifier son email ↦ `/api/user/update_email`
+
+`POST` avec `new_email` et `current_password`. Après changement l'email doit être revérifié. Limité à **une fois tous les 30 jours**.
+
+```
+curl -X POST https://api.tool-center.fr/api/user/update_email \
+    -H "Authorization: Bearer <token>" \
+    -H "Content-Type: application/json" \
+    -d '{"new_email":"exemple@mail.com","current_password":"monpass"}'
+```
+
 *(d'autres routes : `/api/tools`, `/api/reservations`, `/api/moderation`, etc. — check le dossier `scripts/`)*
 
 ---
