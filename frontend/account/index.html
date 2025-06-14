@@ -1420,13 +1420,8 @@
                                 <div class="skeleton skeleton-username" id="skeleton-username"></div>
                                 <h2 class="username" id="username">Chargement</h2>
                                 <img src="/assets/verified.png" alt="Vérifié" class="verified-badge" id="verified-badge">
-                                <img src="/assets/edit-icon.png" alt="Modifier" class="username-edit" id="editUsername" title="Modifier l'username" style="width:20px;height:20px;cursor:pointer;display:none;">
+                                <img src="/assets/edit-icon.png" alt="Modifier" class="username-edit" id="editUsername" title="Modifier l'username" style="width:20px;height:20px;cursor:pointer;">
                             </div>
-                            <form id="usernameForm" class="hidden" style="margin-top:10px;">
-                                <input type="text" id="newUsername" class="form-input" placeholder="Nouveau pseudo" style="margin-bottom:5px;">
-                                <button type="submit" class="btn btn-primary" style="margin-right:7px;">Confirmer</button>
-                                <button type="button" class="btn btn-secondary" id="cancelUsernameEdit">Annuler</button>
-                            </form>
                             <div class="skeleton skeleton-date" id="skeleton-date"></div>
                             <p class="member-date" id="member-date">Chargement de la date de création...</p>
                             <div class="email-container">
@@ -2016,76 +2011,37 @@
         function makeUsernameEditable(userData) {
             const usernameEl = document.getElementById('username');
             const editBtn = document.getElementById('editUsername');
-            const form = document.getElementById('usernameForm');
-            const input = document.getElementById('newUsername');
-            const cancel = document.getElementById('cancelUsernameEdit');
-            const usernameContainer = usernameEl.parentElement;
-
-            editBtn.style.transition = 'opacity 0.2s';
-            editBtn.style.opacity = 0;
-            editBtn.style.display = '';
-
-            let over = false;
-            usernameContainer.addEventListener('mouseenter', () => {
-                editBtn.style.opacity = 1;
-                over = true;
-            });
-            usernameContainer.addEventListener('mouseleave', () => {
-                editBtn.style.opacity = 0;
-                over = false;
-            });
-
-            editBtn.addEventListener('mouseenter', () => {
-                editBtn.style.opacity = 1;
-                over = true;
-            });
-            editBtn.addEventListener('mouseleave', () => {
-                editBtn.style.opacity = 0;
-                over = false;
-            });
 
             editBtn.onclick = () => {
-                usernameEl.style.display = 'none';
-                editBtn.style.opacity = 0;
-                form.classList.remove('hidden');
-                input.value = userData.username;
-                input.focus();
-            };
-            cancel.onclick = () => {
-                form.classList.add('hidden');
-                usernameEl.style.display = '';
-            };
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                const newUsername = input.value.trim();
-                if(!newUsername || newUsername.length < 3 || newUsername.length > 25) return alert("Pseudo invalide");
-                const token = localStorage.getItem("token");
+                const newUsername = prompt('Nouveau pseudo', userData.username);
+                if(!newUsername) return;
+                if(newUsername.length < 3 || newUsername.length > 50){
+                    showError('Pseudo invalide');
+                    return;
+                }
+                const token = localStorage.getItem('token');
                 fetch(`${apiBaseURL}/user/update_username`, {
-                    method:"POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ username: newUsername })
-                }).then(res=>res.json()).then(data=>{
-                    if(data.success){
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
                         userData.username = newUsername;
-                        usernameEl.innerHTML = '';
-                        [...newUsername].forEach((ch,i)=>{
-                            const span=document.createElement('span')
-                            span.textContent=ch
-                            span.style.setProperty('--i',i)
-                            span.className='letter'
-                            usernameEl.appendChild(span)
-                        });
-                        form.classList.add('hidden');
-                        usernameEl.style.display = '';
-                        showSuccessModal("Pseudo modifié !", "Ton pseudo a été mis à jour !");
-                    }else{
-                        alert(data.message || "Erreur lors de la maj du pseudo");
+                        usernameEl.textContent = newUsername;
+                        showSuccessModal('Pseudo modifié !', 'Ton pseudo a été mis à jour !');
+                    } else {
+                        throw new Error(data.message || 'Erreur lors de la modification du pseudo');
                     }
+                })
+                .catch(err => {
+                    showError(err.message || 'Erreur lors de la modification du pseudo');
                 });
-            }
+            };
         }
 
         function setAccountStatus(status) {
