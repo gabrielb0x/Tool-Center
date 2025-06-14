@@ -124,6 +124,8 @@ func setupRoutes(r *gin.Engine) {
 	userGroup.GET("/verify_email", user.VerifyEmailHandler)
 	userGroup.GET(("/me"), user.MeHandler)
 	userGroup.POST("/avatar", user.UploadAvatar)
+	userGroup.POST("/update_username", user.UpdateUsernameHandler)
+	userGroup.POST("/update_email", user.UpdateEmailHandler)
 	userGroup.POST("/delete", user.DeleteAccountHandler)
 
 	toolsGroup := api.Group("/tools")

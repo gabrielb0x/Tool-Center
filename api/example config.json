@@ -35,5 +35,9 @@
   "cleanup": {
     "check_interval": 600,
     "grace_period": 10
+  },
+  "limits": {
+    "username_change_hours": 24,
+    "email_change_hours": 24
   }
 }

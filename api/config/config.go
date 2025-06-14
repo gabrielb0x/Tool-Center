@@ -48,6 +48,10 @@ type Config struct {
 		CheckInterval int `json:"check_interval"`
 		GracePeriod   int `json:"grace_period"`
 	} `json:"cleanup"`
+	Limits struct {
+		UsernameChangeHours int `json:"username_change_hours"`
+		EmailChangeHours    int `json:"email_change_hours"`
+	} `json:"limits"`
 }
 
 func Load(path string) error {

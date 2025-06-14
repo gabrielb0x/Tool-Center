@@ -1079,7 +1079,7 @@
       <i class="fas fa-tachometer-alt"></i>
       Tableau de bord
     </a>
-    <a href="/admin/users" class="sidebar-item">
+    <a href="#" data-path="/admin/users" class="sidebar-item">
       <i class="fas fa-users"></i>
       Utilisateurs
     </a>
@@ -1087,19 +1087,19 @@
       <i class="fas fa-user-shield"></i>
       Modérateurs
     </a>
-    <a href="/admin/logs" class="sidebar-item">
+    <a href="#" data-path="/admin/logs" class="sidebar-item">
       <i class="fas fa-clipboard-list"></i>
       Logs système
     </a>
-    <a href="/admin/tools" class="sidebar-item">
+    <a href="#" data-path="/admin/tools" class="sidebar-item">
       <i class="fas fa-tools"></i>
       Outils
     </a>
-    <a href="/admin/reports" class="sidebar-item">
+    <a href="#" data-path="/admin/reports" class="sidebar-item">
       <i class="fas fa-flag"></i>
       Signalements
     </a>
-    <a href="/admin/params" class="sidebar-item">
+    <a href="#" data-path="/admin/params" class="sidebar-item">
       <i class="fas fa-cog"></i>
       Paramètres
     </a>
@@ -2015,6 +2015,23 @@
       placeholder.replaceWith(logsElement);
     }
 
+    function navigate(path) {
+      history.pushState({}, '', path);
+      if (path.endsWith('/logs')) {
+        loadSystemLogs();
+      } else {
+        loadUsers();
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (location.pathname.endsWith('/logs')) {
+        loadSystemLogs();
+      } else {
+        loadUsers();
+      }
+    });
+
     async function initAdminPanel() {
       const isAdmin = await checkAdminPermissions();
       if (!isAdmin) {
@@ -2024,8 +2041,11 @@
       }
       
       await loadStats();
-      await loadUsers();
-      await loadSystemLogs();
+      if (location.pathname.endsWith('/logs')) {
+        await loadSystemLogs();
+      } else {
+        await loadUsers();
+      }
       
       setTimeout(() => {
         preloader.style.opacity = '0';
@@ -2035,6 +2055,15 @@
       }, 500);
       
       setupTabs();
+
+      document.querySelectorAll('.sidebar-item[data-path]').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelectorAll('.sidebar-item').forEach(a => a.classList.remove('active'));
+          link.classList.add('active');
+          navigate(link.getAttribute('data-path'));
+        });
+      });
       
       document.getElementById('close-modal').addEventListener('click', closeUserModal);
       document.getElementById('cancel-changes').addEventListener('click', closeUserModal);
