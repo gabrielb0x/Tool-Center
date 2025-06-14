@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolCenter - Sanctions</title>
+  <link rel="stylesheet" href="/assets/admin.css">
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+</head>
+<body>
+  <header class="admin-header">
+    <nav class="admin-nav">
+      <a href="/admin" class="active"><i class="fas fa-tachometer-alt"></i> Acceuil</a>
+      <img src="/assets/account.png" alt="Admin" class="user-avatar" id="admin-avatar">
+    </nav>
+  </header>
+  <div class="admin-sidebar">
+    <a href="/admin" class="sidebar-item">Tableau de bord</a>
+    <a href="/admin/users" class="sidebar-item">Utilisateurs</a>
+    <a href="/admin/sanctions" class="sidebar-item active">Sanctions</a>
+    <a href="/admin/logs" class="sidebar-item">Logs système</a>
+  </div>
+  <main class="admin-content" id="content">
+    <h2>Sanctions récentes</h2>
+    <table class="admin-table" id="sanctionTable">
+      <thead><tr><th>ID</th><th>Utilisateur</th><th>Type</th><th>Raison</th><th>Date</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </main>
+<script>
+async function load(){
+  const res=await fetch('/v1/admin/sanctions',{credentials:'include'});
+  const d=await res.json();
+  if(!d.success)return;
+  const tbody=document.querySelector('#sanctionTable tbody');
+  tbody.innerHTML='';
+  d.sanctions.forEach(s=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.sanction_id}</td><td>${s.user_id}</td><td>${s.type}</td><td>${s.reason}</td><td>${new Date(s.start).toLocaleDateString()}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+load();
+</script>
+</body>
+</html>

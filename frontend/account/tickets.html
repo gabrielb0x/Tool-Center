@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolCenter - Support</title>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+    <link rel="stylesheet" href="/assets/account.css">
+    <style>
+        .ticket-card{background:var(--dark-card);padding:20px;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-top:20px;}
+    </style>
+</head>
+<body>
+<nav class="sidebar">
+    <div class="sidebar-header"><h3 class="sidebar-title">Navigation</h3></div>
+    <ul class="sidebar-menu">
+        <li><a href="/account"><img src="/assets/account.png" class="sidebar-icon" alt="Informations">Informations du compte</a></li>
+        <li><a href="/account/tools"><img src="/assets/code.png" class="sidebar-icon" alt="Tools">Tools Publiés</a></li>
+        <li><a href="/account/moderation"><img src="/assets/personnaliser.png" class="sidebar-icon" alt="Moderation">Modération / Sanctions</a></li>
+        <li><a href="/account/security"><img src="/assets/security-icon.png" class="sidebar-icon" alt="Sécurité">Sécurité</a></li>
+        <li><a href="/account/preferences"><img src="/assets/preferences-icon.png" class="sidebar-icon" alt="Préférences">Préférences</a></li>
+        <li><a href="/account/confidentiality"><img src="/assets/privacy-icon.png" class="sidebar-icon" alt="Confidentialité">Confidentialité</a></li>
+        <li><a href="/account/tickets" class="active"><img src="/assets/support.png" class="sidebar-icon" alt="Support">Support / Tickets</a></li>
+        <li><a href="/account/notifications"><img src="/assets/newsletter.png" class="sidebar-icon" alt="Notifications">Notifications</a></li>
+        <li><a href="/account/logout"><img src="/assets/logout.png" class="sidebar-icon" alt="Déconnexion">Se déconnecter</a></li>
+    </ul>
+</nav>
+<div class="main-content">
+    <div class="profile-header">
+        <h1 class="profile-title">Support / Tickets</h1>
+        <p class="profile-subtitle">Ouvrez un ticket pour contacter l'équipe.</p>
+    </div>
+    <form id="ticketForm" class="ticket-card">
+        <div class="form-group">
+            <label for="subject" class="form-label">Sujet</label>
+            <input type="text" id="subject" class="form-input" required>
+        </div>
+        <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" class="form-input" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Envoyer</button>
+    </form>
+    <div id="ticketsContainer"></div>
+</div>
+<script>
+async function loadTickets(){
+    const res=await fetch('/v1/user/tickets',{credentials:'include'});
+    const data=await res.json();
+    const container=document.getElementById('ticketsContainer');
+    container.innerHTML='';
+    if(!data.success)return;
+    data.tickets.forEach(t=>{
+        const d=document.createElement('div');d.className='ticket-card';
+        d.innerHTML=`<b>${t.subject}</b><p>${t.message}</p><small>${new Date(t.created).toLocaleDateString()} - ${t.status}</small>`;
+        container.appendChild(d);
+    });
+}
+const form=document.getElementById('ticketForm');
+form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    await fetch('/v1/user/tickets',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject:subject.value,message:message.value})});
+    subject.value='';message.value='';
+    loadTickets();
+});
+loadTickets();
+</script>
+</body>
+</html>

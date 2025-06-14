@@ -15,6 +15,8 @@
 - 👤 **Gérer ton compte** : avatar, paramètres, stats persos
 - 🛡️ Un **système de modération** ultra propre
 - 📜 **Logs complets** : utilisateurs, admins, actions
+- 🎫 **Tickets de support** intégrés
+- 🔔 **Historique de sanctions** consultable
 - ⚡ Un **design responsive**, fluide et sans chichis
 
 <br/>

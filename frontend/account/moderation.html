@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolCenter - Modération</title>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+    <link rel="stylesheet" href="/assets/account.css">
+    <style>
+        .skeleton{background-color:var(--skeleton-color);border-radius:4px;position:relative;overflow:hidden;}
+        .skeleton::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);animation:shimmer 1.5s infinite;}
+        @keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
+        .moderation-card{background:var(--dark-card);padding:30px;border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-top:20px;}
+        .sanction{border-bottom:1px solid var(--dark-border);padding:10px 0;}
+    </style>
+</head>
+<body>
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <h3 class="sidebar-title">Navigation</h3>
+    </div>
+    <ul class="sidebar-menu">
+        <li><a href="/account"><img src="/assets/account.png" class="sidebar-icon" alt="Informations">Informations du compte</a></li>
+        <li><a href="/account/tools"><img src="/assets/code.png" class="sidebar-icon" alt="Tools">Tools Publiés</a></li>
+        <li><a href="/account/moderation" class="active"><img src="/assets/personnaliser.png" class="sidebar-icon" alt="Moderation">Modération / Sanctions</a></li>
+        <li><a href="/account/security"><img src="/assets/security-icon.png" class="sidebar-icon" alt="Sécurité">Sécurité</a></li>
+        <li><a href="/account/preferences"><img src="/assets/preferences-icon.png" class="sidebar-icon" alt="Préférences">Préférences</a></li>
+        <li><a href="/account/confidentiality"><img src="/assets/privacy-icon.png" class="sidebar-icon" alt="Confidentialité">Confidentialité</a></li>
+        <li><a href="/account/tickets"><img src="/assets/support.png" class="sidebar-icon" alt="Support">Support / Tickets</a></li>
+        <li><a href="/account/notifications"><img src="/assets/newsletter.png" class="sidebar-icon" alt="Notifications">Notifications</a></li>
+        <li><a href="/account/logout"><img src="/assets/logout.png" class="sidebar-icon" alt="Déconnexion">Se déconnecter</a></li>
+    </ul>
+</nav>
+<div class="main-content">
+    <div class="profile-header">
+        <h1 class="profile-title">Statut et sanctions</h1>
+        <p class="profile-subtitle">Consultez l'état de votre compte et vos sanctions.</p>
+    </div>
+    <div id="statusContainer" class="moderation-card">
+        <div class="skeleton" style="height:20px;width:200px;margin-bottom:10px;"></div>
+        <div id="statusText"></div>
+    </div>
+    <div id="sanctionsContainer" class="moderation-card"></div>
+</div>
+<script>
+async function loadData(){
+    const res = await fetch('/v1/user/sanctions',{credentials:'include'});
+    const data = await res.json();
+    const statusDiv=document.getElementById('statusContainer');
+    const statusText=document.getElementById('statusText');
+    if(!data.success){statusText.textContent='Erreur.';return;}
+    const me = await fetch('/v1/user/me',{credentials:'include'}).then(r=>r.json());
+    if(me.success){statusText.textContent=me.user.account_status;}
+    statusDiv.querySelector('.skeleton').style.display='none';
+    const container=document.getElementById('sanctionsContainer');
+    container.innerHTML='';
+    if(data.sanctions.length===0){container.innerHTML='<p>Aucune sanction.</p>';return;}
+    data.sanctions.forEach(s=>{
+        const d=document.createElement('div');d.className='sanction';
+        d.innerHTML=`<b>${s.type}</b> - ${s.reason} <br><small>${new Date(s.start).toLocaleDateString()}</small>`;
+        if(s.contestable&&s.appeal_status==='Pending'){
+            const btn=document.createElement('button');btn.textContent='Contester';btn.onclick=()=>appeal(s.sanction_id);
+            d.appendChild(btn);
+        }
+        container.appendChild(d);
+    });
+}
+async function appeal(id){
+    const txt=prompt('Expliquez pourquoi cette sanction devrait être levée:');
+    if(!txt)return;
+    await fetch('/v1/user/sanctions/'+id+'/appeal',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({appeal:txt})});
+    loadData();
+}
+loadData();
+</script>
+</body>
+</html>
