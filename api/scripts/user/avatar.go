@@ -1,22 +1,24 @@
 package user
 
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"io"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
+        "crypto/rand"
+        "encoding/hex"
+        "io"
+        "net/http"
+        "os"
+        "path/filepath"
+        "strings"
+        "time"
 
 	"github.com/chai2010/webp"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 
-	"toolcenter/config"
-	"toolcenter/utils"
+        "toolcenter/config"
+        "toolcenter/utils"
 )
+
+
 
 func UploadAvatar(c *gin.Context) {
 	uid, _, _, _, err := utils.Check(c, utils.CheckOpts{
@@ -45,18 +47,19 @@ func UploadAvatar(c *gin.Context) {
 	}
 	defer db.Close()
 
-	var lastChangedAt time.Time
-	err = db.QueryRow(`SELECT avatar_changed_at FROM users WHERE user_id = ?`, uid).Scan(&lastChangedAt)
-	if err == nil && !lastChangedAt.IsZero() && time.Since(lastChangedAt) < time.Hour {
-		retryAt := lastChangedAt.Add(time.Hour)
-		utils.LogActivity(c, uid, "upload_avatar", false, "cooldown")
-		c.JSON(http.StatusTooManyRequests, gin.H{
-			"success":  false,
-			"message":  "Vous ne pouvez changer votre photo de profil qu'une fois par heure.",
-			"retry_at": retryAt.Format(time.RFC3339),
-		})
-		return
-	}
+       cooldown := time.Duration(config.Get().AvatarCooldownHours) * time.Hour
+       var lastChangedAt time.Time
+       err = db.QueryRow(`SELECT avatar_changed_at FROM users WHERE user_id = ?`, uid).Scan(&lastChangedAt)
+       if err == nil && !lastChangedAt.IsZero() && time.Since(lastChangedAt) < cooldown {
+               retryAt := lastChangedAt.Add(cooldown)
+               utils.LogActivity(c, uid, "upload_avatar", false, "cooldown")
+               c.JSON(http.StatusTooManyRequests, gin.H{
+                       "success":  false,
+                       "message":  "Vous ne pouvez changer votre photo de profil qu'une fois par jour.",
+                       "retry_at": retryAt.Format(time.RFC3339),
+               })
+               return
+       }
 
 	if c.PostForm("avatar") == "delete" {
 		path := "/var/www/toolcenter/storage/avatars/" + uid + ".webp"

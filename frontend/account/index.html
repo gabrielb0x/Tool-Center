@@ -1529,6 +1529,27 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal-overlay" id="usernameModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Modifier votre pseudo</h3>
+                    <button class="modal-close" id="closeUsernameModal">
+                        <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="newUsername" class="form-label">Nouveau pseudo</label>
+                        <input type="text" id="newUsername" class="form-input" placeholder="Entrez votre nouveau pseudo">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelUsernameChange">Annuler</button>
+                    <button class="btn btn-primary" id="confirmUsernameChange">Confirmer</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1559,6 +1580,7 @@
                     .then(() => {
                         initAvatarModal();
                         initEmailModal();
+                        initUsernameModal();
                         initTheme();
                     })
                     .catch(error => {
@@ -1665,7 +1687,6 @@
             document.querySelectorAll('.skeleton').forEach(el => {
                 el.classList.add('fade-out');
                 setTimeout(() => {
-                    makeUsernameEditable(userData);
                     setAccountStatus(userData.account_status);
                     el.classList.add('hidden');
                 }, 300);
@@ -1969,8 +1990,8 @@
                     if (error.retry_at) {
                         const retryAt = new Date(error.retry_at);
                         const now = new Date();
-                        const timeDiff = Math.ceil((retryAt - now) / 1000 / 60);
-                        const retryMessage = `Vous ne pouvez changer votre photo de profil qu'une fois par heure. Réessayez dans ${timeDiff} minute(s).`;
+                        const timeDiff = Math.ceil((retryAt - now) / 1000 / 60 / 60);
+                        const retryMessage = `Vous ne pouvez changer votre photo de profil qu'une fois par jour. Réessayez dans ${timeDiff} heure(s).`;
                         showError(retryMessage);
                     } else {
                         showError(error.message || "Une erreur s'est produite lors de la modification de l'avatar");
@@ -2008,29 +2029,69 @@
             }
         });
 
-        function makeUsernameEditable(userData) {
+        function initUsernameModal() {
+            const usernameModal = document.getElementById('usernameModal');
+            const newUsernameInput = document.getElementById('newUsername');
+            const closeUsernameModal = document.getElementById('closeUsernameModal');
+            const cancelUsernameChange = document.getElementById('cancelUsernameChange');
+            const confirmUsernameChange = document.getElementById('confirmUsernameChange');
             const usernameEl = document.getElementById('username');
             const editBtn = document.getElementById('editUsername');
 
-            editBtn.onclick = () => {
-                const newUsername = prompt('Nouveau pseudo', userData.username);
-                if(!newUsername) return;
-                if(newUsername.length < 3 || newUsername.length > 50) { alert('Pseudo invalide'); return; }
+            editBtn.addEventListener('click', () => {
+                newUsernameInput.value = usernameEl.textContent.trim();
+                usernameModal.classList.add('active');
+                newUsernameInput.focus();
+            });
+
+            function closeModal() {
+                usernameModal.classList.remove('active');
+                newUsernameInput.value = '';
+            }
+
+            closeUsernameModal.addEventListener('click', closeModal);
+            cancelUsernameChange.addEventListener('click', closeModal);
+
+            confirmUsernameChange.addEventListener('click', () => {
+                const newUsername = newUsernameInput.value.trim();
+                if (newUsername.length < 3 || newUsername.length > 50) {
+                    showError('Le pseudo doit contenir entre 3 et 50 caractères.');
+                    return;
+                }
+
+                const spinner = document.createElement('span');
+                spinner.className = 'spinner';
+                confirmUsernameChange.prepend(spinner);
+                closeUsernameModal.disabled = true;
+                cancelUsernameChange.disabled = true;
+                confirmUsernameChange.disabled = true;
+
                 const token = localStorage.getItem('token');
                 fetch(`${apiBaseURL}/user/update_username`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ username: newUsername })
-                }).then(res=>res.json()).then(data=>{
-                    if(data.success){
-                        userData.username = newUsername;
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
                         usernameEl.textContent = newUsername;
                         showSuccessModal('Pseudo modifié !', 'Ton pseudo a été mis à jour !');
-                    }else{
-                        alert(data.message || 'Erreur lors de la modification du pseudo');
+                        closeModal();
+                    } else {
+                        showError(data.message || 'Erreur lors de la modification du pseudo');
                     }
+                })
+                .catch(() => {
+                    showError("Impossible de se connecter au serveur. Veuillez réessayer plus tard.");
+                })
+                .finally(() => {
+                    closeUsernameModal.disabled = false;
+                    cancelUsernameChange.disabled = false;
+                    confirmUsernameChange.disabled = false;
+                    spinner.remove();
                 });
-            };
+            });
         }
 
         function setAccountStatus(status) {
