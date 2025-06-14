@@ -1353,9 +1353,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/account/profile">
-                            <img src="/assets/personnaliser.png" alt="Profil" class="sidebar-icon">
-                            Personnalisation
+                        <a href="/account/moderation">
+                            <img src="/assets/security-icon.png" alt="Modération" class="sidebar-icon">
+                            Modération / Sanctions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/account/support">
+                            <img src="/assets/support.png" alt="Support" class="sidebar-icon">
+                            Support / Tickets
                         </a>
                     </li>
                     <li>
@@ -1402,7 +1408,6 @@
                 <div class="profile-card" style="padding:0;">
                     <div class="tabs-header">
                         <button class="tab-btn active" id="tabMainBtn">Infos principales</button>
-                        <button class="tab-btn" id="tabStatusBtn">Statut du compte</button>
                     </div>
                     <div class="tab-content active" id="tabMain">
                         <div class="profile-info" style="padding:30px;">
@@ -1430,27 +1435,6 @@
                                 <img src="/assets/show.png" alt="Afficher" class="email-toggle" id="toggleEmail">
                                 <img src="/assets/edit-icon.png" alt="Modifier" class="email-edit" id="editEmail">
                             </div>
-                        </div>
-                    </div>
-                    <div class="tab-content" id="tabStatus" style="padding:30px;">
-                        <h3 style="font-size:1.3rem;margin-bottom:18px;">Statut du compte</h3>
-                        <div id="status-bar-container">
-                            <div class="status-progress-bar" id="statusProgress">
-                                <div class="status-progress" id="statusProgressFill"></div>
-                            </div>
-                            <div class="status-labels">
-                                <span>Tout bon !</span>
-                                <span>Limité</span>
-                                <span>Très limité</span>
-                                <span>À risque</span>
-                                <span>Banni(e)</span>
-                            </div>
-                        </div>
-                        <div style="margin-top:20px;">
-                            <b>Votre statut :</b> <span id="accountStatusText" style="font-weight:bold;">Chargement...</span>
-                        </div>
-                        <div id="statusDescription" style="color:#aaa;margin-top:8px;font-size: 1rem;max-width: 600px;">
-                            Chargemment...
                         </div>
                     </div>
                 </div>
@@ -1687,7 +1671,6 @@
             document.querySelectorAll('.skeleton').forEach(el => {
                 el.classList.add('fade-out');
                 setTimeout(() => {
-                    setAccountStatus(userData.account_status);
                     el.classList.add('hidden');
                 }, 300);
             });
@@ -2011,21 +1994,10 @@
         // G0
         document.addEventListener('DOMContentLoaded', () => {
             const tabMainBtn = document.getElementById('tabMainBtn');
-            const tabStatusBtn = document.getElementById('tabStatusBtn');
             const tabMain = document.getElementById('tabMain');
-            const tabStatus = document.getElementById('tabStatus');
-
             tabMainBtn.onclick = function() {
                 tabMainBtn.classList.add('active');
-                tabStatusBtn.classList.remove('active');
                 tabMain.classList.add('active');
-                tabStatus.classList.remove('active');
-            }
-            tabStatusBtn.onclick = function() {
-                tabStatusBtn.classList.add('active');
-                tabMainBtn.classList.remove('active');
-                tabStatus.classList.add('active');
-                tabMain.classList.remove('active');
             }
         });
 
@@ -2094,33 +2066,6 @@
             });
         }
 
-        function setAccountStatus(status) {
-            const bar = document.getElementById('statusProgressFill');
-            const statusText = document.getElementById('accountStatusText');
-            const statusDesc = document.getElementById('statusDescription');
-            const steps = ['Good','Limited','Very Limited','At Risk','Banned'];
-            const colors = [
-                'linear-gradient(90deg,#10c95a,#2fd174)', // Good
-                'linear-gradient(90deg,#ffca29,#ffd66b)', // Limited
-                'linear-gradient(90deg,#f88407,#ff5f00)', // Very Limited
-                'linear-gradient(90deg,#e94434,#fc6a55)', // At Risk
-                'linear-gradient(90deg,#a10000,#570404)'  // Banned
-            ];
-            const descriptions = [
-                "Merci de respecter les règles de ToolCenter !",
-                "Vous ne pouvez plus utiliser certaines parties de ToolCenter. Vous risquez une suspension si vous enfreignez à nouveau les règles.",
-                "Vous ne pouvez plus utiliser la plupart des parties de ToolCenter. Votre compte pourrait être banni.",
-                "Votre compte est à risque. Vous ne pouvez plus utiliser ToolCenter tant que vous n'avez pas réglé le problème.",
-                "Votre compte est banni. Vous ne pouvez plus utiliser ToolCenter."
-            ];
-            const widths = ['10%','30%','50%','70%','100%'];
-            const idx = steps.indexOf(status);
-            if(idx === -1) return;
-            bar.style.width = widths[idx];
-            bar.style.background = colors[idx];
-            statusText.textContent = steps[idx];
-            statusDesc.textContent = descriptions[idx];
-        }
     </script>
 </body>
 </html>

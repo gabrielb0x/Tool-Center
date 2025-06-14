@@ -8,6 +8,7 @@ import (
 	"toolcenter/config"
 	"toolcenter/scripts/admin"
 	"toolcenter/scripts/auth"
+	"toolcenter/scripts/moderation"
 	"toolcenter/scripts/tools"
 	"toolcenter/scripts/user"
 	"toolcenter/utils"
@@ -127,6 +128,7 @@ func setupRoutes(r *gin.Engine) {
 	userGroup.POST("/update_username", user.UpdateUsernameHandler)
 	userGroup.POST("/update_email", user.UpdateEmailHandler)
 	userGroup.POST("/delete", user.DeleteAccountHandler)
+	userGroup.POST("/sanctions/:id/appeal", moderation.AppealSanctionHandler)
 
 	toolsGroup := api.Group("/tools")
 	toolsGroup.POST("/add", tools.SubmitToolHandler)
@@ -146,6 +148,9 @@ func setupRoutes(r *gin.Engine) {
 
 	moderationGroup := api.Group("/moderation")
 	moderationGroup.Use(utils.RequireRole("Admin", "Moderator"))
+	moderationGroup.POST("/sanctions/:id", moderation.CreateSanctionHandler)
+	moderationGroup.GET("/sanctions/:id", moderation.ListSanctionsHandler)
+	moderationGroup.GET("/appeals", moderation.ListAppealsHandler)
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)

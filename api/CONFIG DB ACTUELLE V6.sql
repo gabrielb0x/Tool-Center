@@ -295,3 +295,29 @@ CREATE TABLE email_queue (
   body     TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB;
+
+-- ========= SANCTIONS =========
+CREATE TABLE sanctions (
+  sanction_id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  moderator_id CHAR(36) NOT NULL,
+  type ENUM('Warn','Ban','Limit') NOT NULL,
+  reason TEXT,
+  not_contestable BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  expires_at DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+  FOREIGN KEY (moderator_id) REFERENCES users (user_id) ON DELETE SET NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE sanction_appeals (
+  appeal_id CHAR(36) PRIMARY KEY,
+  sanction_id CHAR(36) NOT NULL,
+  user_id CHAR(36) NOT NULL,
+  message TEXT,
+  status ENUM('Pending','Approved','Rejected') DEFAULT 'Pending',
+  response TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (sanction_id) REFERENCES sanctions (sanction_id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+) ENGINE = InnoDB;

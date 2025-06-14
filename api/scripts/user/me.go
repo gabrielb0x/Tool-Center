@@ -91,33 +91,35 @@ FROM user_stats WHERE user_id = ?`, uid).
 
 	sanctions := make([]gin.H, 0)
 
-	if status != "Good" {
-		rows, err := db.Query(`
-            SELECT warn_id, reason, warn_date
-            FROM user_warns
-            WHERE user_id = ?
-            ORDER BY warn_date DESC`, uid)
-		if err == nil {
-			defer rows.Close()
-			for rows.Next() {
-				var (
-					warnID   int
-					reason   string
-					warnDate time.Time
-				)
-				if err = rows.Scan(&warnID, &reason, &warnDate); err == nil {
-					sanctions = append(sanctions, gin.H{
-						"warn_id":   warnID,
-						"reason":    reason,
-						"warn_date": warnDate,
-					})
+	rows, err := db.Query(`SELECT sanction_id,type,reason,not_contestable,created_at,expires_at FROM sanctions WHERE user_id = ? ORDER BY created_at DESC`, uid)
+	if err == nil {
+		defer rows.Close()
+		for rows.Next() {
+			var (
+				sid, typ, reason string
+				nc               bool
+				created, expires sql.NullTime
+			)
+			if err = rows.Scan(&sid, &typ, &reason, &nc, &created, &expires); err == nil {
+				s := gin.H{
+					"sanction_id":     sid,
+					"type":            typ,
+					"reason":          reason,
+					"not_contestable": nc,
 				}
+				if created.Valid {
+					s["created_at"] = created.Time
+				}
+				if expires.Valid {
+					s["expires_at"] = expires.Time
+				}
+				sanctions = append(sanctions, s)
 			}
-		} else {
-			utils.LogActivity(c, uid, "me", false, "warns query error")
-			c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
-			return
 		}
+	} else {
+		utils.LogActivity(c, uid, "me", false, "sanctions query error")
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
+		return
 	}
 
 	resp := gin.H{

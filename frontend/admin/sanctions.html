@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolCenter - Sanctions</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <style>
+    body{font-family:'Poppins',sans-serif;background:#0f172a;color:#fff;margin:0;}
+    .admin-header{display:flex;align-items:center;justify-content:space-between;padding:20px;background:#1e293b;}
+    .admin-sidebar{width:230px;background:#1e293b;position:fixed;top:0;bottom:0;padding-top:80px;}
+    .sidebar-item{display:block;padding:12px 20px;color:#fff;text-decoration:none;border-left:3px solid transparent;}
+    .sidebar-item.active,.sidebar-item:hover{background:#111827;border-color:#6366f1;}
+    .admin-content{margin-left:250px;padding:30px;}
+    table{width:100%;border-collapse:collapse;margin-top:20px;}
+    th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.1);}
+    th{text-align:left;}
+  </style>
+</head>
+<body>
+<header class="admin-header">
+  <h1>Gestion des sanctions</h1>
+</header>
+<div class="admin-sidebar">
+  <a href="/admin" class="sidebar-item">Tableau de bord</a>
+  <a href="/admin/users" class="sidebar-item">Utilisateurs</a>
+  <a href="/admin/sanctions" class="sidebar-item active">Sanctions</a>
+  <a href="/admin/logs" class="sidebar-item">Logs système</a>
+  <a href="/admin/tools" class="sidebar-item">Outils</a>
+</div>
+<main class="admin-content">
+  <table id="sanctions-table">
+    <thead>
+      <tr><th>Date</th><th>User ID</th><th>Type</th><th>Raison</th><th>Contestable</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+<script>
+fetch('/ressources/utils/api').then(r=>r.text()).then(api=>{
+  fetch(api+'/moderation/sanctions/'+new URLSearchParams(location.search).get('uid'),{credentials:'include'})
+    .then(r=>r.json()).then(data=>{if(data.success){const tb=document.querySelector('#sanctions-table tbody');data.sanctions.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${new Date(s.created_at).toLocaleDateString()}</td><td>${s.sanction_id}</td><td>${s.type}</td><td>${s.reason}</td><td>${s.not_contestable? 'Non':'Oui'}</td>`;tb.appendChild(tr);});}});
+});
+</script>
+</body>
+</html>

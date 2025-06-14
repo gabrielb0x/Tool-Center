@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolCenter - Modération</title>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+    <style>
+        body{font-family:'Inter',sans-serif;background:#0f0f13;color:#f0f0f5;margin:0;}
+        .container{display:flex;max-width:1200px;margin:30px auto;padding:0 5%;gap:25px;}
+        .sidebar{width:280px;background:#1a1a23;border-radius:16px;padding:16px 0;box-shadow:0 8px 30px rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);}        
+        .sidebar-title{font-size:1rem;font-weight:600;opacity:.7;padding:0 20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:16px;}
+        .sidebar-menu{list-style:none;padding:0;margin:0;}
+        .sidebar-menu li{margin-bottom:4px;}
+        .sidebar-menu a{display:flex;align-items:center;padding:12px 20px;color:#f0f0f5;text-decoration:none;transition:background .2s;border-left:3px solid transparent;}
+        .sidebar-menu a.active,.sidebar-menu a:hover{background:rgba(255,255,255,0.05);border-color:#3000FF;}
+        .sidebar-icon{width:20px;height:20px;margin-right:12px;}
+        .main-content{flex:1;}
+        .profile-card{background:#1a1a23;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);padding:30px;}
+        .skeleton{background:rgba(255,255,255,0.1);border-radius:8px;animation:pulse 1.5s infinite;}
+        .skeleton-text{height:16px;width:100%;margin-bottom:8px;}
+        .status-progress-bar{height:8px;background:#333;border-radius:4px;margin-bottom:16px;overflow:hidden;}
+        .status-progress{height:100%;width:0;background:linear-gradient(90deg,#10c95a,#2fd174);transition:width .5s;}
+        @keyframes pulse{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="sidebar">
+        <div class="sidebar-title">Navigation</div>
+        <ul class="sidebar-menu">
+            <li><a href="/account"> <img src="/assets/account.png" class="sidebar-icon">Informations du compte</a></li>
+            <li><a href="/account/tools"><img src="/assets/code.png" class="sidebar-icon">Tools Publiés</a></li>
+            <li><a href="/account/moderation" class="active"><img src="/assets/security-icon.png" class="sidebar-icon">Modération / Sanctions</a></li>
+            <li><a href="/account/support"><img src="/assets/support.png" class="sidebar-icon">Support / Tickets</a></li>
+            <li><a href="/account/security"><img src="/assets/security-icon.png" class="sidebar-icon">Sécurité</a></li>
+            <li><a href="/account/preferences"><img src="/assets/preferences-icon.png" class="sidebar-icon">Préférences</a></li>
+            <li><a href="/account/confidentiality"><img src="/assets/privacy-icon.png" class="sidebar-icon">Confidentialité</a></li>
+            <li><a href="/account/notifications"><img src="/assets/newsletter.png" class="sidebar-icon">Notifications</a></li>
+            <li><a href="/account/logout"><img src="/assets/logout.png" class="sidebar-icon">Se déconnecter</a></li>
+        </ul>
+    </nav>
+    <div class="main-content">
+        <div class="profile-card">
+            <h2>Statut du compte</h2>
+            <div class="status-progress-bar"><div class="status-progress" id="statusFill"></div></div>
+            <p class="skeleton skeleton-text" style="width:60%" id="statusText"></p>
+            <h3 style="margin-top:30px;">Sanctions récentes</h3>
+            <div id="sanctionsList">
+                <p class="skeleton skeleton-text" style="width:80%"></p>
+                <p class="skeleton skeleton-text" style="width:70%"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+let apiBaseURL="";
+function fetchData(){
+  const token=localStorage.getItem('token');
+  if(!token) return;
+  fetch('/ressources/utils/api').then(r=>r.text()).then(url=>{apiBaseURL=url;return fetch(`${apiBaseURL}/user/me`,{headers:{'Authorization':`Bearer ${token}`}});}).then(r=>r.json()).then(data=>{if(data.success){updateStatus(data.user);}});
+}
+function updateStatus(user){
+  const steps=['Good','Limited','Very Limited','At Risk','Banned'];
+  const widths=['10%','30%','50%','70%','100%'];
+  const idx=steps.indexOf(user.account_status);
+  document.getElementById('statusFill').style.width=widths[idx];
+  document.getElementById('statusText').textContent=`Statut: ${steps[idx]}`;
+  const list=document.getElementById('sanctionsList');
+  list.innerHTML='';
+  if(user.sanctions){
+    user.sanctions.forEach(s=>{
+      const p=document.createElement('p');
+      p.textContent=`${new Date(s.created_at).toLocaleDateString()} - ${s.type}: ${s.reason}`;
+      list.appendChild(p);
+    });
+  } else {
+    list.innerHTML='<p>Aucune sanction</p>';
+  }
+}
+document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>

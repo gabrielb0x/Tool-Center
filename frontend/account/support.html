@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolCenter - Support</title>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+    <style>
+        body{font-family:'Inter',sans-serif;background:#0f0f13;color:#f0f0f5;margin:0;}
+        .container{display:flex;max-width:1200px;margin:30px auto;padding:0 5%;gap:25px;}
+        .sidebar{width:280px;background:#1a1a23;border-radius:16px;padding:16px 0;box-shadow:0 8px 30px rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);}
+        .sidebar-title{font-size:1rem;font-weight:600;opacity:.7;padding:0 20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:16px;}
+        .sidebar-menu{list-style:none;padding:0;margin:0;}
+        .sidebar-menu li{margin-bottom:4px;}
+        .sidebar-menu a{display:flex;align-items:center;padding:12px 20px;color:#f0f0f5;text-decoration:none;transition:background .2s;border-left:3px solid transparent;}
+        .sidebar-menu a.active,.sidebar-menu a:hover{background:rgba(255,255,255,0.05);border-color:#3000FF;}
+        .sidebar-icon{width:20px;height:20px;margin-right:12px;}
+        .main-content{flex:1;}
+        .profile-card{background:#1a1a23;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.08);padding:30px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="sidebar">
+        <div class="sidebar-title">Navigation</div>
+        <ul class="sidebar-menu">
+            <li><a href="/account"> <img src="/assets/account.png" class="sidebar-icon">Informations du compte</a></li>
+            <li><a href="/account/tools"><img src="/assets/code.png" class="sidebar-icon">Tools Publiés</a></li>
+            <li><a href="/account/moderation"><img src="/assets/security-icon.png" class="sidebar-icon">Modération / Sanctions</a></li>
+            <li><a href="/account/support" class="active"><img src="/assets/support.png" class="sidebar-icon">Support / Tickets</a></li>
+            <li><a href="/account/security"><img src="/assets/security-icon.png" class="sidebar-icon">Sécurité</a></li>
+            <li><a href="/account/preferences"><img src="/assets/preferences-icon.png" class="sidebar-icon">Préférences</a></li>
+            <li><a href="/account/confidentiality"><img src="/assets/privacy-icon.png" class="sidebar-icon">Confidentialité</a></li>
+            <li><a href="/account/notifications"><img src="/assets/newsletter.png" class="sidebar-icon">Notifications</a></li>
+            <li><a href="/account/logout"><img src="/assets/logout.png" class="sidebar-icon">Se déconnecter</a></li>
+        </ul>
+    </nav>
+    <div class="main-content">
+        <div class="profile-card">
+            <h2>Support</h2>
+            <p>La gestion des tickets arrive bientôt.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
