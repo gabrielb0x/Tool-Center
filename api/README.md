@@ -206,7 +206,8 @@ cp config.sample.json config.json && nano config.json
     "cleanup": {
         "check_interval": 600,
         "grace_period": 10
-    }
+    },
+    "avatar_cooldown_hours": 24
 }
 ```
 

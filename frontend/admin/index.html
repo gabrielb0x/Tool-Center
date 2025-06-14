@@ -659,7 +659,22 @@
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
+    .confirm-modal {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      width: 500px;
+      max-width: 90%;
+      border: 1px solid var(--border-color);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
     .modal-overlay.active .user-modal {
+      transform: translateY(0);
+    }
+
+    .modal-overlay.active .confirm-modal {
       transform: translateY(0);
     }
 
@@ -895,6 +910,10 @@
 
     .btn-danger:hover {
       background-color: #dc2626;
+    }
+
+    .hidden {
+      display: none;
     }
 
     .toast-container {
@@ -1208,23 +1227,43 @@
           </div>
           <!-- Champs supplémentaires retirés car non gérés par l'API -->
         </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" id="cancel-changes">
+      <i class="fas fa-times"></i> Annuler
+    </button>
+    <button class="btn btn-danger" id="ban-user">
+      <i class="fas fa-ban"></i> Bannir
+    </button>
+    <button class="btn btn-primary" id="save-changes">
+      <i class="fas fa-save"></i> Enregistrer
+    </button>
+  </div>
+</div>
+</div>
+
+<div class="modal-overlay" id="ban-modal">
+  <div class="confirm-modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="ban-modal-title">Bannir l'utilisateur</h3>
+      <button class="close-modal" id="close-ban-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group ban-reason-group">
+        <label for="ban-reason">Raison du ban</label>
+        <textarea id="ban-reason" class="form-control" rows="3" placeholder="Indiquez la raison"></textarea>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="cancel-changes">
-          <i class="fas fa-times"></i> Annuler
-        </button>
-        <button class="btn btn-danger" id="ban-user">
-          <i class="fas fa-ban"></i> Bannir
-        </button>
-        <button class="btn btn-primary" id="save-changes">
-          <i class="fas fa-save"></i> Enregistrer
-        </button>
-      </div>
+      <p id="unban-text" class="hidden">Voulez-vous vraiment débannir cet utilisateur ?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-ban">Annuler</button>
+      <button class="btn btn-danger" id="confirm-ban">Confirmer</button>
     </div>
   </div>
+</div>
 
-  <div class="toast-container" id="toast-container">
-  </div>
+<div class="toast-container" id="toast-container">
+</div>
 
   <script src="/ressources/utils/panel-config.js"></script>
   <script>
@@ -1759,24 +1798,10 @@
       });
       
       container.querySelectorAll('.action-btn.delete').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const userId = btn.getAttribute('data-user-id');
+        btn.addEventListener('click', () => {
+          currentUserId = btn.getAttribute('data-user-id');
           const action = btn.getAttribute('data-action');
-          if (action === 'ban') {
-            if (confirm('Êtes-vous sûr de vouloir bannir cet utilisateur ?')) {
-              const result = await banUser(userId, 'Raison non spécifiée');
-              if (result) {
-                loadUsers();
-              }
-            }
-          } else {
-            if (confirm('Débannir cet utilisateur ?')) {
-              const result = await unbanUser(userId);
-              if (result) {
-                loadUsers();
-              }
-            }
-          }
+          openBanModal(action === 'unban');
         });
       });
       
@@ -2086,27 +2111,71 @@
         }
       });
       
-      document.getElementById('ban-user').addEventListener('click', async () => {
+      const banModal = document.getElementById('ban-modal');
+      const closeBanModal = document.getElementById('close-ban-modal');
+      const cancelBan = document.getElementById('cancel-ban');
+      const confirmBan = document.getElementById('confirm-ban');
+      const banReasonInput = document.getElementById('ban-reason');
+      const unbanText = document.getElementById('unban-text');
+      const banReasonGroup = document.querySelector('.ban-reason-group');
+
+      function openBanModal(isUnban) {
+        banModal.classList.add('active');
+        if (isUnban) {
+          document.getElementById('ban-modal-title').textContent = 'Débannir l\'utilisateur';
+          banReasonGroup.style.display = 'none';
+          unbanText.classList.remove('hidden');
+          confirmBan.textContent = 'Débannir';
+        } else {
+          document.getElementById('ban-modal-title').textContent = 'Bannir l\'utilisateur';
+          banReasonGroup.style.display = 'block';
+          unbanText.classList.add('hidden');
+          confirmBan.textContent = 'Bannir';
+          banReasonInput.value = '';
+        }
+      }
+
+      function closeBan() {
+        banModal.classList.remove('active');
+        banReasonInput.value = '';
+      }
+
+      closeBanModal.addEventListener('click', closeBan);
+      cancelBan.addEventListener('click', closeBan);
+
+      document.getElementById('ban-user').addEventListener('click', () => {
         if (!currentUserId) return;
         const status = document.getElementById('account-status').value;
+        openBanModal(status === 'Banned');
+      });
+
+      confirmBan.addEventListener('click', async () => {
+        if (!currentUserId) return;
+        const status = document.getElementById('account-status').value;
+        confirmBan.disabled = true;
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner';
+        confirmBan.prepend(spinner);
+        let result = null;
         if (status === 'Banned') {
-          if (confirm('Débannir cet utilisateur ?')) {
-            const result = await unbanUser(currentUserId);
-            if (result) {
-              closeUserModal();
-              await loadUsers();
-            }
-          }
+          result = await unbanUser(currentUserId);
         } else {
-          const reason = prompt('Entrez la raison du ban:');
-          if (reason) {
-            const result = await banUser(currentUserId, reason);
-            if (result) {
-              closeUserModal();
-              await loadUsers();
-            }
+          const reason = banReasonInput.value.trim();
+          if (!reason) {
+            showToast('error', 'Vous devez préciser une raison');
+            confirmBan.disabled = false;
+            spinner.remove();
+            return;
           }
+          result = await banUser(currentUserId, reason);
         }
+        if (result) {
+          closeBan();
+          closeUserModal();
+          await loadUsers();
+        }
+        confirmBan.disabled = false;
+        spinner.remove();
       });
     }
 
