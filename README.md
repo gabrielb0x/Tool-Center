@@ -2,8 +2,8 @@
 
 ![Tool Center Banner](./frontend/assets/Banniere-TC.png)
 
-> **Tool Center**, c’est **LE** projet phare de **[@gabex749](https://github.com/gabex749)**.  
-> Un concentré de **code**, de **passion**, et d’**utilité**, taillé pour ceux qui veulent des outils de qualitée.
+> **Tool Center**, c’est **LE** projet phare de **[@gabrielb0x](https://github.com/gabrielb0x)**.  
+> Un concentré de **code**, de **passion**, et d’**utilité**, fiat pour ceux qui veulent des outils de qualitée.
 
 ---
 
@@ -12,10 +12,10 @@
 **Tool Center**, c’est une plateforme web pensée pour :
 - 🔧 **Créer & publier** tes propres outils
 - 💬 **Liker, commenter et partager** ceux des autres
-- 👤 **Gérer ton compte** : avatar, paramètres, stats persos
+- 👤 **Gérer ton compte** : avatar, paramètres, statistiques
 - 🛡️ Un **système de modération** ultra propre
 - 📜 **Logs complets** : utilisateurs, admins, actions
-- ⚡ Un **design responsive**, fluide et sans chichis
+- ⚡ Un **design responsive**, fluide et pensé pour être agréable
 
 <br/>
 
@@ -28,7 +28,7 @@
 Parce que le monde avait besoin :
 - D’un **hub d’outils web** open-source, **sans pubs**, **sans trackers**
 - D’un endroit où **les devs indés peuvent briller**
-- D’un site **moderne**, **rapide** et surtout **pas dégueu**
+- D’un site **moderne**, **rapide** et surtout **pas pensé pour les devs**
 - D’un projet fait **par un passionné**, pour les passionnés
 
 ---
@@ -38,7 +38,7 @@ Parce que le monde avait besoin :
 | 🧩 Composant       | ⚙️ Technologies utilisées             |
 |-------------------|-------------------------------------|
 | **Backend API**   | Go (Golang) + MariaDB               |
-| **Frontend**      | HTML, JS, CSS (vanilla stylé)       |
+| **Frontend**      | HTML, JS, CSS (vanilla)             |
 | **Auth**          | Email, tokens SHA-256 hashés, IDs UUIDv7, vérif,sessions   |
 | **Hosting**       | Raspberry Pi 5                      |
 | **Proxy / HTTPS** | Nginx + SSL via Cloudflare          |
@@ -58,9 +58,9 @@ Parce que le monde avait besoin :
 
 ## 🧙‍♂️ **Le créateur**
 
-Développé par **[@gabex749](https://github.com/gabex749)**,  
-jeune dev full stack passionné par l’**électronique**, la **cybersécurité**, et les **projets innovant**.  
-👉 **Tool Center** est son projet **le plus gros, le plus poussé et le plus ambitieux**.
+Développé par **[@gabrielb0x](https://github.com/gabrielb0x)**,  
+jeune dev full stack passionné par l’**Intelligence articifielle**, la **cybersécurité**, et les **projets innovant**.  
+👉 **Tool Center** est son projet **le plus gros, le plus poussé et le plus ambitieux** à ce jour.
 
 ---
 
@@ -72,7 +72,7 @@ jeune dev full stack passionné par l’**électronique**, la **cybersécurité*
 - ❤️‍🔥 Passion pour l'informatique
 
 Tu veux participer, contribuer, ou signaler un bug ?  
-→ **Tu peux me contacter sur gabex@gabex.xyz**
+→ **Tu peux me contacter sur gabex@gabex.xyz** (email suséptible de changer)
 
 ---
 
