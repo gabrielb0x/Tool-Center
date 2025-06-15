@@ -2,20 +2,20 @@
 
 ![Tool Center Banner](./frontend/assets/Banniere-TC.png)
 
-> **Tool Center** est **LE** projet phare de **[@gabrielb0x](https://github.com/gabrielb0x)**.
-> Un concentré de **code**, de **passion** et d’**utilité**, fait pour ceux qui veulent des outils de **qualité**.
+> **Tool Center** is the flagship project of **[@gabrielb0x](https://github.com/gabrielb0x)**.
+> A mix of **code**, **passion** and **usefulness** made for people who want quality tools.
 
 ---
 
-## 🌐 **Aperçu rapide**
+## 🌐 **Quick overview**
 
-**Tool Center**, c’est une plateforme web pensée pour :
-- 🔧 **Créer & publier** tes propres outils
-- 💬 **Liker, commenter et partager** ceux des autres
-- 👤 **Gérer ton compte** : avatar, paramètres, statistiques
-- 🛡️ Un **système de modération** ultra propre
-- 📜 **Logs complets** : utilisateurs, admins, actions
-- ⚡ Un **design responsive**, fluide et pensé pour être agréable
+**Tool Center** is a web platform designed to:
+- 🔧 **Create & publish** your own tools
+- 💬 **Like, comment and share** other people's tools
+- 👤 **Manage your account**: avatar, settings, statistics
+- 🛡️ A clean **moderation system**
+- 📜 **Comprehensive logs** for users and admins
+- ⚡ A responsive design focused on usability
 
 <br/>
 
@@ -23,72 +23,72 @@
 
 ---
 
-## 🧠 **Pourquoi Tool Center existe ?**
+## 🧠 **Why does Tool Center exist?**
 
-Parce que le monde avait besoin :
-- D’un **hub d’outils web** open-source, **sans pubs**, **sans trackers**
-- D’un endroit où **les devs indés peuvent briller**
-- D’un site **moderne**, **rapide** et surtout **pas pensé pour les devs**
-- D’un projet fait **par un passionné**, pour les passionnés
+Because the world needed:
+- An **open-source hub** for web tools, **without ads** and **without trackers**
+- A place where **indie developers can shine**
+- A **modern** and **fast** site not solely aimed at developers
+- A project made **by a passionate developer** for other enthusiasts
 
 ---
 
-## 🧱 **Architecture du projet**
+## 🧱 **Project architecture**
 
-| 🧩 Composant       | ⚙️ Technologies utilisées             |
-|-------------------|-------------------------------------|
+| 🧩 Part       | ⚙️ Tech stack                        |
+|--------------|--------------------------------------|
 | **Backend API**   | Go (Golang) + MariaDB               |
 | **Frontend**      | HTML, JS, CSS (vanilla)             |
-| **Auth**          | Email, tokens SHA-256 hashés, IDs UUIDv7, vérif,sessions   |
-| **Hosting**       | Raspberry Pi 5                      |
+| **Auth**          | Email with hashed tokens, UUIDv7 IDs, verification, sessions |
+| **Hosting**       | Raspberry Pi 5                      |
 | **Proxy / HTTPS** | Nginx + SSL via Cloudflare          |
-| **Domaines**      | [tool-center.fr](https://tool-center.fr) & [gabex.xyz](https://gabex.xyz) |
+| **Domains**       | [tool-center.fr](https://tool-center.fr) & [gabex.xyz](https://gabex.xyz) |
 
 ---
 
-## ⚙️ **Configuration rapide**
+## ⚙️ **Quick configuration**
 
-Toutes les variables de l'API sont centralisées dans `api/example config.json`.
-Adaptez ce fichier (ports, base de données, SMTP...) pour correspondre à votre environnement.
+All API variables live in `api/example config.json`.
+Adjust this file (ports, database, SMTP...) to match your environment.
 
 ---
 
-## 📸 **Galerie**
+## 📸 **Gallery**
 
-| 🔐 Connexion                         | 📊 Tableau de bord                  |
+| 🔐 Login                             | 📊 Dashboard                        |
 |-------------------------------------|------------------------------------|
 | ![Login](./frontend/assets/login-preview.png)        | ![Dashboard](./frontend/assets/dashbord-preview.png) |
 
-> _Ces captures ont été réalisées le 24/05/2025. Il peut donc exister une différence avec la réalité actuelle._
+> _Screenshots taken on 2025‑05‑24. The real interface may have evolved since then._
 
 ---
 
-## 🧙‍♂️ **Le créateur**
+## 🧙‍♂️ **The creator**
 
-Développé par **[@gabrielb0x](https://github.com/gabrielb0x)**,  
-jeune dev full stack passionné par l’**intelligence artificielle**, la **cybersécurité** et les **projets innovants**.
-👉 **Tool Center** est son projet **le plus gros, le plus poussé et le plus ambitieux** à ce jour.
-
----
-
-## ❤️ **Soutien & Contributions**
-
-**Tool Center** est un projet **open-source**, fait avec :
-- 💕 Amour
-- ⏱️ Patience et détermination
-- ❤️‍🔥 Passion pour l'informatique
-
-Tu veux participer, contribuer, ou signaler un bug ?  
-→ **Tu peux me contacter sur gabex@gabex.xyz** (adresse susceptible de changer)
+Developed by **[@gabrielb0x](https://github.com/gabrielb0x)**,
+a young full‑stack developer passionate about **AI**, **cybersecurity** and **innovative projects**.
+👉 **Tool Center** is his biggest and most ambitious project so far.
 
 ---
 
-## 🔮 **À venir très bientôt**
+## ❤️ **Support & Contributions**
 
-- 🔄 Mise à jour auto des outils postés
-- 📊 Stats publiques & classement utilisateurs
-- ⚔️ Gamification + système de niveau
-- 🌍 Traductions multilangues
+**Tool Center** is an **open‑source** project built with:
+- 💕 Love
+- ⏱️ Patience and determination
+- ❤️‍🔥 Passion for computing
+
+Want to contribute or report a bug?
+→ **Reach me at gabex@gabex.xyz** (address may change)
 
 ---
-## **© Gabriel B., 2024-2025 — Tous droits réservés.**
+
+## 🔮 **Coming soon**
+
+- 🔄 Automatic update of posted tools
+- 📊 Public statistics & user ranking
+- ⚔️ Gamification and level system
+- 🌍 Multilingual translations
+
+---
+## **© Gabriel B., 2024-2025 — All rights reserved.**
