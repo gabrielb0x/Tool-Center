@@ -2,8 +2,8 @@
 
 ![Tool Center Banner](./frontend/assets/Banniere-TC.png)
 
-> **Tool Center**, c’est **LE** projet phare de **[@gabrielb0x](https://github.com/gabrielb0x)**.  
-> Un concentré de **code**, de **passion**, et d’**utilité**, fiat pour ceux qui veulent des outils de qualitée.
+> **Tool Center** est **LE** projet phare de **[@gabrielb0x](https://github.com/gabrielb0x)**.
+> Un concentré de **code**, de **passion** et d’**utilité**, fait pour ceux qui veulent des outils de **qualité**.
 
 ---
 
@@ -46,20 +46,27 @@ Parce que le monde avait besoin :
 
 ---
 
+## ⚙️ **Configuration rapide**
+
+Toutes les variables de l'API sont centralisées dans `api/example config.json`.
+Adaptez ce fichier (ports, base de données, SMTP...) pour correspondre à votre environnement.
+
+---
+
 ## 📸 **Galerie**
 
 | 🔐 Connexion                         | 📊 Tableau de bord                  |
 |-------------------------------------|------------------------------------|
 | ![Login](./frontend/assets/login-preview.png)        | ![Dashboard](./frontend/assets/dashbord-preview.png) |
 
-> _Ces photos ont étés réalisés le 24/05/2025. Il peut donc y avoir une différence entre les photos et la réalitée actuelle._
+> _Ces captures ont été réalisées le 24/05/2025. Il peut donc exister une différence avec la réalité actuelle._
 
 ---
 
 ## 🧙‍♂️ **Le créateur**
 
 Développé par **[@gabrielb0x](https://github.com/gabrielb0x)**,  
-jeune dev full stack passionné par l’**Intelligence articifielle**, la **cybersécurité**, et les **projets innovant**.  
+jeune dev full stack passionné par l’**intelligence artificielle**, la **cybersécurité** et les **projets innovants**.
 👉 **Tool Center** est son projet **le plus gros, le plus poussé et le plus ambitieux** à ce jour.
 
 ---
@@ -68,11 +75,11 @@ jeune dev full stack passionné par l’**Intelligence articifielle**, la **cybe
 
 **Tool Center** est un projet **open-source**, fait avec :
 - 💕 Amour
-- ⏱️ Patience et determination
+- ⏱️ Patience et détermination
 - ❤️‍🔥 Passion pour l'informatique
 
 Tu veux participer, contribuer, ou signaler un bug ?  
-→ **Tu peux me contacter sur gabex@gabex.xyz** (email suséptible de changer)
+→ **Tu peux me contacter sur gabex@gabex.xyz** (adresse susceptible de changer)
 
 ---
 

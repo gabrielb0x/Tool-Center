@@ -1,7 +1,7 @@
 # 🚀 **ToolCenter API v1**  
-⏱️ **Date de dernière modification : 04/06/2025**
+⏱️ **Date de dernière modification : 05/06/2025**
 
-API **ultra‑rapide** en **Go** 🐹 pour gérer tes **utilisateurs**, tes **outils** et tout le bazar autour (auth, réservations, stats, etc.).
+API performante écrite en **Go** 🐹 pour gérer les **utilisateurs**, les **outils** et l'ensemble des services associés (authentification, réservations, statistiques, etc.).
 
 ---
 
@@ -44,15 +44,27 @@ API **ultra‑rapide** en **Go** 🐹 pour gérer tes **utilisateurs**, tes **o
 /var/www/toolcenter/api
 ├── config/           # config.go, db.go
 ├── scripts/          # Handlers REST
-│   ├── auth/         # login.go, register.go
-│   ├── tools/        # my_tools.go
-│   └── user/         # avatar.go, me.go, profile.go, verify_email.go
+│   ├── auth/         # login.go, register.go, logout.go
+│   ├── tools/        # submit_tool.go, my_tools.go, delete_tool.go
+│   ├── user/         # avatar.go, me.go, profile.go,
+│   │                 # update_username.go, update_email.go,
+│   │                 # verify_email.go, delete_account.go
+│   └── admin/        # stats.go, logs.go, user_list.go,
+│                     # user_details.go, update_user.go,
+│                     # ban_user.go, unban_user.go, user_activity.go
 ├── utils/            # check.go (middlewares & helpers)
 ├── worker/           # cleanup worker intégré
 ├── start.sh          # démarrage dev "go run main.go"
 ├── main.go           # point d'entrée
 └── README.md         # ce fichier
 ```
+
+## 📜 Scripts principaux
+
+- **Auth** : `login.go`, `logout.go`, `register.go`
+- **User** : `me.go`, `profile.go`, `update_username.go`, `update_email.go`, `avatar.go`, `delete_account.go`, `verify_email.go`
+- **Tools** : `submit_tool.go`, `my_tools.go`, `delete_tool.go`
+- **Admin** : `stats.go`, `logs.go`, `user_list.go`, `user_details.go`, `update_user.go`, `ban_user.go`, `unban_user.go`, `user_activity.go`
 
 ---
 
@@ -81,6 +93,16 @@ Réponse :
     "token": "<JWT or random 128 hex>"
 }
 ```
+
+### User
+
+| Méthode | URL | Description |
+| ------- | --- | ----------- |
+| `GET`    | `/api/user/me`           | Profil complet |
+| `POST`   | `/api/user/update_username` | Modifier le pseudo |
+| `POST`   | `/api/user/update_email`    | Modifier l'e-mail |
+| `POST`   | `/api/user/avatar`          | Mettre à jour l'avatar |
+| `DELETE` | `/api/user/delete`          | Supprimer le compte |
 
 ### Utilisateur ↦ `/api/user/me`
 
@@ -142,6 +164,14 @@ Réponse :
 }
 ```
 
+### Tools
+
+| Méthode | URL | Description |
+| ------- | --- | ----------- |
+| `POST`   | `/api/tools`      | Publier un outil |
+| `GET`    | `/api/tools`      | Liste des outils |
+| `DELETE` | `/api/tools/:id`  | Supprimer un outil |
+
 ### Modifier son pseudo ↦ `/api/user/update_username`
 
 `POST` avec un champ `username` (3-50 caractères). Limité à **une fois tous les 30 jours**.
@@ -164,7 +194,15 @@ curl -X POST https://api.tool-center.fr/api/user/update_email \
     -d '{"new_email":"exemple@mail.com","current_password":"monpass"}'
 ```
 
-*(d'autres routes : `/api/tools`, `/api/reservations`, `/api/moderation`, etc. — check le dossier `scripts/`)*
+### Administration
+
+| Méthode | URL | Description |
+| ------- | --- | ----------- |
+| `GET` | `/api/admin/user_list` | Liste des utilisateurs |
+| `POST` | `/api/admin/ban` | Bannir un utilisateur |
+| `POST` | `/api/admin/unban` | Débannir un utilisateur |
+
+*(d'autres routes : `/api/reservations`, `/api/moderation`, etc. — voir le dossier `scripts/`)*
 
 ---
 
