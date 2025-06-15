@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolCenter - Support</title>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+    <style>
+        :root { --primary-color:#3000FF; --primary-hover:#2500cc; --dark-bg:#0f0f13; --dark-card:#1a1a23; --dark-text:#f0f0f5; --dark-border:rgba(255,255,255,0.08); --light-bg:#f8f9fa; --light-card:#ffffff; --light-text:#2d3748; --light-border:rgba(0,0,0,0.08); --transition:all .3s ease; --radius:16px; }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:"Poppins",sans-serif;background:var(--dark-bg);color:var(--dark-text);transition:var(--transition);}
+        body.light-mode{background:var(--light-bg);color:var(--light-text);}
+        .sidebar{width:260px;position:fixed;top:0;bottom:0;background:var(--dark-card);border-right:1px solid var(--dark-border);padding:20px 0;overflow-y:auto;}
+        body.light-mode .sidebar{background:var(--light-card);border-color:var(--light-border);}
+        .sidebar-menu{list-style:none;padding:0;margin:0;}
+        .sidebar-menu li{margin:6px 0;}
+        .sidebar-menu a{display:flex;align-items:center;padding:10px 20px;color:inherit;text-decoration:none;border-radius:8px;}
+        .sidebar-menu a:hover,.sidebar-menu a.active{background:rgba(48,0,255,0.1);color:var(--primary-color);}
+        .sidebar-icon{width:20px;height:20px;margin-right:12px;filter:invert(1);}
+        body.light-mode .sidebar-icon{filter:none;}
+        .main-content{margin-left:260px;padding:40px;min-height:100vh;}
+        form{background:var(--dark-card);border:1px solid var(--dark-border);padding:20px;border-radius:var(--radius);}
+        body.light-mode form{background:var(--light-card);border-color:var(--light-border);}
+        input,textarea{width:100%;padding:10px;border:1px solid var(--dark-border);border-radius:8px;background:none;color:inherit;margin-top:8px;margin-bottom:16px;}
+        body.light-mode input,body.light-mode textarea{border-color:var(--light-border);}
+        button{padding:10px 20px;border:none;border-radius:8px;background:var(--primary-color);color:#fff;cursor:pointer;}
+        table{width:100%;border-collapse:collapse;margin-top:20px;}
+        th,td{padding:10px;text-align:left;border-bottom:1px solid var(--dark-border);}
+        body.light-mode th,body.light-mode td{border-color:var(--light-border);}
+    </style>
+</head>
+<body>
+    <button class="theme-switcher" id="theme-switcher" style="position:fixed;top:10px;right:10px;background:none;border:none;cursor:pointer;">
+        <img id="theme-icon" src="/assets/switcher.png" alt="Switch" style="width:24px;height:24px;">
+    </button>
+    <nav class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/account"><img src="/assets/account.png" class="sidebar-icon" alt="Infos">Informations du compte</a></li>
+            <li><a href="/account/tools"><img src="/assets/code.png" class="sidebar-icon" alt="Tools">Tools Publiés</a></li>
+            <li><a href="/account/moderation"><img src="/assets/personnaliser.png" class="sidebar-icon" alt="Mod">Modération / Sanctions</a></li>
+            <li><a href="/account/support" class="active"><img src="/assets/support.png" class="sidebar-icon" alt="Support">Support / Tickets</a></li>
+            <li><a href="/account/security"><img src="/assets/security-icon.png" class="sidebar-icon" alt="Sec">Sécurité</a></li>
+            <li><a href="/account/preferences"><img src="/assets/preferences-icon.png" class="sidebar-icon" alt="Pref">Préférences</a></li>
+            <li><a href="/account/confidentiality"><img src="/assets/privacy-icon.png" class="sidebar-icon" alt="Conf">Confidentialité</a></li>
+            <li><a href="/account/notifications"><img src="/assets/newsletter.png" class="sidebar-icon" alt="Notif">Notifications</a></li>
+            <li><a href="/account/logout"><img src="/assets/logout.png" class="sidebar-icon" alt="Logout">Se déconnecter</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <h2>Ouvrir un ticket</h2>
+        <form id="ticketForm">
+            <label>Sujet<input type="text" id="subject" required></label>
+            <label>Message<textarea id="message" rows="5" required></textarea></label>
+            <button type="submit">Envoyer</button>
+        </form>
+        <table id="ticketsTable"></table>
+    </div>
+    <script>
+        const apiBaseURL='/api';
+        function initTheme(){
+            const s=document.getElementById('theme-switcher');const i=document.getElementById('theme-icon');const saved=localStorage.getItem('theme');if(saved==='light'){document.body.classList.add('light-mode');i.src='/assets/switcher-noir.png';}s.onclick=()=>{const dark=!document.body.classList.contains('light-mode');document.body.classList.toggle('light-mode');localStorage.setItem('theme',dark?'light':'dark');i.src=dark?'/assets/switcher-noir.png':'/assets/switcher.png';};
+        }
+        function loadTickets(){
+            const token=localStorage.getItem('token');
+            fetch(`${apiBaseURL}/user/tickets`,{headers:{'Authorization':`Bearer ${token}`}}).then(r=>r.json()).then(data=>{
+                if(!data.success) return;const table=document.getElementById('ticketsTable');table.innerHTML='<tr><th>Sujet</th><th>Statut</th><th>Créé</th></tr>';data.tickets.forEach(t=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${t.subject}</td><td>${t.status}</td><td>${new Date(t.created_at).toLocaleDateString('fr-FR')}</td>`;table.appendChild(tr);});
+            });
+        }
+        document.getElementById('ticketForm').addEventListener('submit',e=>{e.preventDefault();const token=localStorage.getItem('token');fetch(`${apiBaseURL}/user/tickets`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({subject:subject.value,message:message.value})}).then(r=>r.json()).then(d=>{if(d.success){subject.value='';message.value='';loadTickets();}});});
+        document.addEventListener('DOMContentLoaded',()=>{initTheme();loadTickets();if(!localStorage.getItem('token')){window.location='/signin.html';}});
+    </script>
+</body>
+</html>

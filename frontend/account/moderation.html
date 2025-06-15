@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolCenter - Modération</title>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+    <style>
+        :root {
+            --primary-color: #3000FF;
+            --primary-hover: #2500cc;
+            --primary-light: rgba(48,0,255,0.1);
+            --dark-bg: #0f0f13;
+            --dark-card: #1a1a23;
+            --dark-text: #f0f0f5;
+            --dark-border: rgba(255,255,255,0.08);
+            --light-bg: #f8f9fa;
+            --light-card: #ffffff;
+            --light-text: #2d3748;
+            --light-border: rgba(0,0,0,0.08);
+            --transition: all .3s ease;
+            --radius: 16px;
+            --skeleton-color: rgba(255,255,255,0.1);
+            --skeleton-light: rgba(0,0,0,0.05);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:"Poppins",sans-serif;background:var(--dark-bg);color:var(--dark-text);transition:var(--transition);}
+        body.light-mode{background:var(--light-bg);color:var(--light-text);}
+        .sidebar{width:260px;position:fixed;top:0;bottom:0;background:var(--dark-card);border-right:1px solid var(--dark-border);padding:20px 0;overflow-y:auto;}
+        body.light-mode .sidebar{background:var(--light-card);border-color:var(--light-border);}
+        .sidebar-title{margin:0 20px 10px;font-size:1.1rem;font-weight:600;}
+        .sidebar-menu{list-style:none;padding:0;margin:0;}
+        .sidebar-menu li{margin:6px 0;}
+        .sidebar-menu a{display:flex;align-items:center;padding:10px 20px;color:inherit;text-decoration:none;position:relative;border-radius:8px;}
+        .sidebar-menu a:hover,.sidebar-menu a.active{background:var(--primary-light);color:var(--primary-color);}
+        .sidebar-icon{width:20px;height:20px;margin-right:12px;filter:invert(1);}
+        body.light-mode .sidebar-icon{filter:none;}
+        .main-content{margin-left:260px;padding:40px;min-height:100vh;}
+        .status-card{background:var(--dark-card);border:1px solid var(--dark-border);border-radius:var(--radius);padding:30px;animation:fadeIn .3s ease;}
+        body.light-mode .status-card{background:var(--light-card);border-color:var(--light-border);}
+        .status-progress-bar{height:8px;background:var(--dark-border);border-radius:4px;overflow:hidden;margin-top:10px;}
+        .status-progress{height:100%;width:0;background:linear-gradient(90deg,#10c95a,#2fd174);transition:width .4s ease;}
+        .skeleton{background:var(--skeleton-color);border-radius:4px;animation:pulse 1.5s infinite;}
+        body.light-mode .skeleton{background:var(--skeleton-light);}
+        @keyframes pulse{0%{opacity:.5;}50%{opacity:1;}100%{opacity:.5;}}
+        @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+        table{width:100%;border-collapse:collapse;margin-top:20px;}
+        th,td{padding:10px;text-align:left;border-bottom:1px solid var(--dark-border);} 
+        body.light-mode th,body.light-mode td{border-color:var(--light-border);}
+    </style>
+</head>
+<body>
+    <button class="theme-switcher" id="theme-switcher" style="position:fixed;top:10px;right:10px;background:none;border:none;cursor:pointer;">
+        <img id="theme-icon" src="/assets/switcher.png" alt="Switch" style="width:24px;height:24px;">
+    </button>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="sidebar-title">Navigation</h3>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="/account"><img src="/assets/account.png" class="sidebar-icon" alt="Infos">Informations du compte</a></li>
+            <li><a href="/account/tools"><img src="/assets/code.png" class="sidebar-icon" alt="Tools">Tools Publiés</a></li>
+            <li><a href="/account/moderation" class="active"><img src="/assets/personnaliser.png" class="sidebar-icon" alt="Mod">Modération / Sanctions</a></li>
+            <li><a href="/account/support"><img src="/assets/support.png" class="sidebar-icon" alt="Support">Support / Tickets</a></li>
+            <li><a href="/account/security"><img src="/assets/security-icon.png" class="sidebar-icon" alt="Sec">Sécurité</a></li>
+            <li><a href="/account/preferences"><img src="/assets/preferences-icon.png" class="sidebar-icon" alt="Pref">Préférences</a></li>
+            <li><a href="/account/confidentiality"><img src="/assets/privacy-icon.png" class="sidebar-icon" alt="Conf">Confidentialité</a></li>
+            <li><a href="/account/notifications"><img src="/assets/newsletter.png" class="sidebar-icon" alt="Notif">Notifications</a></li>
+            <li><a href="/account/logout"><img src="/assets/logout.png" class="sidebar-icon" alt="Logout">Se déconnecter</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <div class="status-card">
+            <h2>Statut du compte</h2>
+            <div class="status-progress-bar"><div class="status-progress" id="statusProgressFill"></div></div>
+            <div style="margin-top:10px;font-weight:bold;" id="accountStatusText" class="skeleton">Chargement...</div>
+            <div id="statusDescription" style="color:#aaa;margin-top:8px;max-width:600px;" class="skeleton">Chargement...</div>
+            <table id="sanctionsTable" class="skeleton"></table>
+        </div>
+    </div>
+    <script>
+        const apiBaseURL = '/api';
+        function initTheme(){
+            const switcher=document.getElementById('theme-switcher');
+            const icon=document.getElementById('theme-icon');
+            const saved=localStorage.getItem('theme');
+            if(saved==='light'){document.body.classList.add('light-mode');icon.src='/assets/switcher-noir.png';}
+            switcher.onclick=()=>{const dark=!document.body.classList.contains('light-mode');document.body.classList.toggle('light-mode');localStorage.setItem('theme',dark?'light':'dark');icon.src=dark?'/assets/switcher-noir.png':'/assets/switcher.png';};
+        }
+        function setStatus(st){
+            const steps=['Good','Limited','Very Limited','At Risk','Banned'];
+            const colors=['linear-gradient(90deg,#10c95a,#2fd174)','linear-gradient(90deg,#ffca29,#ffd66b)','linear-gradient(90deg,#f88407,#ff5f00)','linear-gradient(90deg,#e94434,#fc6a55)','linear-gradient(90deg,#a10000,#570404)'];
+            const desc=["Merci de respecter les règles de ToolCenter !","Vous êtes limité sur certaines fonctionnalités.","La plupart des fonctionnalités sont désactivées.","Votre compte est à risque.","Compte banni."];
+            const widths=['10%','30%','50%','70%','100%'];
+            const idx=steps.indexOf(st);
+            if(idx===-1)return;
+            document.getElementById('statusProgressFill').style.width=widths[idx];
+            document.getElementById('statusProgressFill').style.background=colors[idx];
+            document.getElementById('accountStatusText').textContent=steps[idx];
+            document.getElementById('statusDescription').textContent=desc[idx];
+        }
+        function loadSanctions(){
+            const token=localStorage.getItem('token');
+            fetch(`${apiBaseURL}/user/sanctions`,{headers:{'Authorization':`Bearer ${token}`}})
+            .then(r=>r.json())
+            .then(data=>{
+                if(!data.success)throw new Error('load fail');
+                document.getElementById('sanctionsTable').classList.remove('skeleton');
+                const table=document.getElementById('sanctionsTable');
+                table.innerHTML='<tr><th>Type</th><th>Raison</th><th>Date</th><th>Contestable</th></tr>';
+                data.sanctions.forEach(s=>{
+                    const tr=document.createElement('tr');
+                    tr.innerHTML=`<td>${s.type}</td><td>${s.reason}</td><td>${new Date(s.start_date).toLocaleDateString('fr-FR')}</td><td>${s.appealable?'Oui':'Non'}</td>`;
+                    table.appendChild(tr);
+                });
+            });
+        }
+        document.addEventListener('DOMContentLoaded',()=>{initTheme();loadSanctions();const token=localStorage.getItem('token');if(!token)window.location='/signin.html';fetch(`${apiBaseURL}/user/me`,{headers:{'Authorization':`Bearer ${token}`}}).then(r=>r.json()).then(d=>{if(d.success){setStatus(d.user.account_status);}});});
+    </script>
+</body>
+</html>

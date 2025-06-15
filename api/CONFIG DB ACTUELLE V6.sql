@@ -295,3 +295,30 @@ CREATE TABLE email_queue (
   body     TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB;
+
+-- ========= SUPPORT / TICKETS =========
+CREATE TABLE support_tickets (
+  ticket_id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  subject VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  status ENUM('Open','In Progress','Closed') DEFAULT 'Open',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+) ENGINE = InnoDB ROW_FORMAT = COMPRESSED;
+
+-- ========= SANCTIONS =========
+CREATE TABLE sanctions (
+  sanction_id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  moderator_id CHAR(36),
+  type ENUM('Warn','Ban','Mute','Other') DEFAULT 'Warn',
+  reason TEXT,
+  appealable BOOLEAN DEFAULT TRUE,
+  start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  end_date DATETIME,
+  status ENUM('Active','Expired','Revoked') DEFAULT 'Active',
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+  FOREIGN KEY (moderator_id) REFERENCES users (user_id) ON DELETE SET NULL
+) ENGINE = InnoDB ROW_FORMAT = COMPRESSED;

@@ -1353,9 +1353,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/account/profile">
+                        <a href="/account/moderation">
                             <img src="/assets/personnaliser.png" alt="Profil" class="sidebar-icon">
-                            Personnalisation
+                            Modération / Sanctions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/account/support">
+                            <img src="/assets/support.png" alt="Support" class="sidebar-icon">
+                            Support / Tickets
                         </a>
                     </li>
                     <li>
@@ -1401,58 +1407,6 @@
 
                 <div class="profile-card" style="padding:0;">
                     <div class="tabs-header">
-                        <button class="tab-btn active" id="tabMainBtn">Infos principales</button>
-                        <button class="tab-btn" id="tabStatusBtn">Statut du compte</button>
-                    </div>
-                    <div class="tab-content active" id="tabMain">
-                        <div class="profile-info" style="padding:30px;">
-                            <div class="avatar-container">
-                                <div class="skeleton skeleton-avatar" id="skeleton-avatar"></div>
-                                <img src="/assets/account.png" alt="Avatar" class="avatar" id="avatar">
-                                <div class="avatar-edit" id="avatarEditBtn">
-                                    <img src="/assets/edit-icon.png" alt="Modifier" class="avatar-edit-icon">
-                                </div>
-                                <form id="avatarForm" action="/api/upload_avatar.php" method="POST" enctype="multipart/form-data" class="hidden">
-                                    <input type="file" name="avatar" id="avatarInput" accept="image/*">
-                                </form>
-                            </div>
-                            <div class="username-container" style="flex-direction: row; gap:10px;">
-                                <div class="skeleton skeleton-username" id="skeleton-username"></div>
-                                <h2 class="username" id="username">Chargement</h2>
-                                <img src="/assets/verified.png" alt="Vérifié" class="verified-badge" id="verified-badge">
-                                <img src="/assets/edit-icon.png" alt="Modifier" class="username-edit" id="editUsername" title="Modifier l'username" style="width:20px;height:20px;cursor:pointer;">
-                            </div>
-                            <div class="skeleton skeleton-date" id="skeleton-date"></div>
-                            <p class="member-date" id="member-date">Chargement de la date de création...</p>
-                            <div class="email-container">
-                                <div class="skeleton skeleton-email" id="skeleton-email"></div>
-                                <span class="email" id="email">Chargement...</span>
-                                <img src="/assets/show.png" alt="Afficher" class="email-toggle" id="toggleEmail">
-                                <img src="/assets/edit-icon.png" alt="Modifier" class="email-edit" id="editEmail">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-content" id="tabStatus" style="padding:30px;">
-                        <h3 style="font-size:1.3rem;margin-bottom:18px;">Statut du compte</h3>
-                        <div id="status-bar-container">
-                            <div class="status-progress-bar" id="statusProgress">
-                                <div class="status-progress" id="statusProgressFill"></div>
-                            </div>
-                            <div class="status-labels">
-                                <span>Tout bon !</span>
-                                <span>Limité</span>
-                                <span>Très limité</span>
-                                <span>À risque</span>
-                                <span>Banni(e)</span>
-                            </div>
-                        </div>
-                        <div style="margin-top:20px;">
-                            <b>Votre statut :</b> <span id="accountStatusText" style="font-weight:bold;">Chargement...</span>
-                        </div>
-                        <div id="statusDescription" style="color:#aaa;margin-top:8px;font-size: 1rem;max-width: 600px;">
-                            Chargemment...
-                        </div>
-                    </div>
                 </div>
 
                 <div class="stats-container">
@@ -2009,25 +1963,6 @@
         }
 
         // G0
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabMainBtn = document.getElementById('tabMainBtn');
-            const tabStatusBtn = document.getElementById('tabStatusBtn');
-            const tabMain = document.getElementById('tabMain');
-            const tabStatus = document.getElementById('tabStatus');
-
-            tabMainBtn.onclick = function() {
-                tabMainBtn.classList.add('active');
-                tabStatusBtn.classList.remove('active');
-                tabMain.classList.add('active');
-                tabStatus.classList.remove('active');
-            }
-            tabStatusBtn.onclick = function() {
-                tabStatusBtn.classList.add('active');
-                tabMainBtn.classList.remove('active');
-                tabStatus.classList.add('active');
-                tabMain.classList.remove('active');
-            }
-        });
 
         function initUsernameModal() {
             const usernameModal = document.getElementById('usernameModal');

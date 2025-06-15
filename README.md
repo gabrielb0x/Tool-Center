@@ -14,6 +14,7 @@
 - 💬 **Liker, commenter et partager** ceux des autres
 - 👤 **Gérer ton compte** : avatar, paramètres, stats persos
 - 🛡️ Un **système de modération** ultra propre
+- 📮 **Support/Tickets** intégré pour contacter l'équipe
 - 📜 **Logs complets** : utilisateurs, admins, actions
 - ⚡ Un **design responsive**, fluide et sans chichis
 

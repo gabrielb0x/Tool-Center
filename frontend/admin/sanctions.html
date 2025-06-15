@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Sanctions</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body{font-family:"Poppins",sans-serif;background:#0f172a;color:#fff;margin:0;padding:0;}
+    .container{padding:40px;max-width:800px;margin:0 auto;}
+    form{background:#1e293b;padding:20px;border-radius:8px;margin-bottom:20px;}
+    input,textarea{width:100%;padding:10px;margin-bottom:10px;border-radius:6px;border:none;}
+    button{background:#6366f1;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;}
+    table{width:100%;border-collapse:collapse;background:#1e293b;border-radius:8px;overflow:hidden;}
+    th,td{padding:10px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1);}    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Ajouter une sanction</h2>
+    <form id="sanctionForm">
+      <input type="text" id="userId" placeholder="ID utilisateur" required>
+      <input type="text" id="type" placeholder="Type (Warn/Ban/Mute)" required>
+      <textarea id="reason" placeholder="Raison" required></textarea>
+      <label><input type="checkbox" id="appealable" checked> Contestable</label>
+      <button type="submit">Valider</button>
+    </form>
+    <table id="sanctions"></table>
+  </div>
+  <script>
+    const apiBaseURL='/api';
+    function loadSanctions(uid){fetch(`${apiBaseURL}/admin/sanctions/${uid}`,{headers:{'Authorization':`Bearer ${localStorage.getItem('token')}`}}).then(r=>r.json()).then(d=>{if(!d.success)return;const t=document.getElementById('sanctions');t.innerHTML='<tr><th>Type</th><th>Raison</th><th>Date</th></tr>';d.sanctions.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${s.type}</td><td>${s.reason}</td><td>${new Date(s.start_date).toLocaleDateString('fr-FR')}</td>`;t.appendChild(tr);});});}
+    document.getElementById('sanctionForm').addEventListener('submit',e=>{e.preventDefault();const uid=userId.value;fetch(`${apiBaseURL}/admin/sanctions/${uid}`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem('token')}`},body:JSON.stringify({type:type.value,reason:reason.value,appealable:appealable.checked})}).then(r=>r.json()).then(d=>{if(d.success){loadSanctions(uid);}});});
+  </script>
+</body>
+</html>
