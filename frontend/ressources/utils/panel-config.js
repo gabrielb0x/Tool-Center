@@ -1,7 +1,7 @@
 const PANEL_CONFIG = {
-  API_BASE: 'https://api.tool-center.fr/v1',
-  ADMIN_BASE: 'https://api.tool-center.fr/v1/admin',
-  MODERATION_BASE: 'https://api.tool-center.fr/v1/moderation',
+  API_BASE: 'https://api.tool-center.fr/v2',
+  ADMIN_BASE: 'https://api.tool-center.fr/v2/admin',
+  MODERATION_BASE: 'https://api.tool-center.fr/v2/moderation',
   COLORS: {
     primary: '#6366f1',
     success: '#10b981',
