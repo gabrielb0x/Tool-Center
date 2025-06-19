@@ -108,5 +108,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 21,
+        "date": "2025-06-20",
+        "displayDate": "20/06/2025",
+        "title": "Chemins de stockage configurables",
+        "summary": "Ajout de la section storage pour choisir o\u00f9 sont enregistr\u00e9s avatars et images de tools.",
+        "content": "La configuration dispose maintenant d'une section `storage` permettant de personnaliser les dossiers de stockage des avatars et des images des tools.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
     }
 ]

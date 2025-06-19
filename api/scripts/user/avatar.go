@@ -59,8 +59,8 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	if c.PostForm("avatar") == "delete" {
-		path := "/var/www/toolcenter/storage/avatars/" + uid + ".webp"
+       if c.PostForm("avatar") == "delete" {
+               path := filepath.Join(config.Get().Storage.AvatarDir, uid+".webp")
 		_ = os.Remove(path)
 		_, _ = db.Exec(`UPDATE users SET avatar_url = NULL, avatar_changed_at = NOW() WHERE user_id = ?`, uid)
 		utils.LogActivity(c, uid, "upload_avatar", true, "delete")
@@ -109,9 +109,9 @@ func UploadAvatar(c *gin.Context) {
 	}
 	img = imaging.Fill(img, 512, 512, imaging.Center, imaging.Lanczos)
 
-	dir := "/var/www/toolcenter/storage/avatars"
-	_ = os.MkdirAll(dir, 0755)
-	finalPath := dir + "/" + uid + ".webp"
+       dir := config.Get().Storage.AvatarDir
+       _ = os.MkdirAll(dir, 0755)
+       finalPath := filepath.Join(dir, uid+".webp")
 	fp, err := os.Create(finalPath)
 	if err != nil {
 		utils.LogActivity(c, uid, "upload_avatar", false, "create final")

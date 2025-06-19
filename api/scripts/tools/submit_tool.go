@@ -21,7 +21,6 @@ import (
 	"github.com/google/uuid"
 )
 
-const toolImageDir = "/var/www/toolcenter/storage/tools_images"
 const toolImageRelPath = "/tools_images/"
 
 func rnd() string {
@@ -112,10 +111,11 @@ func SubmitToolHandler(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "image invalide"})
 			return
 		}
-		img = imaging.Fill(img, 1200, 630, imaging.Center, imaging.Lanczos)
-		_ = os.MkdirAll(toolImageDir, 0755)
-		filename := rnd() + ".webp"
-		final := filepath.Join(toolImageDir, filename)
+               img = imaging.Fill(img, 1200, 630, imaging.Center, imaging.Lanczos)
+               dir := config.Get().Storage.ToolsImageDir
+               _ = os.MkdirAll(dir, 0755)
+               filename := rnd() + ".webp"
+               final := filepath.Join(dir, filename)
 		fp, err := os.Create(final)
 		if err != nil {
 			utils.LogActivity(c, uid, "submit_tool", false, "file create final")

@@ -35,6 +35,10 @@
     "check_interval": 600,
     "grace_period": 10
   },
+  "storage": {
+    "avatar_dir": "/var/www/toolcenter/storage/avatars",
+    "tools_image_dir": "/var/www/toolcenter/storage/tools_images"
+  },
   "avatar_cooldown_hours": 24,
   "private_news_password": "change-me"
 }
