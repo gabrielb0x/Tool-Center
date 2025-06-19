@@ -15,6 +15,7 @@ This repository contains a Go API and a static web frontend.
 
 ## Documentation
 - Update `README.md` when adding or modifying features.
+- Update `/api/utils/privates_articles.json` when adding or modifying features.
 
 ## Collaboration notes
 - When creating tasks, specify which parts of the repo the changes should target and share any relevant configs or examples. This helps the assistant deliver better-quality work.
