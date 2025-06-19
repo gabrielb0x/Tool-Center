@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-)
 
-const privateNewsPassword = "27TND9274TND947T4O872O8724O8FT72O8F2FO"
+	"toolcenter/config"
+)
 
 var lastToken string
 var lastTokenExpiration time.Time
@@ -25,7 +25,7 @@ func loadPrivateArticles() ([]gin.H, error) {
 	if err != nil {
 		return nil, err
 	}
-	filePath := filepath.Join(exePath, "/utils/privates_articles.json")
+	filePath := filepath.Join(exePath, "utils", "privates_articles.json")
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func PrivateNewsHandler(c *gin.Context) {
 	}
 
 	if req.Password != "" {
-		if req.Password == privateNewsPassword {
+		if req.Password == config.Get().PrivateNewsPassword {
 			lastToken = generateToken(32)
 			lastTokenExpiration = time.Now().Add(24 * time.Hour)
 			c.JSON(http.StatusOK, gin.H{
