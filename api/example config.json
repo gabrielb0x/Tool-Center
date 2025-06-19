@@ -7,8 +7,6 @@
   "URL_web": "https://example.com",
   "cors_allowed_origin": "https://example.com",
   "debug": false,
-  "time_zone": "UTC",
-  "timezone": "",
   "logs": {
     "enabled": true,
     "path": "/path/to/logs/api.log"
