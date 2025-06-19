@@ -18,8 +18,12 @@ import (
 )
 
 func corsMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "https://tool-center.fr")
+        return func(c *gin.Context) {
+                origin := config.Get().CorsAllowedOrigin
+                if origin == "" {
+                        origin = "*"
+                }
+                c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
