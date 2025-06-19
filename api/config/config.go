@@ -16,9 +16,10 @@ type Config struct {
 	Port       int    `json:"port"`
 	Version    string `json:"version"`
 	URLVersion string `json:"URL_version"`
-	URLapi     string `json:"URL_api"`
-	URLweb     string `json:"URL_web"`
-	Debug      bool   `json:"debug"`
+       URLapi     string `json:"URL_api"`
+       URLweb     string `json:"URL_web"`
+       CorsAllowedOrigin string `json:"cors_allowed_origin"`
+       Debug      bool   `json:"debug"`
 	TimeZone   string `json:"time_zone"`
 	Logs       struct {
 		Enabled bool   `json:"enabled"`

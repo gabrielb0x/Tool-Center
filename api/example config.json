@@ -5,6 +5,7 @@
   "URL_version": "v1",
   "URL_api": "https://api.example.com",
   "URL_web": "https://example.com",
+  "cors_allowed_origin": "https://example.com",
   "debug": false,
   "time_zone": "UTC",
   "timezone": "",

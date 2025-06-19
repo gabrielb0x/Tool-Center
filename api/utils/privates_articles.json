@@ -97,5 +97,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 20,
+        "date": "2025-06-19",
+        "displayDate": "19/06/2025",
+        "title": "Option de configuration pour l'origine CORS",
+        "summary": "Ajout du champ cors_allowed_origin pour personnaliser l'en-t\u00eate CORS.",
+        "content": "La configuration permet d\u00e9sormais de d\u00e9finir l'origine autoris\u00e9e pour les requ\u00eates cross-origin.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
     }
 ]
