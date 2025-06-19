@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -80,6 +81,48 @@
       margin: 0 auto;
       padding: 0 1.5rem;
       transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .home-btn {
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+    }
+
+    .home-btn span {
+      font-size: 1.3rem;
+      font-weight: 999;
+      margin-top: 3px;
+      order: 1;
+    }
+
+    .home-btn i {
+      order: 0;
+    }
+
+    .home-btn:hover {
+      color: var(--primary);
+      background: rgba(67, 97, 238, 0.1);
+      transform: translateY(-50%);
+    }
+
+    header.scrolled .home-btn {
+      font-size: 1.2rem;
+      padding: 0.6rem 1.2rem;
+    }
+
+    header.scrolled .home-btn span {
+      font-size: 1.1rem;
     }
     
     header.scrolled .header-content {
@@ -1399,6 +1442,10 @@
   <header>
     <div class="wave-effect"></div>
     <div class="header-content">
+      <a href="https://tool-center.fr" class="home-btn" title="Retour à l'accueil">
+        <span>Accueil</span>
+        <i class="fas fa-home"></i>
+      </a>
       <h1><i class="fas fa-newspaper"></i> Tool Center News</h1>
       <p class="subtitle">Les dernières mises à jour du projet</p>
     </div>
