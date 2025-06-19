@@ -36,5 +36,6 @@
     "check_interval": 600,
     "grace_period": 10
   },
-  "avatar_cooldown_hours": 24
+  "avatar_cooldown_hours": 24,
+  "private_news_password": "change-me"
 }

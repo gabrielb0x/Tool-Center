@@ -50,6 +50,7 @@ Because the world needed:
 
 All API variables live in `api/example config.json`.
 Adjust this file (ports, database, SMTP...) to match your environment.
+A new `private_news_password` field secures access to private news articles.
 
 ---
 
