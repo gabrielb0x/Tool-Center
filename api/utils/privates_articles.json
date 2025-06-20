@@ -119,5 +119,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 22,
+        "date": "2025-06-25",
+        "displayDate": "25/06/2025",
+        "title": "Section cooldowns dans la config",
+        "summary": "Les d\u00e9lais de modification sont maintenant configurables via `cooldowns`.",
+        "content": "Une nouvelle section `cooldowns` permet de personnaliser les dur\u00e9es de changement d'email, de pseudo, de soumission de tool et d'avatar.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [""]
     }
 ]
