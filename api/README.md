@@ -62,7 +62,7 @@ API performante écrite en **Go** 🐹 pour gérer les **utilisateurs**, les **
 ## 📜 Scripts principaux
 
 - **Auth** : `login.go`, `logout.go`, `register.go`
-- **User** : `me.go`, `profile.go`, `update_username.go`, `update_email.go`, `avatar.go`, `delete_account.go`, `verify_email.go`
+- **User** : `me.go`, `profile.go`, `update_username.go`, `update_email.go`, `update_password.go`, `avatar.go`, `delete_account.go`, `verify_email.go`
 - **Tools** : `submit_tool.go`, `my_tools.go`, `delete_tool.go`
 - **Admin** : `stats.go`, `logs.go`, `user_list.go`, `user_details.go`, `update_user.go`, `ban_user.go`, `unban_user.go`, `user_activity.go`
 
@@ -101,6 +101,7 @@ Réponse :
 | `GET`    | `/api/user/me`           | Profil complet |
 | `POST`   | `/api/user/update_username` | Modifier le pseudo |
 | `POST`   | `/api/user/update_email`    | Modifier l'e-mail |
+| `POST`   | `/api/user/update_password` | Changer le mot de passe |
 | `POST`   | `/api/user/avatar`          | Mettre à jour l'avatar |
 | `DELETE` | `/api/user/delete`          | Supprimer le compte |
 
@@ -192,6 +193,17 @@ curl -X POST https://api.tool-center.fr/api/user/update_email \
     -H "Authorization: Bearer <token>" \
     -H "Content-Type: application/json" \
     -d '{"new_email":"exemple@mail.com","current_password":"monpass"}'
+```
+
+### Changer son mot de passe ↦ `/api/user/update_password`
+
+`POST` avec `current_password` et `new_password` (7-30 caractères).
+
+```
+curl -X POST https://api.tool-center.fr/api/user/update_password \
+    -H "Authorization: Bearer <token>" \
+    -H "Content-Type: application/json" \
+    -d '{"current_password":"ancien","new_password":"nouveauPass"}'
 ```
 
 ### Administration
