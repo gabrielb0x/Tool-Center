@@ -52,13 +52,16 @@ type Config struct {
 		AvatarDir     string `json:"avatar_dir"`
 		ToolsImageDir string `json:"tools_image_dir"`
 	} `json:"storage"`
-	Cooldowns struct {
-		EmailChangeDays    int `json:"email_change_days"`
-		UsernameChangeDays int `json:"username_change_days"`
-		ToolPostHours      int `json:"tool_post_hours"`
-		AvatarChangeHours  int `json:"avatar_change_hours"`
-	} `json:"cooldowns"`
-	PrivateNewsPassword string `json:"private_news_password"`
+        Cooldowns struct {
+                EmailChangeDays    int `json:"email_change_days"`
+                UsernameChangeDays int `json:"username_change_days"`
+                ToolPostHours      int `json:"tool_post_hours"`
+                AvatarChangeHours  int `json:"avatar_change_hours"`
+        } `json:"cooldowns"`
+       Moderation struct {
+               MaxBanHours int `json:"max_ban_hours"`
+       } `json:"moderation"`
+        PrivateNewsPassword string `json:"private_news_password"`
 }
 
 func Load(path string) error {

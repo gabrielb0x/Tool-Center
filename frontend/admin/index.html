@@ -741,6 +741,14 @@
       font-size: 24px;
       font-weight: 600;
       margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .verified-badge {
+      color: var(--success-color);
+      margin-left: 8px;
+      font-size: 18px;
     }
 
     .user-role {
@@ -780,6 +788,12 @@
       padding: 10px 15px;
       border-radius: 8px;
       min-width: 80px;
+    }
+
+    .ban-info {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--error-color);
     }
 
     .stat-number {
@@ -1147,7 +1161,7 @@
         <div class="user-profile-header">
           <img src="https://tool-center.fr/assets/account.png" alt="User" class="user-avatar-lg" id="modal-avatar">
           <div class="user-details">
-            <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
+            <h2 class="user-name-lg" id="modal-user-name">Chargement...<span id="verified-badge" class="verified-badge" style="display:none;"><i class="fas fa-check-circle"></i></span></h2>
             <span class="user-role role-user" id="modal-user-role">Utilisateur</span>
             <div class="user-stats">
               <div class="user-stat">
@@ -1163,6 +1177,7 @@
                 <div class="stat-label">Inscription</div>
               </div>
             </div>
+            <div id="ban-info" class="ban-info"></div>
           </div>
         </div>
 
@@ -1252,6 +1267,10 @@
       <div class="form-group ban-reason-group">
         <label for="ban-reason">Raison du ban</label>
         <textarea id="ban-reason" class="form-control" rows="3" placeholder="Indiquez la raison"></textarea>
+      </div>
+      <div class="form-group ban-duration-group">
+        <label for="ban-duration">Durée (heures, 0 = permanent)</label>
+        <input type="number" id="ban-duration" class="form-control" min="0" value="0">
       </div>
       <p id="unban-text" class="hidden">Voulez-vous vraiment débannir cet utilisateur ?</p>
     </div>
@@ -1356,19 +1375,14 @@
         }
         
         const data = await response.json();
-        if (!data.success || !data.user || data.user.role !== 'Admin') {
-          throw new Error('User is not admin');
+        if (!data.success || !data.user || (data.user.role !== 'Admin' && data.user.role !== 'Moderator')) {
+          throw new Error('User is not admin/moderator');
         }
 
         const user = data.user;
         currentUserRole = user.role;
         adminAvatar.src = user.avatar_url ? `${user.avatar_url}` : 'https://tool-center.fr/assets/account.png';
         
-        if (user.role === 'Moderator') {
-          window.location.href = 'https://tool-center.fr/moderator';
-          return false;
-        }
-
         return true;
       } catch (error) {
         console.error('Permission check failed:', error);
@@ -1510,16 +1524,16 @@
       }
     }
 
-    async function banUser(userId, reason) {
+    async function banUser(userId, reason, duration) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/ban`, {
+        const response = await fetch(`${PANEL_CONFIG.MODERATION_BASE}/users/${userId}/ban`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ reason })
+          body: JSON.stringify({ reason, duration })
         });
         
         if (!response.ok) {
@@ -1539,7 +1553,7 @@
     async function unbanUser(userId) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/unban`, {
+        const response = await fetch(`${PANEL_CONFIG.MODERATION_BASE}/users/${userId}/unban`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1942,8 +1956,15 @@
         return;
       }
       const user = data.user;
-      
-      document.getElementById('modal-user-name').textContent = user.username;
+
+      const nameEl = document.getElementById('modal-user-name');
+      nameEl.textContent = user.username;
+      const badge = document.getElementById('verified-badge');
+      if (user.is_verified) {
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
       document.getElementById('modal-avatar').src = user.avatar || '/assets/account.png';
       
       const roleBadge = document.getElementById('modal-user-role');
@@ -1957,12 +1978,31 @@
       document.getElementById('tools-count').textContent = user.toolsCount || 0;
       document.getElementById('reports-count').textContent = user.reportsCount || 0;
       document.getElementById('joined-date').textContent = new Date(user.createdAt).toLocaleDateString();
+      if (user.status === 'Banned') {
+        if (user.ban_expires_at) {
+          const remain = Math.max(0, Math.floor((new Date(user.ban_expires_at) - Date.now()) / 3600000));
+          document.getElementById('ban-info').textContent = remain > 0 ? `Banni pour encore ${remain}h` : 'Banni temporairement';
+        } else {
+          document.getElementById('ban-info').textContent = 'Banni définitivement';
+        }
+      } else {
+        document.getElementById('ban-info').textContent = '';
+      }
       
       document.getElementById('username').value = user.username;
       document.getElementById('email').value = user.email;
       document.getElementById('bio').value = user.bio || '';
       document.getElementById('user-role').value = user.role || 'User';
       document.getElementById('account-status').value = user.status || 'Good';
+
+      const banBtn = document.getElementById('ban-user');
+      if (currentUserRole === 'Moderator') {
+        document.getElementById('user-role').disabled = true;
+        banBtn.disabled = user.role !== 'User';
+      } else {
+        document.getElementById('user-role').disabled = false;
+        banBtn.disabled = user.role === 'Admin';
+      }
 
       const activityTab = document.getElementById('activity-tab');
       activityTab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
@@ -2040,21 +2080,24 @@
       placeholder.replaceWith(logsElement);
     }
 
-    function navigate(path) {
-      history.pushState({}, '', path);
+    function handleRoute(path) {
       if (path.endsWith('/logs')) {
         loadSystemLogs();
       } else {
         loadUsers();
       }
+      document.querySelectorAll('.sidebar-item[data-path]').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-path') === path);
+      });
+    }
+
+    function navigate(path) {
+      history.pushState({}, '', path);
+      handleRoute(path);
     }
 
     window.addEventListener('popstate', () => {
-      if (location.pathname.endsWith('/logs')) {
-        loadSystemLogs();
-      } else {
-        loadUsers();
-      }
+      handleRoute(location.pathname);
     });
 
     async function initAdminPanel() {
@@ -2066,11 +2109,7 @@
       }
       
       await loadStats();
-      if (location.pathname.endsWith('/logs')) {
-        await loadSystemLogs();
-      } else {
-        await loadUsers();
-      }
+      handleRoute(location.pathname);
       
       setTimeout(() => {
         preloader.style.opacity = '0';
@@ -2084,8 +2123,6 @@
       document.querySelectorAll('.sidebar-item[data-path]').forEach(link => {
         link.addEventListener('click', e => {
           e.preventDefault();
-          document.querySelectorAll('.sidebar-item').forEach(a => a.classList.remove('active'));
-          link.classList.add('active');
           navigate(link.getAttribute('data-path'));
         });
       });
@@ -2124,20 +2161,24 @@
         if (isUnban) {
           document.getElementById('ban-modal-title').textContent = 'Débannir l\'utilisateur';
           banReasonGroup.style.display = 'none';
+          document.querySelector('.ban-duration-group').style.display = 'none';
           unbanText.classList.remove('hidden');
           confirmBan.textContent = 'Débannir';
         } else {
           document.getElementById('ban-modal-title').textContent = 'Bannir l\'utilisateur';
           banReasonGroup.style.display = 'block';
+          document.querySelector('.ban-duration-group').style.display = 'block';
           unbanText.classList.add('hidden');
           confirmBan.textContent = 'Bannir';
           banReasonInput.value = '';
+          document.getElementById('ban-duration').value = 0;
         }
       }
 
       function closeBan() {
         banModal.classList.remove('active');
         banReasonInput.value = '';
+        document.getElementById('ban-duration').value = 0;
       }
 
       closeBanModal.addEventListener('click', closeBan);
@@ -2167,7 +2208,8 @@
             spinner.remove();
             return;
           }
-          result = await banUser(currentUserId, reason);
+          const duration = parseInt(document.getElementById('ban-duration').value) || 0;
+          result = await banUser(currentUserId, reason, duration);
         }
         if (result) {
           closeBan();

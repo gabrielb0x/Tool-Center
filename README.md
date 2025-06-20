@@ -14,6 +14,7 @@
 - 💬 **Like, comment and share** other people's tools
 - 👤 **Manage your account**: avatar, security, statistics
 - 🛡️ A clean **moderation system**
+- ⏳ Temporary bans with adjustable duration
 - 📜 **Comprehensive logs** for users and admins
 - ⚡ A responsive design focused on usability
 
@@ -53,6 +54,7 @@ Adjust this file (ports, database, SMTP...) to match your environment.
 A new `private_news_password` field secures access to private news articles.
 Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
 Use the `storage` section to configure directories for avatars and tool images.
+`moderation.max_ban_hours` sets the maximum duration for temporary bans.
 
 ---
 

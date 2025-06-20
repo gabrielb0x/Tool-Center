@@ -45,5 +45,8 @@
     "tool_post_hours": 24,
     "avatar_change_hours": 24
   },
+  "moderation": {
+    "max_ban_hours": 8760
+  },
   "private_news_password": "change-me"
 }

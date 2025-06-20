@@ -25,13 +25,17 @@ func Start() {
 }
 
 func run() {
-	cfg := config.Get()
-	db, err := config.OpenDB()
-	if err != nil {
-		log.Println("cleanup: open db:", err)
-		return
-	}
-	defer db.Close()
+        cfg := config.Get()
+        db, err := config.OpenDB()
+        if err != nil {
+                log.Println("cleanup: open db:", err)
+                return
+        }
+        defer db.Close()
+
+        if _, err := db.Exec(`UPDATE users SET account_status='Good', ban_expires_at=NULL WHERE account_status='Banned' AND ban_expires_at IS NOT NULL AND ban_expires_at <= NOW()`); err != nil {
+                log.Println("cleanup: unban expired:", err)
+        }
 
 	grace := cfg.Cleanup.GracePeriod
 	if grace == 0 {

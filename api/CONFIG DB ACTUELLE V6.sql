@@ -18,6 +18,7 @@ CREATE TABLE users (
   is_verified TINYINT(1) DEFAULT 0,
   role ENUM('User','Moderator','Admin') DEFAULT 'User',
   account_status ENUM('Good','Limited','Very Limited','At Risk','Banned') DEFAULT 'Good',
+  ban_expires_at DATETIME,
   email_verified_at DATETIME,
   authenticator_secret VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

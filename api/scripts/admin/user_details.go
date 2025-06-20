@@ -30,14 +30,15 @@ func UserDetailsHandler(c *gin.Context) {
 	}
 	defer db.Close()
 
-	var (
-		username, email, role, status string
-		avatar, bio                   sql.NullString
-		created                       sql.NullTime
-	)
+        var (
+                username, email, role, status string
+                avatar, bio                   sql.NullString
+                created, banExpiry            sql.NullTime
+                verified                      bool
+        )
 
-	err = db.QueryRow(`SELECT username,email,role,account_status,avatar_url,bio,created_at FROM users WHERE user_id = ?`, uid).
-		Scan(&username, &email, &role, &status, &avatar, &bio, &created)
+        err = db.QueryRow(`SELECT username,email,role,account_status,avatar_url,bio,created_at,ban_expires_at,is_verified FROM users WHERE user_id = ?`, uid).
+                Scan(&username, &email, &role, &status, &avatar, &bio, &created, &banExpiry, &verified)
 	if err == sql.ErrNoRows {
 		utils.LogActivity(c, modID, "user_details", false, "not found")
 		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "not found"})
@@ -52,24 +53,28 @@ func UserDetailsHandler(c *gin.Context) {
 	var toolsCount int
 	_ = db.QueryRow(`SELECT COUNT(*) FROM tools WHERE user_id = ?`, uid).Scan(&toolsCount)
 
-	user := gin.H{
-		"user_id":      uid,
-		"username":     username,
-		"email":        email,
-		"role":         role,
-		"status":       status,
-		"toolsCount":   toolsCount,
-		"reportsCount": 0,
-	}
+       user := gin.H{
+                "user_id":      uid,
+                "username":     username,
+                "email":        email,
+                "role":         role,
+                "status":       status,
+                "toolsCount":   toolsCount,
+                "reportsCount": 0,
+                "is_verified":  verified,
+        }
 	if avatar.Valid {
 		user["avatar"] = avatar.String
 	}
 	if bio.Valid {
 		user["bio"] = bio.String
 	}
-	if created.Valid {
-		user["createdAt"] = created.Time
-	}
+        if created.Valid {
+                user["createdAt"] = created.Time
+        }
+        if banExpiry.Valid {
+                user["ban_expires_at"] = banExpiry.Time
+        }
 
 	utils.LogActivity(c, modID, "user_details", true, "")
 

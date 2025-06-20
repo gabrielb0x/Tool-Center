@@ -141,5 +141,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": ["done"]
+    },
+    {
+        "id": 24,
+        "date": "2025-07-05",
+        "displayDate": "05/07/2025",
+        "title": "Bannissements temporaires et panneau admin am\u00e9lior\u00e9",
+        "summary": "Le panneau admin g\u00e8re la dur\u00e9e de ban et l'\u00e9tat v\u00e9rifi\u00e9 des utilisateurs.",
+        "content": "Ajout de la colonne `ban_expires_at` dans la base, configuration `moderation.max_ban_hours` et nouvelles routes `/moderation`. Les mod\u00e9rateurs peuvent bannir les utilisateurs pour une dur\u00e9e d\u00e9finie.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": ["done"]
     }
 ]

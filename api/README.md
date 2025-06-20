@@ -211,10 +211,12 @@ curl -X POST https://api.tool-center.fr/api/user/update_password \
 | Méthode | URL | Description |
 | ------- | --- | ----------- |
 | `GET` | `/api/admin/user_list` | Liste des utilisateurs |
-| `POST` | `/api/admin/ban` | Bannir un utilisateur |
-| `POST` | `/api/admin/unban` | Débannir un utilisateur |
+| `POST` | `/api/moderation/users/:id/ban` | Bannir un utilisateur |
+| `POST` | `/api/moderation/users/:id/unban` | Débannir un utilisateur |
 
 *(d'autres routes : `/api/reservations`, `/api/moderation`, etc. — voir le dossier `scripts/`)*
+
+`duration` (en heures) peut être fourni lors du ban; `0` ou absence de valeur indique un bannissement permanent. La limite maximale est définie par `moderation.max_ban_hours` dans la configuration.
 
 ---
 

@@ -15,14 +15,15 @@ import (
 )
 
 type UserInfo struct {
-	UserID     string    `json:"user_id"`
-	Username   string    `json:"username"`
-	Email      string    `json:"email"`
-	Role       string    `json:"role"`
-	Status     string    `json:"status"`
-	Created    time.Time `json:"created_at"`
-	AvatarURL  string    `json:"avatar_url"`
-	IsVerified bool      `json:"is_verified"`
+        UserID     string    `json:"user_id"`
+        Username   string    `json:"username"`
+        Email      string    `json:"email"`
+        Role       string    `json:"role"`
+        Status     string    `json:"status"`
+        Created    time.Time `json:"created_at"`
+        AvatarURL  string    `json:"avatar_url"`
+        IsVerified bool      `json:"is_verified"`
+        BanExpires sql.NullTime `json:"ban_expires_at"`
 }
 
 func UserListHandler(c *gin.Context) {
@@ -46,11 +47,11 @@ func UserListHandler(c *gin.Context) {
 	offset := (page - 1) * limit
 
 	var rows *sql.Rows
-	if search != "" {
-		rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified FROM users WHERE username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`, "%"+search+"%", limit, offset)
-	} else {
-		rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?`, limit, offset)
-	}
+        if search != "" {
+                rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified, ban_expires_at FROM users WHERE username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`, "%"+search+"%", limit, offset)
+        } else {
+                rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified, ban_expires_at FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?`, limit, offset)
+        }
 	if err != nil {
 		utils.LogActivity(c, uid, "user_list", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
@@ -61,11 +62,11 @@ func UserListHandler(c *gin.Context) {
 	users := make([]UserInfo, 0)
 	for rows.Next() {
 		var u UserInfo
-		if err := rows.Scan(&u.UserID, &u.Username, &u.Email, &u.Role, &u.Status, &u.Created, &u.AvatarURL, &u.IsVerified); err != nil {
-			utils.LogActivity(c, uid, "user_list", false, "scan error")
-			c.JSON(http.StatusInternalServerError, gin.H{"success": false})
-			return
-		}
+                if err := rows.Scan(&u.UserID, &u.Username, &u.Email, &u.Role, &u.Status, &u.Created, &u.AvatarURL, &u.IsVerified, &u.BanExpires); err != nil {
+                        utils.LogActivity(c, uid, "user_list", false, "scan error")
+                        c.JSON(http.StatusInternalServerError, gin.H{"success": false})
+                        return
+                }
 		users = append(users, u)
 	}
 
