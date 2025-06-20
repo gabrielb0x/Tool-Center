@@ -1688,131 +1688,132 @@
     function renderUsersTable(users) {
       const container = document.createElement('div');
       container.innerHTML = `
-        <h2 class="section-title">
-          <i class="fas fa-users"></i>
-          Gestion des <span>utilisateurs</span>
-        </h2>
-        <div class="admin-table-container">
-          <div class="table-header">
-            <h3 class="table-title"><i class="fas fa-list"></i> Liste des utilisateurs</h3>
-            <div class="search-box">
-              <i class="fas fa-search"></i>
-              <input type="text" placeholder="Rechercher un utilisateur..." id="user-search">
-            </div>
-          </div>
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Utilisateur</th>
-                <th>Email</th>
-                <th>Inscription</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="users-table-body">
-              <!-- Users will be loaded here via JS -->
-            </tbody>
-          </table>
-          <div class="pagination">
-            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-          </div>
+      <h2 class="section-title">
+        <i class="fas fa-users"></i>
+        Gestion des <span>utilisateurs</span>
+      </h2>
+      <div class="admin-table-container">
+        <div class="table-header">
+        <h3 class="table-title"><i class="fas fa-list"></i> Liste des utilisateurs</h3>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Rechercher un utilisateur..." id="user-search">
         </div>
+        </div>
+        <table class="admin-table">
+        <thead>
+          <tr>
+          <th>Utilisateur</th>
+          <th>Email</th>
+          <th>Inscription</th>
+          <th>Status</th>
+          <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-table-body">
+          <!-- Users will be loaded here via JS -->
+        </tbody>
+        </table>
+        <div class="pagination">
+        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
       `;
       
       const tbody = container.querySelector('#users-table-body');
       
       users.forEach(user => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>
-            <div class="user-cell">
-              <img src="${user.avatar_url || 'https://tool-center.fr/assets/account.png'}" alt="${user.username}" class="user-avatar-sm">
-              <div class="user-info">
-                <span class="user-name" style="
-                  ${user.role === 'admin' ? 'color:#ef4444;font-weight:600;' : 
-                    user.role === 'moderator' ? 'color:#f59e0b;font-weight:600;' : ''}
-                ">
-                  ${user.username}
-                  ${user.role === 'admin' ? ' (Admin)' : user.role === 'moderator' ? ' (Mod)' : ''}
-                </span>
-                <span class="user-email">@${user.username}</span>
-              </div>
-            </div>
-          </td>
-          <td>${user.email}</td>
-          <td>${new Date(user.created_at).toLocaleDateString()}</td>
-          <td>
-            <span class="status-badge 
-              ${user.status === 'Good' ? 'status-active' : 
-                user.status === 'Limited' ? 'status-pending' : 
-                user.status === 'Very Limited' ? 'status-pending' : 
-                user.status === 'At Risk' ? 'status-pending' : 
-                user.status === 'Banned' ? 'status-banned' : 'status-pending'}">
-              <i class="fas fa-${
-                user.status === 'Good' ? 'check-circle' : 
-                user.status === 'Limited' ? 'exclamation-triangle' : 
-                user.status === 'Very Limited' ? 'exclamation-triangle' : 
-                user.status === 'At Risk' ? 'exclamation-circle' : 
-                user.status === 'Banned' ? 'ban' : 'clock'
-              }"></i>
-              ${
-                user.status === 'Good' ? 'Actif' : 
-                user.status === 'Limited' ? 'Limité' : 
-                user.status === 'Very Limited' ? 'Très limité' : 
-                user.status === 'At Risk' ? 'À risque' : 
-                user.status === 'Banned' ? 'Banni' : 'En attente'
-              }
-            </span>
-          </td>
-            <td>
-            <button class="action-btn view" data-user-id="${user.user_id}" title="Voir">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="action-btn edit" data-user-id="${user.user_id}" title="Modifier">
-              <i class="fas fa-edit"></i>
-            </button>
-            ${user.status === 'Banned' ? `
-            <button class="action-btn delete" data-user-id="${user.user_id}" data-action="unban" title="Débannir">
-              <i class="fas fa-unlock"></i>
-            </button>
-            ` : `
-            <button class="action-btn delete" data-user-id="${user.user_id}" data-action="ban" title="Bannir">
-              <i class="fas fa-ban"></i>
-            </button>
-            `}
-            </td>
-        `;
-        tbody.appendChild(tr);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+        <div class="user-cell">
+          <img src="${user.avatar_url || 'https://tool-center.fr/assets/account.png'}" alt="${user.username}" class="user-avatar-sm">
+          <div class="user-info">
+          <span class="user-name" style="
+            ${user.role === 'admin' ? 'color:#ef4444;font-weight:600;' : 
+            user.role === 'moderator' ? 'color:#f59e0b;font-weight:600;' : ''}
+          ">
+            ${user.username}
+            ${user.role === 'admin' ? ' (Admin)' : user.role === 'moderator' ? ' (Mod)' : ''}
+            ${user.is_verified === true ? '<img src="/assets/verified.png" alt="Vérifié" title="Compte vérifié" style="width: 15px;height: 15px;vertical-align:middle;margin-left:4px;margin-bottom: 2px;">' : ''}
+          </span>
+          <span class="user-email">@${user.username}</span>
+          </div>
+        </div>
+        </td>
+        <td>${user.email}</td>
+        <td>${new Date(user.created_at).toLocaleDateString()}</td>
+        <td>
+        <span class="status-badge 
+          ${user.status === 'Good' ? 'status-active' : 
+          user.status === 'Limited' ? 'status-pending' : 
+          user.status === 'Very Limited' ? 'status-pending' : 
+          user.status === 'At Risk' ? 'status-pending' : 
+          user.status === 'Banned' ? 'status-banned' : 'status-pending'}">
+          <i class="fas fa-${
+          user.status === 'Good' ? 'check-circle' : 
+          user.status === 'Limited' ? 'exclamation-triangle' : 
+          user.status === 'Very Limited' ? 'exclamation-triangle' : 
+          user.status === 'At Risk' ? 'exclamation-circle' : 
+          user.status === 'Banned' ? 'ban' : 'clock'
+          }"></i>
+          ${
+          user.status === 'Good' ? 'Actif' : 
+          user.status === 'Limited' ? 'Limité' : 
+          user.status === 'Very Limited' ? 'Très limité' : 
+          user.status === 'At Risk' ? 'À risque' : 
+          user.status === 'Banned' ? 'Banni' : 'En attente'
+          }
+        </span>
+        </td>
+        <td>
+        <button class="action-btn view" data-user-id="${user.user_id}" title="Voir">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button class="action-btn edit" data-user-id="${user.user_id}" title="Modifier">
+          <i class="fas fa-edit"></i>
+        </button>
+        ${user.status === 'Banned' ? `
+        <button class="action-btn delete" data-user-id="${user.user_id}" data-action="unban" title="Débannir">
+          <i class="fas fa-unlock"></i>
+        </button>
+        ` : `
+        <button class="action-btn delete" data-user-id="${user.user_id}" data-action="ban" title="Bannir">
+          <i class="fas fa-ban"></i>
+        </button>
+        `}
+        </td>
+      `;
+      tbody.appendChild(tr);
       });
       
       container.querySelectorAll('.action-btn.view, .action-btn.edit').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const userId = btn.getAttribute('data-user-id');
-          openUserModal(userId);
-        });
+      btn.addEventListener('click', async () => {
+        const userId = btn.getAttribute('data-user-id');
+        openUserModal(userId);
+      });
       });
       
       container.querySelectorAll('.action-btn.delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentUserId = btn.getAttribute('data-user-id');
-          const action = btn.getAttribute('data-action');
-          openBanModal(action === 'unban');
-        });
+      btn.addEventListener('click', () => {
+        currentUserId = btn.getAttribute('data-user-id');
+        const action = btn.getAttribute('data-action');
+        openBanModal(action === 'unban');
+      });
       });
       
       const searchInput = container.querySelector('#user-search');
       let searchTimeout;
       
       searchInput.addEventListener('input', () => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-          loadUsers(searchInput.value);
-        }, 500);
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        loadUsers(searchInput.value);
+      }, 500);
       });
       
       return container;
