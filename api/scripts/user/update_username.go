@@ -16,8 +16,6 @@ type updateUsernameRequest struct {
 	Username string `json:"username"`
 }
 
-const usernameChangeCooldown = 30 * 24 * time.Hour
-
 func UpdateUsernameHandler(c *gin.Context) {
 	uid, _, _, _, err := utils.Check(c, utils.CheckOpts{
 		RequireToken:     true,
@@ -60,8 +58,9 @@ func UpdateUsernameHandler(c *gin.Context) {
 
 	var lastChangedAt time.Time
 	_ = db.QueryRow(`SELECT username_changed_at FROM users WHERE user_id = ?`, uid).Scan(&lastChangedAt)
-	if !lastChangedAt.IsZero() && time.Since(lastChangedAt) < usernameChangeCooldown {
-		retryAt := lastChangedAt.Add(usernameChangeCooldown)
+	cooldown := time.Duration(config.Get().Cooldowns.UsernameChangeDays) * 24 * time.Hour
+	if !lastChangedAt.IsZero() && time.Since(lastChangedAt) < cooldown {
+		retryAt := lastChangedAt.Add(cooldown)
 		utils.LogActivity(c, uid, "update_username", false, "cooldown")
 		c.JSON(http.StatusTooManyRequests, gin.H{
 			"success":  false,

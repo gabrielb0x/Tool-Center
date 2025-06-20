@@ -245,7 +245,12 @@ cp config.sample.json config.json && nano config.json
         "check_interval": 600,
         "grace_period": 10
     },
-    "avatar_cooldown_hours": 24
+    "cooldowns": {
+        "email_change_days": 30,
+        "username_change_days": 30,
+        "tool_post_hours": 24,
+        "avatar_change_hours": 24
+    }
 }
 ```
 

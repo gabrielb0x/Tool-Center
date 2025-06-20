@@ -44,16 +44,21 @@ type Config struct {
 		SignInSecret string `json:"signin_secret"`
 		SignUpSecret string `json:"signup_secret"`
 	} `json:"turnstile"`
-        Cleanup struct {
-                CheckInterval int `json:"check_interval"`
-                GracePeriod   int `json:"grace_period"`
-        } `json:"cleanup"`
-       Storage struct {
-               AvatarDir     string `json:"avatar_dir"`
-               ToolsImageDir string `json:"tools_image_dir"`
-       } `json:"storage"`
-        PrivateNewsPassword string `json:"private_news_password"`
-        AvatarCooldownHours int    `json:"avatar_cooldown_hours"`
+	Cleanup struct {
+		CheckInterval int `json:"check_interval"`
+		GracePeriod   int `json:"grace_period"`
+	} `json:"cleanup"`
+	Storage struct {
+		AvatarDir     string `json:"avatar_dir"`
+		ToolsImageDir string `json:"tools_image_dir"`
+	} `json:"storage"`
+	Cooldowns struct {
+		EmailChangeDays    int `json:"email_change_days"`
+		UsernameChangeDays int `json:"username_change_days"`
+		ToolPostHours      int `json:"tool_post_hours"`
+		AvatarChangeHours  int `json:"avatar_change_hours"`
+	} `json:"cooldowns"`
+	PrivateNewsPassword string `json:"private_news_password"`
 }
 
 func Load(path string) error {

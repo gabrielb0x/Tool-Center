@@ -18,8 +18,6 @@ type updateEmailRequest struct {
 	CurrentPassword string `json:"current_password"`
 }
 
-const emailChangeCooldown = 30 * 24 * time.Hour
-
 func UpdateEmailHandler(c *gin.Context) {
 	uid, _, _, _, err := utils.Check(c, utils.CheckOpts{
 		RequireToken:     true,
@@ -67,8 +65,9 @@ func UpdateEmailHandler(c *gin.Context) {
 
 	var lastChangedAt time.Time
 	_ = db.QueryRow(`SELECT email_changed_at FROM users WHERE user_id = ?`, uid).Scan(&lastChangedAt)
-	if !lastChangedAt.IsZero() && time.Since(lastChangedAt) < emailChangeCooldown {
-		retryAt := lastChangedAt.Add(emailChangeCooldown)
+	cooldown := time.Duration(config.Get().Cooldowns.EmailChangeDays) * 24 * time.Hour
+	if !lastChangedAt.IsZero() && time.Since(lastChangedAt) < cooldown {
+		retryAt := lastChangedAt.Add(cooldown)
 		utils.LogActivity(c, uid, "update_email", false, "cooldown")
 		c.JSON(http.StatusTooManyRequests, gin.H{
 			"success":  false,
