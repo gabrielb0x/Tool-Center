@@ -130,5 +130,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": [""]
+    },
+    {
+        "id": 23,
+        "date": "2025-07-01",
+        "displayDate": "01/07/2025",
+        "title": "Nouvelle page de s\u00e9curit\u00e9 avec changement de mot de passe",
+        "summary": "Les utilisateurs peuvent maintenant modifier leur mot de passe depuis la page s\u00e9curit\u00e9.",
+        "content": "Une page d'administration de la s\u00e9curit\u00e9 est disponible sur le site et un endpoint API `update_password` permet de mettre \u00e0 jour son mot de passe apr\u00e8s v\u00e9rification.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": ["done"]
     }
 ]

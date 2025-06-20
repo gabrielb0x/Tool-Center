@@ -12,7 +12,7 @@
 **Tool Center** is a web platform designed to:
 - 🔧 **Create & publish** your own tools
 - 💬 **Like, comment and share** other people's tools
-- 👤 **Manage your account**: avatar, settings, statistics
+- 👤 **Manage your account**: avatar, security, statistics
 - 🛡️ A clean **moderation system**
 - 📜 **Comprehensive logs** for users and admins
 - ⚡ A responsive design focused on usability
@@ -92,6 +92,7 @@ Want to contribute or report a bug?
 - 📊 Public statistics & user ranking
 - ⚔️ Gamification and level system
 - 🌍 Multilingual translations
+- 🔐 Account security page with password updates
 
 ---
 ## **© Gabriel B., 2024-2025 — All rights reserved.**
