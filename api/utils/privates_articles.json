@@ -141,5 +141,16 @@
         "isNew": true,
         "isPrivate": true,
         "tags": ["done"]
+    },
+    {
+        "id": 24,
+        "date": "2025-07-15",
+        "displayDate": "15/07/2025",
+        "title": "Am\u00e9liorations du panel admin",
+        "summary": "Dur\u00e9e de ban configurable et nouveaux indicateurs.",
+        "content": "Les administrateurs peuvent d\u00e9finir la dur\u00e9e d'un ban et voir rapidement si un utilisateur est v\u00e9rifi\u00e9 ou banni d\u00e9finitivement.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": ["done"]
     }
 ]

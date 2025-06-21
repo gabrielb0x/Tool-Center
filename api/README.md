@@ -210,9 +210,11 @@ curl -X POST https://api.tool-center.fr/api/user/update_password \
 
 | Méthode | URL | Description |
 | ------- | --- | ----------- |
-| `GET` | `/api/admin/user_list` | Liste des utilisateurs |
-| `POST` | `/api/admin/ban` | Bannir un utilisateur |
-| `POST` | `/api/admin/unban` | Débannir un utilisateur |
+| `GET` | `/api/admin/users` | Liste des utilisateurs |
+| `POST` | `/api/admin/users/{id}/ban` | Bannir un utilisateur |
+| `POST` | `/api/admin/users/{id}/unban` | Débannir un utilisateur |
+
+Le JSON du ban doit contenir `reason` et optionnellement `duration_hours` (0 ou omis = ban permanent). Les modérateurs ne peuvent bannir que les comptes "User".
 
 *(d'autres routes : `/api/reservations`, `/api/moderation`, etc. — voir le dossier `scripts/`)*
 
