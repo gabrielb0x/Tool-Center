@@ -1148,6 +1148,7 @@
           <img src="https://tool-center.fr/assets/account.png" alt="User" class="user-avatar-lg" id="modal-avatar">
           <div class="user-details">
             <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
+            <img src="/assets/verified.png" id="modal-verified" title="Vérifié" style="width:16px;height:16px;vertical-align:middle;display:none;">
             <span class="user-role role-user" id="modal-user-role">Utilisateur</span>
             <div class="user-stats">
               <div class="user-stat">
@@ -1159,11 +1160,12 @@
                 <div class="stat-label">Signalements</div>
               </div>
               <div class="user-stat">
-                <div class="stat-number" id="joined-date">--/--/----</div>
-                <div class="stat-label">Inscription</div>
-              </div>
+              <div class="stat-number" id="joined-date">--/--/----</div>
+              <div class="stat-label">Inscription</div>
             </div>
           </div>
+          <div id="ban-info" style="margin-top:8px;font-weight:600;color:#ef4444;display:none;"></div>
+        </div>
         </div>
 
         <div class="user-tabs">
@@ -1252,6 +1254,8 @@
       <div class="form-group ban-reason-group">
         <label for="ban-reason">Raison du ban</label>
         <textarea id="ban-reason" class="form-control" rows="3" placeholder="Indiquez la raison" style="resize: vertical;"></textarea>
+        <label for="ban-duration">Durée (heures, 0 = permanent)</label>
+        <input type="number" id="ban-duration" class="form-control" min="0" value="24">
       </div>
       <p id="unban-text" class="hidden">Voulez-vous vraiment débannir cet utilisateur ?</p>
     </div>
@@ -1519,7 +1523,7 @@
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ reason })
+          body: JSON.stringify({ reason, duration_hours: parseInt(document.getElementById('ban-duration').value, 10) || 0 })
         });
         
         if (!response.ok) {
@@ -1685,7 +1689,7 @@
       return statsContainer;
     }
 
-    function renderUsersTable(users) {
+    function renderUsersTable(users, page = 1, total = 0) {
       const container = document.createElement('div');
       container.innerHTML = `
       <h2 class="section-title">
@@ -1714,13 +1718,7 @@
           <!-- Users will be loaded here via JS -->
         </tbody>
         </table>
-        <div class="pagination">
-        <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-        </div>
+        <div class="pagination" id="users-pagination"></div>
       </div>
       `;
       
@@ -1808,18 +1806,30 @@
       
       const searchInput = container.querySelector('#user-search');
       let searchTimeout;
-      
+
       searchInput.addEventListener('input', () => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
-        loadUsers(searchInput.value);
+        loadUsers(searchInput.value, 1);
       }, 500);
+      });
+
+      const pag = container.querySelector('#users-pagination');
+      const maxPage = Math.max(1, Math.ceil(total / 10));
+      pag.innerHTML = `
+        <button class="page-btn" ${page<=1?'disabled':''} data-page="${page-1}"><i class="fas fa-chevron-left"></i></button>
+        <span class="page-info">Page ${page}/${maxPage}</span>
+        <button class="page-btn" ${page>=maxPage?'disabled':''} data-page="${page+1}"><i class="fas fa-chevron-right"></i></button>`;
+      pag.querySelectorAll('button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const p=parseInt(btn.getAttribute('data-page')); if(p>=1&&p<=maxPage){ loadUsers(searchInput.value,p); }
+        });
       });
       
       return container;
     }
 
-    function renderSystemLogs(logs) {
+    function renderSystemLogs(logs, page = 1, total = 0) {
       const container = document.createElement('div');
       container.innerHTML = `
         <h2 class="section-title">
@@ -1848,13 +1858,7 @@
               <!-- Logs will be loaded here via JS -->
             </tbody>
           </table>
-          <div class="pagination">
-            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
-            <button class="page-btn active">1</button>
-            <button class="page-btn">2</button>
-            <button class="page-btn">3</button>
-            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
-          </div>
+          <div class="pagination" id="logs-pagination"></div>
         </div>
       `;
       
@@ -1881,12 +1885,24 @@
       
       const searchInput = container.querySelector('#logs-search');
       let searchTimeout;
-      
+
       searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
-          loadSystemLogs(searchInput.value);
+          loadSystemLogs(1);
         }, 500);
+      });
+
+      const pag = container.querySelector('#logs-pagination');
+      const maxPage = Math.max(1, Math.ceil(total / 10));
+      pag.innerHTML = `
+        <button class="page-btn" ${page<=1?'disabled':''} data-page="${page-1}"><i class="fas fa-chevron-left"></i></button>
+        <span class="page-info">Page ${page}/${maxPage}</span>
+        <button class="page-btn" ${page>=maxPage?'disabled':''} data-page="${page+1}"><i class="fas fa-chevron-right"></i></button>`;
+      pag.querySelectorAll('button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const p=parseInt(btn.getAttribute('data-page')); if(p>=1&&p<=maxPage){ loadSystemLogs(p); }
+        });
       });
       
       return container;
@@ -1945,6 +1961,12 @@
       const user = data.user;
       
       document.getElementById('modal-user-name').textContent = user.username;
+      const verifiedIcon = document.getElementById('modal-verified');
+      if (user.is_verified) {
+        verifiedIcon.style.display = 'inline-block';
+      } else {
+        verifiedIcon.style.display = 'none';
+      }
       document.getElementById('modal-avatar').src = user.avatar || '/assets/account.png';
       
       const roleBadge = document.getElementById('modal-user-role');
@@ -1958,6 +1980,20 @@
       document.getElementById('tools-count').textContent = user.toolsCount || 0;
       document.getElementById('reports-count').textContent = user.reportsCount || 0;
       document.getElementById('joined-date').textContent = new Date(user.createdAt).toLocaleDateString();
+      const banInfo = document.getElementById('ban-info');
+      if (user.status === 'Banned') {
+        if (user.ban_permanent) {
+          banInfo.textContent = 'Banni définitivement';
+        } else if (user.ban_until) {
+          const end = new Date(user.ban_until);
+          const diff = Math.max(0, end - Date.now());
+          const hours = Math.ceil(diff / 3600000);
+          banInfo.textContent = `Ban restant: ${hours}h`;
+        }
+        banInfo.style.display = 'block';
+      } else {
+        banInfo.style.display = 'none';
+      }
       
       document.getElementById('username').value = user.username;
       document.getElementById('email').value = user.email;
@@ -1998,7 +2034,7 @@
       }
     }
 
-    async function loadUsers(search = '') {
+    async function loadUsers(search = '', page = 1) {
       const existing = document.getElementById(SECTION_IDS.users);
       if (existing) existing.remove();
 
@@ -2007,8 +2043,8 @@
       adminContent.appendChild(placeholder);
       showLoadingSkeleton('users');
 
-      const { users } = await fetchUsers(search);
-      const usersElement = renderUsersTable(users);
+      const { users, total } = await fetchUsers(search, page);
+      const usersElement = renderUsersTable(users, page, total);
       usersElement.id = SECTION_IDS.users;
 
       if (!document.querySelector('.stats-cards')) {
@@ -2027,8 +2063,8 @@
       adminContent.appendChild(placeholder);
       showLoadingSkeleton('logs');
 
-      const { logs } = await fetchSystemLogs(page);
-      const logsElement = renderSystemLogs(logs);
+      const { logs, total } = await fetchSystemLogs(page);
+      const logsElement = renderSystemLogs(logs, page, total);
       logsElement.id = SECTION_IDS.logs;
 
       if (!document.querySelector('.stats-cards')) {
@@ -2139,6 +2175,7 @@
       function closeBan() {
         banModal.classList.remove('active');
         banReasonInput.value = '';
+        document.getElementById('ban-duration').value = '24';
       }
 
       closeBanModal.addEventListener('click', closeBan);

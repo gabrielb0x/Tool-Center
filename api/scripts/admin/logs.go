@@ -23,18 +23,21 @@ func LogsHandler(c *gin.Context) {
 	if page < 1 {
 		page = 1
 	}
-	limit := logsPerPage
-	offset := (page - 1) * limit
+       limit := logsPerPage
+       offset := (page - 1) * limit
+       var total int
 
-	db, err := config.OpenDB()
-	if err != nil {
-		utils.LogActivity(c, uid, "view_logs", false, "db open error")
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
-		return
-	}
-	defer db.Close()
+       db, err := config.OpenDB()
+       if err != nil {
+               utils.LogActivity(c, uid, "view_logs", false, "db open error")
+               c.JSON(http.StatusInternalServerError, gin.H{"success": false})
+               return
+       }
+       defer db.Close()
 
-	rows, err := db.Query(`
+       _ = db.QueryRow(`SELECT COUNT(*) FROM activity_logs`).Scan(&total)
+
+       rows, err := db.Query(`
         SELECT al.created_at, al.action, al.message, al.success, al.ip_address,
                al.user_id, u.username, u.avatar_url
         FROM activity_logs al
@@ -79,7 +82,7 @@ func LogsHandler(c *gin.Context) {
 		logs = append(logs, entry)
 	}
 
-	utils.LogActivity(c, uid, "view_logs", true, "")
+       utils.LogActivity(c, uid, "view_logs", true, "")
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "logs": logs})
+       c.JSON(http.StatusOK, gin.H{"success": true, "logs": logs, "total": total})
 }

@@ -14,6 +14,7 @@
 - 💬 **Like, comment and share** other people's tools
 - 👤 **Manage your account**: avatar, security, statistics
 - 🛡️ A clean **moderation system**
+- ⏳ **Ban durations** and role restrictions for moderators
 - 📜 **Comprehensive logs** for users and admins
 - ⚡ A responsive design focused on usability
 

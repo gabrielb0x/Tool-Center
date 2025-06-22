@@ -38,19 +38,22 @@ func UserListHandler(c *gin.Context) {
 	defer db.Close()
 
 	search := strings.TrimSpace(c.Query("search"))
-	page, _ := strconv.Atoi(c.Query("page"))
-	if page < 1 {
-		page = 1
-	}
-	limit := 10
-	offset := (page - 1) * limit
+       page, _ := strconv.Atoi(c.Query("page"))
+       if page < 1 {
+               page = 1
+       }
+       limit := 10
+       offset := (page - 1) * limit
+       var total int
 
-	var rows *sql.Rows
-	if search != "" {
-		rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified FROM users WHERE username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`, "%"+search+"%", limit, offset)
-	} else {
-		rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?`, limit, offset)
-	}
+       var rows *sql.Rows
+       if search != "" {
+               rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified FROM users WHERE username LIKE ? ORDER BY created_at DESC LIMIT ? OFFSET ?`, "%"+search+"%", limit, offset)
+               _ = db.QueryRow(`SELECT COUNT(*) FROM users WHERE username LIKE ?`, "%"+search+"%").Scan(&total)
+       } else {
+               rows, err = db.Query(`SELECT user_id, username, email, role, account_status, created_at, avatar_url, is_verified FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?`, limit, offset)
+               _ = db.QueryRow(`SELECT COUNT(*) FROM users`).Scan(&total)
+       }
 	if err != nil {
 		utils.LogActivity(c, uid, "user_list", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
@@ -69,7 +72,7 @@ func UserListHandler(c *gin.Context) {
 		users = append(users, u)
 	}
 
-	utils.LogActivity(c, uid, "user_list", true, "")
+       utils.LogActivity(c, uid, "user_list", true, "")
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "users": users})
+       c.JSON(http.StatusOK, gin.H{"success": true, "users": users, "total": total})
 }
