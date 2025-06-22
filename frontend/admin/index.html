@@ -428,6 +428,12 @@
       margin-bottom: 20px;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .table-title {
       font-size: 20px;
       font-weight: 600;
@@ -737,6 +743,18 @@
       flex: 1;
     }
 
+    .user-name-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .verified-icon {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+    }
+
     .user-name-lg {
       font-size: 24px;
       font-weight: 600;
@@ -752,6 +770,12 @@
       font-size: 12px;
       font-weight: 500;
       margin-bottom: 10px;
+    }
+
+    .ban-info {
+      margin-top: 8px;
+      font-weight: 600;
+      color: var(--error-color);
     }
 
     .role-admin {
@@ -882,6 +906,11 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
     }
 
     .btn-primary {
@@ -1147,8 +1176,10 @@
         <div class="user-profile-header">
           <img src="https://tool-center.fr/assets/account.png" alt="User" class="user-avatar-lg" id="modal-avatar">
           <div class="user-details">
-            <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
-            <img src="/assets/verified.png" id="modal-verified" title="Vérifié" style="width:16px;height:16px;vertical-align:middle;display:none;">
+            <div class="user-name-wrapper">
+              <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
+              <img src="/assets/verified.png" id="modal-verified" title="Vérifié" class="verified-icon" style="display:none;">
+            </div>
             <span class="user-role role-user" id="modal-user-role">Utilisateur</span>
             <div class="user-stats">
               <div class="user-stat">
@@ -1164,13 +1195,14 @@
               <div class="stat-label">Inscription</div>
             </div>
           </div>
-          <div id="ban-info" style="margin-top:8px;font-weight:600;color:#ef4444;display:none;"></div>
+          <div id="ban-info" class="ban-info" style="display:none;"></div>
         </div>
         </div>
 
         <div class="user-tabs">
           <div class="user-tab active" data-tab="info">Informations</div>
           <div class="user-tab" data-tab="activity">Activité</div>
+          <div class="user-tab" data-tab="tools">Outils</div>
           <div class="user-tab" data-tab="settings">Paramètres</div>
         </div>
 
@@ -1205,6 +1237,10 @@
         </div>
 
         <div class="tab-content" id="activity-tab">
+          <div class="skeleton" style="height: 300px; border-radius: 8px;"></div>
+        </div>
+
+        <div class="tab-content" id="tools-tab">
           <div class="skeleton" style="height: 300px; border-radius: 8px;"></div>
         </div>
 
@@ -1276,6 +1312,8 @@
     let currentUserId = null;
     let currentPage = 1;
     let currentUserRole = null;
+    let currentActivityPage = 1;
+    let totalActivity = 0;
 
     const preloader = document.getElementById('preloader');
     const adminContent = document.getElementById('admin-content');
@@ -1425,10 +1463,10 @@
       }
     }
 
-    async function fetchUserActivity(userId) {
+    async function fetchUserActivity(userId, page = 1) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/activity`, {
+        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/activity?page=${page}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
@@ -1438,7 +1476,41 @@
       } catch (error) {
         showToast('error', `Erreur lors du chargement de l'activité: ${error.message}`);
         console.error('Error fetching user activity:', error);
-        return { logs: [] };
+        return { logs: [], total: 0 };
+      }
+    }
+
+    async function fetchUserTools(userId) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/tools`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        showToast('error', `Erreur lors du chargement des outils: ${error.message}`);
+        console.error('Error fetching user tools:', error);
+        return { tools: [] };
+      }
+    }
+
+    async function fetchBanInfo(userId) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/users/${userId}/ban`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        showToast('error', `Erreur lors du chargement de la raison: ${error.message}`);
+        console.error('Error fetching ban info:', error);
+        return null;
       }
     }
 
@@ -1561,6 +1633,25 @@
         showToast('error', `Erreur lors du débannissement: ${error.message}`);
         console.error('Error unbanning user:', error);
         return null;
+      }
+    }
+
+    async function clearLogs() {
+      if (!confirm('Supprimer tous les logs ?')) return;
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/logs/clear`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        showToast('success', 'Logs supprimés');
+        loadSystemLogs();
+      } catch (error) {
+        showToast('error', `Erreur lors de la suppression: ${error.message}`);
+        console.error('Error clearing logs:', error);
       }
     }
 
@@ -1839,9 +1930,12 @@
         <div class="admin-table-container">
           <div class="table-header">
             <h3 class="table-title"><i class="fas fa-history"></i> Activité récente</h3>
-            <div class="search-box">
-              <i class="fas fa-search"></i>
-              <input type="text" placeholder="Rechercher dans les logs..." id="logs-search">
+            <div class="header-actions">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher dans les logs..." id="logs-search">
+              </div>
+              <button class="btn btn-danger btn-sm" id="clear-logs-btn" title="Vider les logs"><i class="fas fa-trash"></i></button>
             </div>
           </div>
           <table class="admin-table">
@@ -1893,6 +1987,8 @@
         }, 500);
       });
 
+      container.querySelector('#clear-logs-btn').addEventListener('click', clearLogs);
+
       const pag = container.querySelector('#logs-pagination');
       const maxPage = Math.max(1, Math.ceil(total / 10));
       pag.innerHTML = `
@@ -1908,7 +2004,7 @@
       return container;
     }
 
-    function renderUserActivity(logs) {
+    function renderUserActivity(logs, page = 1, total = 0) {
       const container = document.createElement('div');
       if (!logs.length) {
         container.innerHTML = '<p>Aucune activité récente.</p>';
@@ -1925,6 +2021,48 @@
           <span class="${log.success ? 'activity-success' : 'activity-fail'}">
             <i class="fas fa-${log.success ? 'check-circle' : 'times-circle'}"></i>
           </span>`;
+        list.appendChild(li);
+      });
+      container.appendChild(list);
+      const maxPage = Math.max(1, Math.ceil(total / 10));
+      const pag = document.createElement('div');
+      pag.className = 'pagination';
+      pag.innerHTML = `
+        <button class="page-btn" ${page<=1?'disabled':''} data-page="${page-1}"><i class="fas fa-chevron-left"></i></button>
+        <span class="page-info">Page ${page}/${maxPage}</span>
+        <button class="page-btn" ${page>=maxPage?'disabled':''} data-page="${page+1}"><i class="fas fa-chevron-right"></i></button>`;
+      pag.querySelectorAll('button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const p=parseInt(btn.getAttribute('data-page')); if(p>=1&&p<=maxPage){ loadActivityPage(p); }
+        });
+      });
+      container.appendChild(pag);
+      return container;
+    }
+
+    async function loadActivityPage(page) {
+      if (!currentUserId) return;
+      const activityTab = document.getElementById('activity-tab');
+      activityTab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
+      const data = await fetchUserActivity(currentUserId, page);
+      currentActivityPage = page;
+      totalActivity = data.total || 0;
+      activityTab.innerHTML = '';
+      activityTab.appendChild(renderUserActivity(data.logs || [], page, totalActivity));
+    }
+
+    function renderUserTools(tools) {
+      const container = document.createElement('div');
+      if (!tools.length) {
+        container.innerHTML = '<p>Aucun outil.</p>';
+        return container;
+      }
+      const list = document.createElement('ul');
+      list.className = 'activity-list';
+      tools.forEach(t => {
+        const li = document.createElement('li');
+        li.className = 'activity-item';
+        li.innerHTML = `${t.title} - ${t.status} - ${new Date(t.created_at).toLocaleDateString()}`;
         list.appendChild(li);
       });
       container.appendChild(list);
@@ -1982,15 +2120,23 @@
       document.getElementById('joined-date').textContent = new Date(user.createdAt).toLocaleDateString();
       const banInfo = document.getElementById('ban-info');
       if (user.status === 'Banned') {
+        let text = '';
         if (user.ban_permanent) {
-          banInfo.textContent = 'Banni définitivement';
+          text = 'Banni définitivement';
         } else if (user.ban_until) {
           const end = new Date(user.ban_until);
           const diff = Math.max(0, end - Date.now());
           const hours = Math.ceil(diff / 3600000);
-          banInfo.textContent = `Ban restant: ${hours}h`;
+          text = `Ban restant: ${hours}h`;
         }
+        banInfo.innerHTML = `<span id="ban-text">${text}</span> <button class="btn btn-warning btn-sm" id="view-ban-reason">Raison</button>`;
         banInfo.style.display = 'block';
+        document.getElementById('view-ban-reason').addEventListener('click', async () => {
+          const res = await fetchBanInfo(userId);
+          if (res && res.ban && res.ban.reason) {
+            showToast('info', `Raison: ${res.ban.reason}`);
+          }
+        });
       } else {
         banInfo.style.display = 'none';
       }
@@ -2003,9 +2149,17 @@
 
       const activityTab = document.getElementById('activity-tab');
       activityTab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
-      const activityData = await fetchUserActivity(userId);
+      const activityData = await fetchUserActivity(userId, 1);
+      totalActivity = activityData.total || 0;
+      currentActivityPage = 1;
       activityTab.innerHTML = '';
-      activityTab.appendChild(renderUserActivity(activityData.logs || []));
+      activityTab.appendChild(renderUserActivity(activityData.logs || [], 1, totalActivity));
+
+      const toolsTab = document.getElementById('tools-tab');
+      toolsTab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
+      const toolsData = await fetchUserTools(userId);
+      toolsTab.innerHTML = '';
+      toolsTab.appendChild(renderUserTools(toolsData.tools || []));
     }
 
     function closeUserModal() {
@@ -2015,13 +2169,23 @@
 
     function setupTabs() {
       document.querySelectorAll('.user-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', async () => {
           document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
           document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
           
           tab.classList.add('active');
           const tabId = tab.getAttribute('data-tab');
           document.getElementById(`${tabId}-tab`).classList.add('active');
+          if (tabId === 'activity') {
+            loadActivityPage(currentActivityPage);
+          } else if (tabId === 'tools') {
+            if (!currentUserId) return;
+            const toolsTab = document.getElementById('tools-tab');
+            toolsTab.innerHTML = '<div class="skeleton" style="height: 300px; border-radius: 8px;"></div>';
+            const toolsData = await fetchUserTools(currentUserId);
+            toolsTab.innerHTML = '';
+            toolsTab.appendChild(renderUserTools(toolsData.tools || []));
+          }
         });
       });
     }
@@ -2103,11 +2267,8 @@
       }
       
       await loadStats();
-      if (location.pathname.endsWith('/logs')) {
-        await loadSystemLogs();
-      } else {
-        await loadUsers();
-      }
+      await loadUsers();
+      await loadSystemLogs();
       
       setTimeout(() => {
         preloader.style.opacity = '0';

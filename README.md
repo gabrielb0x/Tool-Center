@@ -55,6 +55,11 @@ A new `private_news_password` field secures access to private news articles.
 Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
 Use the `storage` section to configure directories for avatars and tool images.
 
+### Useful API endpoints
+- `POST /v{n}/admin/logs/clear` – clear all activity logs
+- `GET /v{n}/admin/users/{id}/tools` – list tools of a specific user
+- `GET /v{n}/admin/users/{id}/ban` – get last ban reason
+
 ---
 
 ## 📸 **Gallery**
