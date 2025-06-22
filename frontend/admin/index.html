@@ -911,6 +911,7 @@
     .btn-sm {
       padding: 4px 8px;
       font-size: 12px;
+      background-color: var(--info-color);
     }
 
     .btn-primary {
@@ -2121,22 +2122,46 @@
       const banInfo = document.getElementById('ban-info');
       if (user.status === 'Banned') {
         let text = '';
-        if (user.ban_permanent) {
-          text = 'Banni définitivement';
-        } else if (user.ban_until) {
-          const end = new Date(user.ban_until);
-          const diff = Math.max(0, end - Date.now());
-          const hours = Math.ceil(diff / 3600000);
-          text = `Ban restant: ${hours}h`;
+        let intervalId = null;
+
+        function updateBanCountdown() {
+          if (user.ban_permanent) {
+        text = 'Banni définitivement';
+        banInfo.innerHTML = `<span id="ban-text">${text}</span> <button class="btn btn-warning btn-sm" id="view-ban-reason">Voir la raison du bannissement</button>`;
+        clearInterval(intervalId);
+          } else if (user.ban_until) {
+        const end = new Date(user.ban_until);
+        const now = Date.now();
+        const diff = Math.max(0, end - now);
+        if (diff <= 0) {
+          text = 'Ban terminé';
+          clearInterval(intervalId);
+        } else {
+          const totalSeconds = Math.floor(diff / 1000);
+          const hours = Math.floor(totalSeconds / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          text = `Durée de ban restant : ${hours}h ${minutes}m ${seconds}s`;
         }
-        banInfo.innerHTML = `<span id="ban-text">${text}</span> <button class="btn btn-warning btn-sm" id="view-ban-reason">Raison</button>`;
-        banInfo.style.display = 'block';
-        document.getElementById('view-ban-reason').addEventListener('click', async () => {
+        banInfo.innerHTML = `<span id="ban-text">${text}</span> <button class="btn btn-warning btn-sm" id="view-ban-reason">Voir la raison du bannissement</button>`;
+          }
+          // Ajoute l'event listener à chaque update
+          const btn = document.getElementById('view-ban-reason');
+          if (btn) {
+        btn.onclick = async () => {
           const res = await fetchBanInfo(userId);
           if (res && res.ban && res.ban.reason) {
-            showToast('info', `Raison: ${res.ban.reason}`);
+            showToast('info', `Raison du bannissement de ${user.username} : ${res.ban.reason}`);
           }
-        });
+        };
+          }
+        }
+
+        updateBanCountdown();
+        if (!user.ban_permanent && user.ban_until) {
+          intervalId = setInterval(updateBanCountdown, 1000);
+        }
+        banInfo.style.display = 'block';
       } else {
         banInfo.style.display = 'none';
       }
