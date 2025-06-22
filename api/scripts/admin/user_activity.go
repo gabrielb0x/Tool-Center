@@ -25,20 +25,23 @@ func UserActivityHandler(c *gin.Context) {
 		return
 	}
 
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+       page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	if page < 1 {
 		page = 1
 	}
 	limit := userActivityPerPage
 	offset := (page - 1) * limit
 
-	db, err := config.OpenDB()
-	if err != nil {
-		utils.LogActivity(c, modID, "user_activity", false, "db open error")
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
-		return
-	}
-	defer db.Close()
+       db, err := config.OpenDB()
+       if err != nil {
+               utils.LogActivity(c, modID, "user_activity", false, "db open error")
+               c.JSON(http.StatusInternalServerError, gin.H{"success": false})
+               return
+       }
+       defer db.Close()
+
+       var total int
+       _ = db.QueryRow("SELECT COUNT(*) FROM activity_logs WHERE user_id = ?", uid).Scan(&total)
 
 	rows, err := db.Query(`SELECT log_id, created_at, action, success, message, ip_address
         FROM activity_logs WHERE user_id = ?
@@ -79,7 +82,7 @@ func UserActivityHandler(c *gin.Context) {
 		logs = append(logs, entry)
 	}
 
-	utils.LogActivity(c, modID, "user_activity", true, "")
+       utils.LogActivity(c, modID, "user_activity", true, "")
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "logs": logs})
+       c.JSON(http.StatusOK, gin.H{"success": true, "logs": logs, "total": total})
 }

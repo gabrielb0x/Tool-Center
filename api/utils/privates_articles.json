@@ -8,7 +8,9 @@
         "content": "Désormais, tous les IDs de toolcenter seront des UUID v7. Cela permettra d'améliorer la sécurité et la scalabilité de l'application.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 12,
@@ -19,7 +21,9 @@
         "content": "L'endpoint API pour les news supporte désormais la mise à jour des articles directement depuis un fichier JSON. Plus besoin de redémarrer l'API pour publier ou modifier des articles, ce qui facilite la gestion et accélère le déploiement des nouveautés.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 13,
@@ -30,7 +34,9 @@
         "content": "Le problème de cache sur les avatars est résolu. La cause principale était l'absence de règle Cloudflare adaptée à l'URI, ainsi qu'une configuration Nginx qui ajoutait 'Cache-Control: public, max-age=2592000, immutable'. Cela empêchait le bon fonctionnement du rafraîchissement des avatars. Désormais, les avatars sont bien mis à jour.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 14,
@@ -41,7 +47,9 @@
         "content": "Le projet toolcenter est maintenant versionné avec Git et hébergé sur un dépôt privé GitHub. Cela permet un meilleur suivi des évolutions, une gestion simplifiée des modifications et une sécurité accrue pour le code source.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 15,
@@ -52,7 +60,9 @@
         "content": "Pour renforcer la sécurité, tous les tokens de vérification d'emails et de connexion/acces au compte sont maintenant hashés en base de données avec SHA-256. Auparavant, ils étaient stockés en clair. Cette modification protège mieux les utilisateurs en cas de fuite de données.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 16,
@@ -63,7 +73,9 @@
         "content": "Un nouveau script permet désormais d'envoyer des notifications via les webhooks Discord. Cette fonctionnalité est en phase d'expérimentation et peut évoluer. N'hésitez pas à faire des retours si vous l'utilisez.",
         "isNew": true,
         "isPrivate": true,
-        "tags": ["done"]
+        "tags": [
+            "done"
+        ]
     },
     {
         "id": 17,
@@ -74,7 +86,9 @@
         "content": "Les bugs d'affichage sur tool-center.fr/account/tools ont été corrigés. Un nouveau handler API permet maintenant de récupérer vos propres tools. Prochainement, un endpoint pour soumettre des tools sera ajouté.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 18,
@@ -85,7 +99,9 @@
         "content": "Un bug empêchait la connexion des utilisateurs, affichant 'la requête a expiré' même si le bon mot de passe était entré. Ce problème est maintenant résolu et la connexion fonctionne normalement.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 19,
@@ -96,61 +112,86 @@
         "content": "Plusieurs bugs ont été corrigés sur la page des tools dans votre compte. Désormais, la suppression d'un tool supprime aussi l'image associée. Prochainement, un nouveau système sera mis en place pour supprimer les comptes non vérifiés, car le worker actuel ne fonctionne pas correctement.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 20,
         "date": "2025-06-19",
         "displayDate": "19/06/2025",
         "title": "Option de configuration pour l'origine CORS",
-        "summary": "Ajout du champ cors_allowed_origin pour personnaliser l'en-t\u00eate CORS.",
-        "content": "La configuration permet d\u00e9sormais de d\u00e9finir l'origine autoris\u00e9e pour les requ\u00eates cross-origin.",
+        "summary": "Ajout du champ cors_allowed_origin pour personnaliser l'en-tête CORS.",
+        "content": "La configuration permet désormais de définir l'origine autorisée pour les requêtes cross-origin.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 21,
         "date": "2025-06-20",
         "displayDate": "20/06/2025",
         "title": "Chemins de stockage configurables",
-        "summary": "Ajout de la section storage pour choisir o\u00f9 sont enregistr\u00e9s avatars et images de tools.",
+        "summary": "Ajout de la section storage pour choisir où sont enregistrés avatars et images de tools.",
         "content": "La configuration dispose maintenant d'une section `storage` permettant de personnaliser les dossiers de stockage des avatars et des images des tools.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 22,
         "date": "2025-06-25",
         "displayDate": "25/06/2025",
         "title": "Section cooldowns dans la config",
-        "summary": "Les d\u00e9lais de modification sont maintenant configurables via `cooldowns`.",
-        "content": "Une nouvelle section `cooldowns` permet de personnaliser les dur\u00e9es de changement d'email, de pseudo, de soumission de tool et d'avatar.",
+        "summary": "Les délais de modification sont maintenant configurables via `cooldowns`.",
+        "content": "Une nouvelle section `cooldowns` permet de personnaliser les durées de changement d'email, de pseudo, de soumission de tool et d'avatar.",
         "isNew": true,
         "isPrivate": true,
-        "tags": [""]
+        "tags": [
+            ""
+        ]
     },
     {
         "id": 23,
         "date": "2025-07-01",
         "displayDate": "01/07/2025",
-        "title": "Nouvelle page de s\u00e9curit\u00e9 avec changement de mot de passe",
-        "summary": "Les utilisateurs peuvent maintenant modifier leur mot de passe depuis la page s\u00e9curit\u00e9.",
-        "content": "Une page d'administration de la s\u00e9curit\u00e9 est disponible sur le site et un endpoint API `update_password` permet de mettre \u00e0 jour son mot de passe apr\u00e8s v\u00e9rification.",
+        "title": "Nouvelle page de sécurité avec changement de mot de passe",
+        "summary": "Les utilisateurs peuvent maintenant modifier leur mot de passe depuis la page sécurité.",
+        "content": "Une page d'administration de la sécurité est disponible sur le site et un endpoint API `update_password` permet de mettre à jour son mot de passe après vérification.",
         "isNew": true,
         "isPrivate": true,
-        "tags": ["done"]
+        "tags": [
+            "done"
+        ]
     },
     {
         "id": 24,
         "date": "2025-07-15",
         "displayDate": "15/07/2025",
-        "title": "Am\u00e9liorations du panel admin",
-        "summary": "Dur\u00e9e de ban configurable et nouveaux indicateurs.",
-        "content": "Les administrateurs peuvent d\u00e9finir la dur\u00e9e d'un ban et voir rapidement si un utilisateur est v\u00e9rifi\u00e9 ou banni d\u00e9finitivement.",
+        "title": "Améliorations du panel admin",
+        "summary": "Durée de ban configurable et nouveaux indicateurs.",
+        "content": "Les administrateurs peuvent définir la durée d'un ban et voir rapidement si un utilisateur est vérifié ou banni définitivement.",
         "isNew": true,
         "isPrivate": true,
-        "tags": ["done"]
+        "tags": [
+            "done"
+        ]
+    },
+    {
+        "id": 25,
+        "date": "2025-08-30",
+        "displayDate": "30/08/2025",
+        "title": "Nouveautés du panel admin",
+        "summary": "Bouton pour vider les logs et onglet outils dans la fiche utilisateur.",
+        "content": "Le panel administrateur dispose désormais d'un bouton pour supprimer tous les logs, d'une pagination sur l'activité et d'un nouvel onglet permettant de voir les outils d'un utilisateur.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [
+            ""
+        ]
     }
 ]
