@@ -13,6 +13,7 @@ import (
 type AdminTool struct {
     ID        string    `json:"tool_id"`
     Title     string    `json:"title"`
+    Thumbnail string    `json:"thumbnail_url"`
     Status    string    `json:"status"`
     CreatedAt time.Time `json:"created_at"`
 }
@@ -34,7 +35,7 @@ func UserToolsHandler(c *gin.Context) {
     }
     defer db.Close()
 
-    rows, err := db.Query(`SELECT tool_id, title, status, created_at FROM tools WHERE user_id = ? ORDER BY created_at DESC`, uid)
+    rows, err := db.Query(`SELECT tool_id, title, thumbnail_url, status, created_at FROM tools WHERE user_id = ? ORDER BY created_at DESC`, uid)
     if err != nil {
         utils.LogActivity(c, adminID, "user_tools", false, "query error")
         c.JSON(http.StatusInternalServerError, gin.H{"success": false})
@@ -45,7 +46,7 @@ func UserToolsHandler(c *gin.Context) {
     tools := make([]AdminTool, 0)
     for rows.Next() {
         var t AdminTool
-        if err := rows.Scan(&t.ID, &t.Title, &t.Status, &t.CreatedAt); err != nil {
+        if err := rows.Scan(&t.ID, &t.Title, &t.Thumbnail, &t.Status, &t.CreatedAt); err != nil {
             continue
         }
         tools = append(tools, t)
