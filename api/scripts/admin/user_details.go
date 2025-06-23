@@ -3,9 +3,10 @@ package admin
 import (
         "database/sql"
         "net/http"
+        "time"
 
-	"toolcenter/config"
-	"toolcenter/utils"
+        "toolcenter/config"
+        "toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -56,6 +57,11 @@ func UserDetailsHandler(c *gin.Context) {
        var banEnd sql.NullTime
        if status == "Banned" {
                _ = db.QueryRow(`SELECT end_date FROM moderation_actions WHERE user_id = ? AND action_type='Ban' ORDER BY action_date DESC LIMIT 1`, uid).Scan(&banEnd)
+               if banEnd.Valid && time.Now().After(banEnd.Time) {
+                       if lifted, _ := utils.LiftExpiredBan(db, uid); lifted {
+                               status = "Good"
+                       }
+               }
        }
 
        user := gin.H{

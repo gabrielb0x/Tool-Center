@@ -54,6 +54,7 @@ Adjust this file (ports, database, SMTP...) to match your environment.
 A new `private_news_password` field secures access to private news articles.
 Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
 Use the `storage` section to configure directories for avatars and tool images.
+The `moderation` section now includes `auto_unban` to automatically lift temporary bans when expired.
 
 ### Useful API endpoints
 - `POST /v{n}/admin/logs/clear` – clear all activity logs

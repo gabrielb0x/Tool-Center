@@ -193,5 +193,18 @@
         "tags": [
             ""
         ]
+    },
+    {
+        "id": 26,
+        "date": "2025-09-01",
+        "displayDate": "01/09/2025",
+        "title": "Correctifs ban et améliorations UI",
+        "summary": "Débannissement automatique et interface revue.",
+        "content": "Les bans temporaires sont levés automatiquement lorsqu'ils expirent et le panel admin affiche mieux les outils des utilisateurs.",
+        "isNew": true,
+        "isPrivate": true,
+        "tags": [
+            "done"
+        ]
     }
 ]

@@ -40,7 +40,8 @@
     "tools_image_dir": "/var/www/toolcenter/storage/tools_images"
   },
   "moderation": {
-    "max_ban_days": 30
+    "max_ban_days": 30,
+    "auto_unban": true
   },
   "cooldowns": {
     "email_change_days": 30,

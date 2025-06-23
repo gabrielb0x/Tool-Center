@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"toolcenter/config"
+        "toolcenter/config"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -26,8 +26,29 @@ var (
 	ErrInvalidToken     = errors.New("votre session a expiré, veuillez vous reconnecter")
 	ErrExpiredToken     = errors.New("reconnectez-vous, la session a expiré")
 	ErrEmailNotVerified = errors.New("vous devez vérifier votre adresse e-mail")
-	ErrAccountBanned    = errors.New("compte banni")
+        ErrAccountBanned    = errors.New("compte banni")
 )
+
+func LiftExpiredBan(db *sql.DB, uid string) (bool, error) {
+        cfg := config.Get()
+        if !cfg.Moderation.AutoUnban {
+                return false, nil
+        }
+        var end sql.NullTime
+        err := db.QueryRow(`SELECT end_date FROM moderation_actions WHERE user_id=? AND action_type='Ban' ORDER BY action_date DESC LIMIT 1`, uid).Scan(&end)
+        if err != nil {
+                if err == sql.ErrNoRows {
+                        return false, nil
+                }
+                return false, err
+        }
+        if end.Valid && time.Now().After(end.Time) {
+                if _, err := db.Exec(`UPDATE users SET account_status='Good' WHERE user_id=?`, uid); err == nil {
+                        return true, nil
+                }
+        }
+        return false, nil
+}
 
 func Check(c *gin.Context, o CheckOpts) (string, bool, string, string, error) {
 	var bearer string
@@ -87,15 +108,21 @@ func Check(c *gin.Context, o CheckOpts) (string, bool, string, string, error) {
 		return "", false, "", "", err
 	}
 
-	if o.RequireToken && expires.Valid && time.Now().After(expires.Time) {
-		return "", false, "", "", ErrExpiredToken
-	}
-	if o.RequireVerified && !verifiedAt.Valid {
-		return "", false, "", "", ErrEmailNotVerified
-	}
-	if o.RequireNotBanned && accountStatus == "Banned" {
-		return "", false, "", "", ErrAccountBanned
-	}
+        if o.RequireToken && expires.Valid && time.Now().After(expires.Time) {
+                return "", false, "", "", ErrExpiredToken
+        }
+        if o.RequireVerified && !verifiedAt.Valid {
+                return "", false, "", "", ErrEmailNotVerified
+        }
+
+        if accountStatus == "Banned" {
+                if lifted, _ := LiftExpiredBan(db, uid); lifted {
+                        accountStatus = "Good"
+                }
+        }
+        if o.RequireNotBanned && accountStatus == "Banned" {
+                return "", false, "", "", ErrAccountBanned
+        }
 
 	if o.UpdateLastLogin {
 		_, _ = db.Exec(`UPDATE users SET last_login = NOW() WHERE user_id = ?`, uid)

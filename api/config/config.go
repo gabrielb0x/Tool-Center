@@ -53,7 +53,8 @@ type Config struct {
                 ToolsImageDir string `json:"tools_image_dir"`
         } `json:"storage"`
        Moderation struct {
-               MaxBanDays int `json:"max_ban_days"`
+               MaxBanDays int  `json:"max_ban_days"`
+               AutoUnban  bool `json:"auto_unban"`
        } `json:"moderation"`
         Cooldowns struct {
                 EmailChangeDays    int `json:"email_change_days"`
@@ -75,6 +76,9 @@ func Load(path string) error {
        }
        if cfg.Moderation.MaxBanDays == 0 {
                cfg.Moderation.MaxBanDays = 30
+       }
+       if !cfg.Moderation.AutoUnban {
+               cfg.Moderation.AutoUnban = true
        }
        mu.Lock()
        Current = cfg
