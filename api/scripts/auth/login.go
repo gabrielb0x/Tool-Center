@@ -13,12 +13,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/pquerna/otp/totp"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginRequest struct {
 	Email          string `json:"email"`
 	Password       string `json:"password"`
+	TwoFactorCode  string `json:"two_factor_code"`
 	TurnstileToken string `json:"turnstile_token"`
 }
 
@@ -70,9 +72,10 @@ func LoginHandler(c *gin.Context) {
 	var (
 		uid        string
 		storedHash string
+		authSecret sql.NullString
 	)
-	err = db.QueryRow(`SELECT user_id, password_hash FROM users WHERE email = ?`, req.Email).
-		Scan(&uid, &storedHash)
+	err = db.QueryRow(`SELECT user_id, password_hash, authenticator_secret FROM users WHERE email = ?`, req.Email).
+		Scan(&uid, &storedHash, &authSecret)
 	if err == sql.ErrNoRows {
 		utils.LogActivity(c, "", "login_attempt", false, "unknown user")
 		c.JSON(http.StatusUnauthorized, gin.H{
@@ -94,6 +97,19 @@ func LoginHandler(c *gin.Context) {
 			"message": "Utilisateur ou mot de passe incorrect.",
 		})
 		return
+	}
+
+	if authSecret.Valid && authSecret.String != "" {
+		if req.TwoFactorCode == "" {
+			utils.LogActivity(c, uid, "login_attempt", false, "2fa required")
+			c.JSON(http.StatusUnauthorized, gin.H{"success": false, "two_factor_required": true})
+			return
+		}
+		if !totp.Validate(req.TwoFactorCode, authSecret.String) {
+			utils.LogActivity(c, uid, "login_attempt", false, "invalid 2fa")
+			c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "Code 2FA invalide"})
+			return
+		}
 	}
 
 	_ = c.Request.Body.Close()

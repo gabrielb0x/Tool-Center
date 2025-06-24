@@ -61,22 +61,23 @@ func MeHandler(c *gin.Context) {
 		userChg, mailChg, avaChg, banChg     sql.NullTime
 		passChg, lastLogin, lastPost, lastUp sql.NullTime
 		blueCheck                            bool
+		authSecret                           sql.NullString
 	)
 
 	const qry = `
-	SELECT username,email,avatar_url,banner_url,role,account_status,bio,
-		   created_at,updated_at,
-		   username_changed_at,email_changed_at,avatar_changed_at,banner_changed_at,
-		   password_changed_at,last_login,last_tool_posted,last_tool_updated,
-		   is_verified
-	FROM users WHERE user_id = ? LIMIT 1`
+        SELECT username,email,avatar_url,banner_url,role,account_status,bio,
+                   created_at,updated_at,
+                   username_changed_at,email_changed_at,avatar_changed_at,banner_changed_at,
+                   password_changed_at,last_login,last_tool_posted,last_tool_updated,
+                   is_verified,authenticator_secret
+        FROM users WHERE user_id = ? LIMIT 1`
 
 	if err = db.QueryRow(qry, uid).Scan(
 		&username, &email, &avatar, &banner, &role, &status, &bio,
 		&createdAt, &updatedAt,
 		&userChg, &mailChg, &avaChg, &banChg,
 		&passChg, &lastLogin, &lastPost, &lastUp,
-		&blueCheck,
+		&blueCheck, &authSecret,
 	); err != nil {
 		utils.LogActivity(c, uid, "me", false, "query error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "Erreur interne."})
@@ -139,6 +140,7 @@ FROM user_stats WHERE user_id = ?`, uid).
 		"last_login":          nTime(lastLogin),
 		"last_tool_posted":    nTime(lastPost),
 		"last_tool_updated":   nTime(lastUp),
+		"two_factor_enabled":  authSecret.Valid && authSecret.String != "",
 		"stats": gin.H{
 			"tools_posted":   st.Tools,
 			"comments":       st.Cmts,

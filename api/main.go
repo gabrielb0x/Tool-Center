@@ -18,12 +18,12 @@ import (
 )
 
 func corsMiddleware() gin.HandlerFunc {
-        return func(c *gin.Context) {
-                origin := config.Get().CorsAllowedOrigin
-                if origin == "" {
-                        origin = "*"
-                }
-                c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
+	return func(c *gin.Context) {
+		origin := config.Get().CorsAllowedOrigin
+		if origin == "" {
+			origin = "*"
+		}
+		c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -124,38 +124,41 @@ func setupRoutes(r *gin.Engine) {
 	authGroup.POST("/register", auth.RegisterHandler)
 	authGroup.POST("/logout", auth.LogoutHandler)
 
-        userGroup := api.Group("/user")
-        userGroup.GET("/verify_email", user.VerifyEmailHandler)
-        userGroup.GET(("/me"), user.MeHandler)
-        userGroup.POST("/avatar", user.UploadAvatar)
-        userGroup.POST("/update_username", user.UpdateUsernameHandler)
-        userGroup.POST("/update_email", user.UpdateEmailHandler)
-        userGroup.POST("/update_password", user.UpdatePasswordHandler)
-        userGroup.POST("/delete", user.DeleteAccountHandler)
+	userGroup := api.Group("/user")
+	userGroup.GET("/verify_email", user.VerifyEmailHandler)
+	userGroup.GET(("/me"), user.MeHandler)
+	userGroup.POST("/avatar", user.UploadAvatar)
+	userGroup.POST("/update_username", user.UpdateUsernameHandler)
+	userGroup.POST("/update_email", user.UpdateEmailHandler)
+	userGroup.POST("/update_password", user.UpdatePasswordHandler)
+	userGroup.GET("/2fa/setup", user.Generate2FAHandler)
+	userGroup.POST("/enable_2fa", user.Enable2FAHandler)
+	userGroup.POST("/disable_2fa", user.Disable2FAHandler)
+	userGroup.POST("/delete", user.DeleteAccountHandler)
 
 	toolsGroup := api.Group("/tools")
 	toolsGroup.POST("/add", tools.SubmitToolHandler)
 	toolsGroup.GET("/me", tools.MyToolsHandler)
 	toolsGroup.DELETE("/delete/:id", tools.DeleteToolHandler)
 
-       adminGroup := api.Group("/admin")
-       adminGroup.Use(utils.RequireRole("Admin"))
-       adminGroup.GET("/users", admin.UserListHandler)
-       adminGroup.GET("/users/:id", admin.UserDetailsHandler)
-       adminGroup.PUT("/users/:id", admin.UpdateUserHandler)
-       adminGroup.POST("/users/:id/ban", admin.BanUserHandler)
-       adminGroup.POST("/users/:id/unban", admin.UnbanUserHandler)
-       adminGroup.GET("/users/:id/activity", admin.UserActivityHandler)
-       adminGroup.GET("/users/:id/tools", admin.UserToolsHandler)
-       adminGroup.GET("/users/:id/ban", admin.UserBanInfoHandler)
-       adminGroup.GET("/logs", admin.LogsHandler)
-       adminGroup.POST("/logs/clear", admin.ClearLogsHandler)
-       adminGroup.GET("/stats", admin.StatsHandler)
+	adminGroup := api.Group("/admin")
+	adminGroup.Use(utils.RequireRole("Admin"))
+	adminGroup.GET("/users", admin.UserListHandler)
+	adminGroup.GET("/users/:id", admin.UserDetailsHandler)
+	adminGroup.PUT("/users/:id", admin.UpdateUserHandler)
+	adminGroup.POST("/users/:id/ban", admin.BanUserHandler)
+	adminGroup.POST("/users/:id/unban", admin.UnbanUserHandler)
+	adminGroup.GET("/users/:id/activity", admin.UserActivityHandler)
+	adminGroup.GET("/users/:id/tools", admin.UserToolsHandler)
+	adminGroup.GET("/users/:id/ban", admin.UserBanInfoHandler)
+	adminGroup.GET("/logs", admin.LogsHandler)
+	adminGroup.POST("/logs/clear", admin.ClearLogsHandler)
+	adminGroup.GET("/stats", admin.StatsHandler)
 
-       moderationGroup := api.Group("/moderation")
-       moderationGroup.Use(utils.RequireRole("Admin", "Moderator"))
-       moderationGroup.POST("/users/:id/ban", admin.BanUserHandler)
-       moderationGroup.POST("/users/:id/unban", admin.UnbanUserHandler)
+	moderationGroup := api.Group("/moderation")
+	moderationGroup.Use(utils.RequireRole("Admin", "Moderator"))
+	moderationGroup.POST("/users/:id/ban", admin.BanUserHandler)
+	moderationGroup.POST("/users/:id/unban", admin.UnbanUserHandler)
 
 	utilsGroup := api.Group("/utils")
 	utilsGroup.POST("/privates_news", utils.PrivateNewsHandler)

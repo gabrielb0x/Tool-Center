@@ -1551,6 +1551,7 @@
     <script>
         let apiBaseURL = "";
         let currentUserTools = [];
+        let twoFactorEnabled = false;
         let currentEditingToolId = null;
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -1570,6 +1571,7 @@
                     .then(() => {
                         initTheme();
                         initSecurityButtons();
+                        checkTwoFactor();
                         initToolModal();
                         initDeleteModal();
                     })
@@ -1810,9 +1812,7 @@
                 alert('Fonctionnalité de changement de mot de passe à implémenter');
             });
 
-            document.getElementById('enable2faBtn').addEventListener('click', () => {
-                alert('Fonctionnalité d\'activation 2FA à implémenter');
-            });
+            document.getElementById('enable2faBtn').addEventListener('click', handle2FA);
 
             document.getElementById('logoutAllBtn').addEventListener('click', () => {
                 if (confirm('Êtes-vous sûr de vouloir déconnecter toutes les sessions ?')) {
@@ -1821,6 +1821,57 @@
             });
 
             fetchSessions();
+        }
+
+        function checkTwoFactor() {
+            const token = localStorage.getItem('token');
+            fetch(`${apiBaseURL}/user/me`, { headers: { 'Authorization': `Bearer ${token}` } })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    twoFactorEnabled = data.user.two_factor_enabled === true;
+                    document.getElementById('enable2faBtn').textContent = twoFactorEnabled ? 'Désactiver' : 'Activer';
+                }
+            });
+        }
+
+        function handle2FA() {
+            const token = localStorage.getItem('token');
+            if (!twoFactorEnabled) {
+                fetch(`${apiBaseURL}/user/2fa/setup`, { headers: { 'Authorization': `Bearer ${token}` } })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const code = prompt('Scannez le QR code puis saisissez le code\n' + data.secret);
+                        if (!code) return;
+                        fetch(`${apiBaseURL}/user/enable_2fa`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ secret: data.secret, code: code.trim() })
+                        }).then(resp => resp.json()).then(res => {
+                            if (res.success) {
+                                alert('2FA activée');
+                                twoFactorEnabled = true;
+                                document.getElementById('enable2faBtn').textContent = 'Désactiver';
+                            } else { alert(res.message || 'Erreur'); }
+                        });
+                    } else { alert(data.message || 'Erreur'); }
+                });
+            } else {
+                const code = prompt('Code 2FA pour désactiver');
+                if (!code) return;
+                fetch(`${apiBaseURL}/user/disable_2fa`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code.trim() })
+                }).then(r => r.json()).then(res => {
+                    if (res.success) {
+                        alert('2FA désactivée');
+                        twoFactorEnabled = false;
+                        document.getElementById('enable2faBtn').textContent = 'Activer';
+                    } else { alert(res.message || 'Erreur'); }
+                });
+            }
         }
 
         function fetchSessions() {

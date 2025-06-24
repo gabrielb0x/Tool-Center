@@ -1,210 +1,223 @@
 [
-    {
-        "id": 11,
-        "date": "2025-05-20",
-        "displayDate": "20/05/2025",
-        "title": "Passage de ID à UUID v7 sur les IDs en DB de toolcenter",
-        "summary": "Cliquez ici pour en savoir plus sur le passage de ID à UUID v7 sur les IDs en DB de toolcenter.",
-        "content": "Désormais, tous les IDs de toolcenter seront des UUID v7. Cela permettra d'améliorer la sécurité et la scalabilité de l'application.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 12,
-        "date": "2025-05-20",
-        "displayDate": "20/05/2025",
-        "title": "Amélioration de l'endpoint API pour les news",
-        "summary": "L'API des news a été améliorée pour permettre la mise à jour des articles via un fichier JSON sans redémarrage.",
-        "content": "L'endpoint API pour les news supporte désormais la mise à jour des articles directement depuis un fichier JSON. Plus besoin de redémarrer l'API pour publier ou modifier des articles, ce qui facilite la gestion et accélère le déploiement des nouveautés.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 13,
-        "date": "2025-05-24",
-        "displayDate": "24/05/2025",
-        "title": "Suppression du cache sur les avatars",
-        "summary": "Le cache sur les avatars a enfin été retiré, la cause venait de Cloudflare et d'une mauvaise configuration Nginx.",
-        "content": "Le problème de cache sur les avatars est résolu. La cause principale était l'absence de règle Cloudflare adaptée à l'URI, ainsi qu'une configuration Nginx qui ajoutait 'Cache-Control: public, max-age=2592000, immutable'. Cela empêchait le bon fonctionnement du rafraîchissement des avatars. Désormais, les avatars sont bien mis à jour.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 14,
-        "date": "2025-05-24",
-        "displayDate": "24/05/2025",
-        "title": "Mise en place d'un dépôt privé GitHub et intégration de Git",
-        "summary": "Le projet est désormais sous dépôt privé GitHub avec Git, facilitant le suivi des changements et la gestion des nouveautés.",
-        "content": "Le projet toolcenter est maintenant versionné avec Git et hébergé sur un dépôt privé GitHub. Cela permet un meilleur suivi des évolutions, une gestion simplifiée des modifications et une sécurité accrue pour le code source.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 15,
-        "date": "2025-05-29",
-        "displayDate": "29/05/2025",
-        "title": "Hashage des tokens de vérification et d'accès en base de données",
-        "summary": "Les tokens de vérification d'emails et d'accès au compte sont désormais stockés hashés (SHA-256) en base de données.",
-        "content": "Pour renforcer la sécurité, tous les tokens de vérification d'emails et de connexion/acces au compte sont maintenant hashés en base de données avec SHA-256. Auparavant, ils étaient stockés en clair. Cette modification protège mieux les utilisateurs en cas de fuite de données.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 16,
-        "date": "2025-05-30",
-        "displayDate": "30/05/2025",
-        "title": "Ajout d'un script pour utiliser les webhooks Discord (expérimental)",
-        "summary": "Un script expérimental a été ajouté pour permettre l'utilisation des webhooks Discord.",
-        "content": "Un nouveau script permet désormais d'envoyer des notifications via les webhooks Discord. Cette fonctionnalité est en phase d'expérimentation et peut évoluer. N'hésitez pas à faire des retours si vous l'utilisez.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            "done"
-        ]
-    },
-    {
-        "id": 17,
-        "date": "2025-06-04",
-        "displayDate": "04/06/2025",
-        "title": "Corrections d'affichage et nouvel endpoint API pour vos tools",
-        "summary": "Corrections des bugs d'affichage sur la page tools et ajout du handler API pour récupérer vos propres tools.",
-        "content": "Les bugs d'affichage sur tool-center.fr/account/tools ont été corrigés. Un nouveau handler API permet maintenant de récupérer vos propres tools. Prochainement, un endpoint pour soumettre des tools sera ajouté.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 18,
-        "date": "2025-06-04",
-        "displayDate": "04/06/2025",
-        "title": "Le login est enfin réparé",
-        "summary": "Le problème empêchant la connexion, même avec le bon mot de passe, est corrigé.",
-        "content": "Un bug empêchait la connexion des utilisateurs, affichant 'la requête a expiré' même si le bon mot de passe était entré. Ce problème est maintenant résolu et la connexion fonctionne normalement.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 19,
-        "date": "2025-06-07",
-        "displayDate": "07/06/2025",
-        "title": "Corrections de bugs sur la page tools et suppression d'image lors du delete",
-        "summary": "Corrections sur la page des tools dans le compte, suppression de l'image associée lors de la suppression d'un tool, et planification d'un nouveau système pour les comptes non vérifiés.",
-        "content": "Plusieurs bugs ont été corrigés sur la page des tools dans votre compte. Désormais, la suppression d'un tool supprime aussi l'image associée. Prochainement, un nouveau système sera mis en place pour supprimer les comptes non vérifiés, car le worker actuel ne fonctionne pas correctement.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 20,
-        "date": "2025-06-19",
-        "displayDate": "19/06/2025",
-        "title": "Option de configuration pour l'origine CORS",
-        "summary": "Ajout du champ cors_allowed_origin pour personnaliser l'en-tête CORS.",
-        "content": "La configuration permet désormais de définir l'origine autorisée pour les requêtes cross-origin.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 21,
-        "date": "2025-06-20",
-        "displayDate": "20/06/2025",
-        "title": "Chemins de stockage configurables",
-        "summary": "Ajout de la section storage pour choisir où sont enregistrés avatars et images de tools.",
-        "content": "La configuration dispose maintenant d'une section `storage` permettant de personnaliser les dossiers de stockage des avatars et des images des tools.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 22,
-        "date": "2025-06-25",
-        "displayDate": "25/06/2025",
-        "title": "Section cooldowns dans la config",
-        "summary": "Les délais de modification sont maintenant configurables via `cooldowns`.",
-        "content": "Une nouvelle section `cooldowns` permet de personnaliser les durées de changement d'email, de pseudo, de soumission de tool et d'avatar.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 23,
-        "date": "2025-07-01",
-        "displayDate": "01/07/2025",
-        "title": "Nouvelle page de sécurité avec changement de mot de passe",
-        "summary": "Les utilisateurs peuvent maintenant modifier leur mot de passe depuis la page sécurité.",
-        "content": "Une page d'administration de la sécurité est disponible sur le site et un endpoint API `update_password` permet de mettre à jour son mot de passe après vérification.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            "done"
-        ]
-    },
-    {
-        "id": 24,
-        "date": "2025-07-15",
-        "displayDate": "15/07/2025",
-        "title": "Améliorations du panel admin",
-        "summary": "Durée de ban configurable et nouveaux indicateurs.",
-        "content": "Les administrateurs peuvent définir la durée d'un ban et voir rapidement si un utilisateur est vérifié ou banni définitivement.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            "done"
-        ]
-    },
-    {
-        "id": 25,
-        "date": "2025-08-30",
-        "displayDate": "30/08/2025",
-        "title": "Nouveautés du panel admin",
-        "summary": "Bouton pour vider les logs et onglet outils dans la fiche utilisateur.",
-        "content": "Le panel administrateur dispose désormais d'un bouton pour supprimer tous les logs, d'une pagination sur l'activité et d'un nouvel onglet permettant de voir les outils d'un utilisateur.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            ""
-        ]
-    },
-    {
-        "id": 26,
-        "date": "2025-09-01",
-        "displayDate": "01/09/2025",
-        "title": "Correctifs ban et améliorations UI",
-        "summary": "Débannissement automatique et interface revue.",
-        "content": "Les bans temporaires sont levés automatiquement lorsqu'ils expirent et le panel admin affiche mieux les outils des utilisateurs.",
-        "isNew": true,
-        "isPrivate": true,
-        "tags": [
-            "done"
-        ]
-    }
+  {
+    "id": 11,
+    "date": "2025-05-20",
+    "displayDate": "20/05/2025",
+    "title": "Passage de ID à UUID v7 sur les IDs en DB de toolcenter",
+    "summary": "Cliquez ici pour en savoir plus sur le passage de ID à UUID v7 sur les IDs en DB de toolcenter.",
+    "content": "Désormais, tous les IDs de toolcenter seront des UUID v7. Cela permettra d'améliorer la sécurité et la scalabilité de l'application.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 12,
+    "date": "2025-05-20",
+    "displayDate": "20/05/2025",
+    "title": "Amélioration de l'endpoint API pour les news",
+    "summary": "L'API des news a été améliorée pour permettre la mise à jour des articles via un fichier JSON sans redémarrage.",
+    "content": "L'endpoint API pour les news supporte désormais la mise à jour des articles directement depuis un fichier JSON. Plus besoin de redémarrer l'API pour publier ou modifier des articles, ce qui facilite la gestion et accélère le déploiement des nouveautés.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 13,
+    "date": "2025-05-24",
+    "displayDate": "24/05/2025",
+    "title": "Suppression du cache sur les avatars",
+    "summary": "Le cache sur les avatars a enfin été retiré, la cause venait de Cloudflare et d'une mauvaise configuration Nginx.",
+    "content": "Le problème de cache sur les avatars est résolu. La cause principale était l'absence de règle Cloudflare adaptée à l'URI, ainsi qu'une configuration Nginx qui ajoutait 'Cache-Control: public, max-age=2592000, immutable'. Cela empêchait le bon fonctionnement du rafraîchissement des avatars. Désormais, les avatars sont bien mis à jour.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 14,
+    "date": "2025-05-24",
+    "displayDate": "24/05/2025",
+    "title": "Mise en place d'un dépôt privé GitHub et intégration de Git",
+    "summary": "Le projet est désormais sous dépôt privé GitHub avec Git, facilitant le suivi des changements et la gestion des nouveautés.",
+    "content": "Le projet toolcenter est maintenant versionné avec Git et hébergé sur un dépôt privé GitHub. Cela permet un meilleur suivi des évolutions, une gestion simplifiée des modifications et une sécurité accrue pour le code source.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 15,
+    "date": "2025-05-29",
+    "displayDate": "29/05/2025",
+    "title": "Hashage des tokens de vérification et d'accès en base de données",
+    "summary": "Les tokens de vérification d'emails et d'accès au compte sont désormais stockés hashés (SHA-256) en base de données.",
+    "content": "Pour renforcer la sécurité, tous les tokens de vérification d'emails et de connexion/acces au compte sont maintenant hashés en base de données avec SHA-256. Auparavant, ils étaient stockés en clair. Cette modification protège mieux les utilisateurs en cas de fuite de données.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 16,
+    "date": "2025-05-30",
+    "displayDate": "30/05/2025",
+    "title": "Ajout d'un script pour utiliser les webhooks Discord (expérimental)",
+    "summary": "Un script expérimental a été ajouté pour permettre l'utilisation des webhooks Discord.",
+    "content": "Un nouveau script permet désormais d'envoyer des notifications via les webhooks Discord. Cette fonctionnalité est en phase d'expérimentation et peut évoluer. N'hésitez pas à faire des retours si vous l'utilisez.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "done"
+    ]
+  },
+  {
+    "id": 17,
+    "date": "2025-06-04",
+    "displayDate": "04/06/2025",
+    "title": "Corrections d'affichage et nouvel endpoint API pour vos tools",
+    "summary": "Corrections des bugs d'affichage sur la page tools et ajout du handler API pour récupérer vos propres tools.",
+    "content": "Les bugs d'affichage sur tool-center.fr/account/tools ont été corrigés. Un nouveau handler API permet maintenant de récupérer vos propres tools. Prochainement, un endpoint pour soumettre des tools sera ajouté.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 18,
+    "date": "2025-06-04",
+    "displayDate": "04/06/2025",
+    "title": "Le login est enfin réparé",
+    "summary": "Le problème empêchant la connexion, même avec le bon mot de passe, est corrigé.",
+    "content": "Un bug empêchait la connexion des utilisateurs, affichant 'la requête a expiré' même si le bon mot de passe était entré. Ce problème est maintenant résolu et la connexion fonctionne normalement.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 19,
+    "date": "2025-06-07",
+    "displayDate": "07/06/2025",
+    "title": "Corrections de bugs sur la page tools et suppression d'image lors du delete",
+    "summary": "Corrections sur la page des tools dans le compte, suppression de l'image associée lors de la suppression d'un tool, et planification d'un nouveau système pour les comptes non vérifiés.",
+    "content": "Plusieurs bugs ont été corrigés sur la page des tools dans votre compte. Désormais, la suppression d'un tool supprime aussi l'image associée. Prochainement, un nouveau système sera mis en place pour supprimer les comptes non vérifiés, car le worker actuel ne fonctionne pas correctement.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 20,
+    "date": "2025-06-19",
+    "displayDate": "19/06/2025",
+    "title": "Option de configuration pour l'origine CORS",
+    "summary": "Ajout du champ cors_allowed_origin pour personnaliser l'en-tête CORS.",
+    "content": "La configuration permet désormais de définir l'origine autorisée pour les requêtes cross-origin.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 21,
+    "date": "2025-06-20",
+    "displayDate": "20/06/2025",
+    "title": "Chemins de stockage configurables",
+    "summary": "Ajout de la section storage pour choisir où sont enregistrés avatars et images de tools.",
+    "content": "La configuration dispose maintenant d'une section `storage` permettant de personnaliser les dossiers de stockage des avatars et des images des tools.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 22,
+    "date": "2025-06-25",
+    "displayDate": "25/06/2025",
+    "title": "Section cooldowns dans la config",
+    "summary": "Les délais de modification sont maintenant configurables via `cooldowns`.",
+    "content": "Une nouvelle section `cooldowns` permet de personnaliser les durées de changement d'email, de pseudo, de soumission de tool et d'avatar.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 23,
+    "date": "2025-07-01",
+    "displayDate": "01/07/2025",
+    "title": "Nouvelle page de sécurité avec changement de mot de passe",
+    "summary": "Les utilisateurs peuvent maintenant modifier leur mot de passe depuis la page sécurité.",
+    "content": "Une page d'administration de la sécurité est disponible sur le site et un endpoint API `update_password` permet de mettre à jour son mot de passe après vérification.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "done"
+    ]
+  },
+  {
+    "id": 24,
+    "date": "2025-07-15",
+    "displayDate": "15/07/2025",
+    "title": "Améliorations du panel admin",
+    "summary": "Durée de ban configurable et nouveaux indicateurs.",
+    "content": "Les administrateurs peuvent définir la durée d'un ban et voir rapidement si un utilisateur est vérifié ou banni définitivement.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "done"
+    ]
+  },
+  {
+    "id": 25,
+    "date": "2025-08-30",
+    "displayDate": "30/08/2025",
+    "title": "Nouveautés du panel admin",
+    "summary": "Bouton pour vider les logs et onglet outils dans la fiche utilisateur.",
+    "content": "Le panel administrateur dispose désormais d'un bouton pour supprimer tous les logs, d'une pagination sur l'activité et d'un nouvel onglet permettant de voir les outils d'un utilisateur.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  },
+  {
+    "id": 26,
+    "date": "2025-09-01",
+    "displayDate": "01/09/2025",
+    "title": "Correctifs ban et améliorations UI",
+    "summary": "Débannissement automatique et interface revue.",
+    "content": "Les bans temporaires sont levés automatiquement lorsqu'ils expirent et le panel admin affiche mieux les outils des utilisateurs.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "done"
+    ]
+  },
+  {
+    "id": 27,
+    "date": "2025-09-15",
+    "displayDate": "15/09/2025",
+    "title": "Authentification à deux facteurs",
+    "summary": "Ajout de la compatibilité Google Authenticator pour sécuriser la connexion.",
+    "content": "Les utilisateurs peuvent désormais activer l'authentification à deux facteurs dans leurs paramètres de sécurité.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
+  }
 ]

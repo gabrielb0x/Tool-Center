@@ -1,12 +1,12 @@
 package admin
 
 import (
-        "database/sql"
-        "net/http"
-        "time"
+	"database/sql"
+	"net/http"
+	"time"
 
-        "toolcenter/config"
-        "toolcenter/utils"
+	"toolcenter/config"
+	"toolcenter/utils"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -31,15 +31,16 @@ func UserDetailsHandler(c *gin.Context) {
 	}
 	defer db.Close()
 
-        var (
-                username, email, role, status string
-                avatar, bio                   sql.NullString
-                created                       sql.NullTime
-                verified                      bool
-        )
+	var (
+		username, email, role, status string
+		avatar, bio                   sql.NullString
+		created                       sql.NullTime
+		verified                      bool
+		authSecret                    sql.NullString
+	)
 
-        err = db.QueryRow(`SELECT username,email,role,account_status,avatar_url,bio,created_at,is_verified FROM users WHERE user_id = ?`, uid).
-                Scan(&username, &email, &role, &status, &avatar, &bio, &created, &verified)
+	err = db.QueryRow(`SELECT username,email,role,account_status,avatar_url,bio,created_at,is_verified,authenticator_secret FROM users WHERE user_id = ?`, uid).
+		Scan(&username, &email, &role, &status, &avatar, &bio, &created, &verified, &authSecret)
 	if err == sql.ErrNoRows {
 		utils.LogActivity(c, modID, "user_details", false, "not found")
 		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "not found"})
@@ -51,45 +52,46 @@ func UserDetailsHandler(c *gin.Context) {
 		return
 	}
 
-       var toolsCount int
-       _ = db.QueryRow(`SELECT COUNT(*) FROM tools WHERE user_id = ?`, uid).Scan(&toolsCount)
+	var toolsCount int
+	_ = db.QueryRow(`SELECT COUNT(*) FROM tools WHERE user_id = ?`, uid).Scan(&toolsCount)
 
-       var banEnd sql.NullTime
-       if status == "Banned" {
-               _ = db.QueryRow(`SELECT end_date FROM moderation_actions WHERE user_id = ? AND action_type='Ban' ORDER BY action_date DESC LIMIT 1`, uid).Scan(&banEnd)
-               if banEnd.Valid && time.Now().After(banEnd.Time) {
-                       if lifted, _ := utils.LiftExpiredBan(db, uid); lifted {
-                               status = "Good"
-                       }
-               }
-       }
+	var banEnd sql.NullTime
+	if status == "Banned" {
+		_ = db.QueryRow(`SELECT end_date FROM moderation_actions WHERE user_id = ? AND action_type='Ban' ORDER BY action_date DESC LIMIT 1`, uid).Scan(&banEnd)
+		if banEnd.Valid && time.Now().After(banEnd.Time) {
+			if lifted, _ := utils.LiftExpiredBan(db, uid); lifted {
+				status = "Good"
+			}
+		}
+	}
 
-       user := gin.H{
-               "user_id":      uid,
-               "username":     username,
-               "email":        email,
-               "role":         role,
-               "status":       status,
-               "toolsCount":   toolsCount,
-               "reportsCount": 0,
-               "is_verified":  verified,
-       }
+	user := gin.H{
+		"user_id":            uid,
+		"username":           username,
+		"email":              email,
+		"role":               role,
+		"status":             status,
+		"toolsCount":         toolsCount,
+		"reportsCount":       0,
+		"is_verified":        verified,
+		"two_factor_enabled": authSecret.Valid && authSecret.String != "",
+	}
 	if avatar.Valid {
 		user["avatar"] = avatar.String
 	}
 	if bio.Valid {
 		user["bio"] = bio.String
 	}
-       if created.Valid {
-               user["createdAt"] = created.Time
-       }
-       if status == "Banned" {
-               if banEnd.Valid {
-                       user["ban_until"] = banEnd.Time
-               } else {
-                       user["ban_permanent"] = true
-               }
-       }
+	if created.Valid {
+		user["createdAt"] = created.Time
+	}
+	if status == "Banned" {
+		if banEnd.Valid {
+			user["ban_until"] = banEnd.Time
+		} else {
+			user["ban_permanent"] = true
+		}
+	}
 
 	utils.LogActivity(c, modID, "user_details", true, "")
 
