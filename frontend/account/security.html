@@ -1566,14 +1566,18 @@
                     .then(res => res.text())
                     .then(url => {
                         apiBaseURL = url;
-                        return fetchUserTools();
+                        if (document.getElementById('toolsGrid')) {
+                            return fetchUserTools();
+                        }
                     })
                     .then(() => {
                         initTheme();
                         initSecurityButtons();
                         checkTwoFactor();
-                        initToolModal();
-                        initDeleteModal();
+                        if (document.getElementById('addToolBtn')) {
+                            initToolModal();
+                            initDeleteModal();
+                        }
                     })
                     .catch(error => {
                         console.error('Erreur:', error);
@@ -1642,6 +1646,10 @@
             const skeletonGrid = document.getElementById('skeletonGrid');
             const noTools = document.getElementById('noTools');
             const toolsGrid = document.getElementById('toolsGrid');
+
+            if (!skeletonGrid || !noTools || !toolsGrid) {
+                return Promise.resolve();
+            }
             
             return fetch(`${apiBaseURL}/tools/me`, {
                 method: 'GET',
@@ -2012,6 +2020,10 @@
             const submitText = document.getElementById('submitText');
             const toolForm = document.getElementById('toolForm');
             const toolModalTitle = document.getElementById('toolModalTitle');
+
+            if (!toolModal || !addToolBtn || !addToolBtnEmpty) {
+                return;
+            }
             
             addToolBtn.addEventListener('click', () => {
                 currentEditingToolId = null;
@@ -2165,6 +2177,10 @@
             const confirmDeleteModal = document.getElementById('confirmDeleteModal');
             const deleteSpinner = document.getElementById('deleteSpinner');
             const deleteText = document.getElementById('deleteText');
+
+            if (!deleteModal || !closeDeleteModal || !cancelDeleteModal || !confirmDeleteModal) {
+                return;
+            }
             
             closeDeleteModal.addEventListener('click', () => {
                 deleteModal.classList.remove('active');
@@ -2218,7 +2234,10 @@
         
         function openDeleteModal(toolId) {
             currentEditingToolId = toolId;
-            document.getElementById('deleteModal').classList.add('active');
+            const modal = document.getElementById('deleteModal');
+            if (modal) {
+                modal.classList.add('active');
+            }
         }
         
         function showModalError(message) {
