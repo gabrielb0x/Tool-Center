@@ -48,20 +48,23 @@ type Config struct {
 		CheckInterval int `json:"check_interval"`
 		GracePeriod   int `json:"grace_period"`
 	} `json:"cleanup"`
-        Storage struct {
-                AvatarDir     string `json:"avatar_dir"`
-                ToolsImageDir string `json:"tools_image_dir"`
-        } `json:"storage"`
-       Moderation struct {
-               MaxBanDays int  `json:"max_ban_days"`
-               AutoUnban  bool `json:"auto_unban"`
-       } `json:"moderation"`
-        Cooldowns struct {
-                EmailChangeDays    int `json:"email_change_days"`
-                UsernameChangeDays int `json:"username_change_days"`
-                ToolPostHours      int `json:"tool_post_hours"`
-                AvatarChangeHours  int `json:"avatar_change_hours"`
+	Storage struct {
+		AvatarDir     string `json:"avatar_dir"`
+		ToolsImageDir string `json:"tools_image_dir"`
+	} `json:"storage"`
+	Moderation struct {
+		MaxBanDays int  `json:"max_ban_days"`
+		AutoUnban  bool `json:"auto_unban"`
+	} `json:"moderation"`
+	Cooldowns struct {
+		EmailChangeDays    int `json:"email_change_days"`
+		UsernameChangeDays int `json:"username_change_days"`
+		ToolPostHours      int `json:"tool_post_hours"`
+		AvatarChangeHours  int `json:"avatar_change_hours"`
 	} `json:"cooldowns"`
+	TwoFactor struct {
+		Issuer string `json:"issuer"`
+	} `json:"two_factor"`
 	PrivateNewsPassword string `json:"private_news_password"`
 }
 
@@ -71,19 +74,22 @@ func Load(path string) error {
 		return err
 	}
 	var cfg Config
-       if err := json.Unmarshal(data, &cfg); err != nil {
-               return err
-       }
-       if cfg.Moderation.MaxBanDays == 0 {
-               cfg.Moderation.MaxBanDays = 30
-       }
-       if !cfg.Moderation.AutoUnban {
-               cfg.Moderation.AutoUnban = true
-       }
-       mu.Lock()
-       Current = cfg
-       mu.Unlock()
-       return nil
+	if err := json.Unmarshal(data, &cfg); err != nil {
+		return err
+	}
+	if cfg.Moderation.MaxBanDays == 0 {
+		cfg.Moderation.MaxBanDays = 30
+	}
+	if !cfg.Moderation.AutoUnban {
+		cfg.Moderation.AutoUnban = true
+	}
+	if cfg.TwoFactor.Issuer == "" {
+		cfg.TwoFactor.Issuer = "ToolCenter"
+	}
+	mu.Lock()
+	Current = cfg
+	mu.Unlock()
+	return nil
 }
 
 func Get() Config {

@@ -49,5 +49,8 @@
     "tool_post_hours": 24,
     "avatar_change_hours": 24
   },
+  "two_factor": {
+    "issuer": "ToolCenter"
+  },
   "private_news_password": "change-me"
 }

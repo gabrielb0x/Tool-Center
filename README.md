@@ -13,6 +13,7 @@
 - 🔧 **Create & publish** your own tools
 - 💬 **Like, comment and share** other people's tools
 - 👤 **Manage your account**: avatar, security, statistics
+- 🔐 **Two-factor authentication** with Google Authenticator
 - 🛡️ A clean **moderation system**
 - ⏳ **Ban durations** and role restrictions for moderators
 - 📜 **Comprehensive logs** for users and admins

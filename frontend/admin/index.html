@@ -1855,6 +1855,7 @@
           <th>Utilisateur</th>
           <th>Email</th>
           <th>Inscription</th>
+          <th>2FA</th>
           <th>Status</th>
           <th>Actions</th>
           </tr>
@@ -1890,6 +1891,7 @@
         </td>
         <td>${user.email}</td>
         <td>${new Date(user.created_at).toLocaleDateString()}</td>
+        <td>${user.two_factor_enabled ? 'Oui' : 'Non'}</td>
         <td>
         <span class="status-badge 
           ${user.status === 'Good' ? 'status-active' : 
