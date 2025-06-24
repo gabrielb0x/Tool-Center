@@ -64,12 +64,16 @@ func UserListHandler(c *gin.Context) {
 
 	users := make([]UserInfo, 0)
 	for rows.Next() {
-		var u UserInfo
-		if err := rows.Scan(&u.UserID, &u.Username, &u.Email, &u.Role, &u.Status, &u.Created, &u.AvatarURL, &u.IsVerified, &u.TwoFactor); err != nil {
+		var (
+			u      UserInfo
+			secret sql.NullString
+		)
+		if err := rows.Scan(&u.UserID, &u.Username, &u.Email, &u.Role, &u.Status, &u.Created, &u.AvatarURL, &u.IsVerified, &secret); err != nil {
 			utils.LogActivity(c, uid, "user_list", false, "scan error")
 			c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 			return
 		}
+		u.TwoFactor = secret.Valid && secret.String != ""
 		users = append(users, u)
 	}
 
