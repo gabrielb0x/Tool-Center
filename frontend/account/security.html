@@ -1414,7 +1414,7 @@
                                     <p>Mettez à jour votre mot de passe pour plus de sécurité</p>
                                 </div>
                                 <button class="security-btn" id="changePasswordBtn">
-                                    <img src="/assets/password-icon.png" alt="Modifier" class="security-btn-icon">
+                                    <img src="/assets/password.png" alt="Modifier" class="security-btn-icon">
                                     Modifier
                                 </button>
                             </div>
@@ -1458,70 +1458,6 @@
                             Déconnecter toutes les sessions
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="toolModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="toolModalTitle">Publier un nouveau tool</h3>
-                    <button class="modal-close" id="closeToolModal">
-                        <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="toolModalError" class="hidden"></div>
-                    <div id="toolModalSuccess" class="hidden"></div>
-                    
-                    <form id="toolForm">
-                        <div class="form-group">
-                            <label for="toolTitle" class="form-label">Titre du tool</label>
-                            <input type="text" id="toolTitle" class="form-input" placeholder="Un titre clair et descriptif" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toolDescription" class="form-label">Description</label>
-                            <textarea id="toolDescription" class="form-input form-textarea" placeholder="Décrivez en détail ce que fait votre tool, comment l'utiliser, etc." required></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toolCategory" class="form-label">Catégorie</label>
-                            <select id="toolCategory" class="form-input form-select" required>
-                                <option value="">Sélectionnez une catégorie</option>
-                                <option value="productivity">Productivité</option>
-                                <option value="development">Développement</option>
-                                <option value="design">Design</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="education">Éducation</option>
-                                <option value="other">Autre</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toolUrl" class="form-label">URL du tool</label>
-                            <input type="url" id="toolUrl" class="form-input" placeholder="https://example.com" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toolImage" class="form-label">Image (optionnel)</label>
-                            <input type="file" id="toolImage" class="form-input" accept="image/*">
-                            <small>Format recommandé : 1200x630px (ratio 16:9)</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toolTags" class="form-label">Tags (optionnel)</label>
-                            <input type="text" id="toolTags" class="form-input" placeholder="tag1, tag2, tag3">
-                            <small>Séparez les tags par des virgules</small>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelToolModal">Annuler</button>
-                    <button class="btn btn-primary" id="submitToolForm">
-                        <span class="spinner hidden" id="submitSpinner"></span>
-                        <span id="submitText">Publier</span>
-                    </button>
                 </div>
             </div>
         </div>
