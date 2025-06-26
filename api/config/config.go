@@ -56,16 +56,19 @@ type Config struct {
 		MaxBanDays int  `json:"max_ban_days"`
 		AutoUnban  bool `json:"auto_unban"`
 	} `json:"moderation"`
-	Cooldowns struct {
-		EmailChangeDays    int `json:"email_change_days"`
-		UsernameChangeDays int `json:"username_change_days"`
-		ToolPostHours      int `json:"tool_post_hours"`
-		AvatarChangeHours  int `json:"avatar_change_hours"`
-	} `json:"cooldowns"`
-	TwoFactor struct {
-		Issuer string `json:"issuer"`
-	} `json:"two_factor"`
-	PrivateNewsPassword string `json:"private_news_password"`
+        Cooldowns struct {
+                EmailChangeDays    int `json:"email_change_days"`
+                UsernameChangeDays int `json:"username_change_days"`
+                ToolPostHours      int `json:"tool_post_hours"`
+                AvatarChangeHours  int `json:"avatar_change_hours"`
+        } `json:"cooldowns"`
+        TwoFactor struct {
+                Issuer string `json:"issuer"`
+        } `json:"two_factor"`
+       PasswordReset struct {
+               TokenExpiryMinutes int `json:"token_expiry_minutes"`
+       } `json:"password_reset"`
+        PrivateNewsPassword string `json:"private_news_password"`
 }
 
 func Load(path string) error {
@@ -83,13 +86,16 @@ func Load(path string) error {
 	if !cfg.Moderation.AutoUnban {
 		cfg.Moderation.AutoUnban = true
 	}
-	if cfg.TwoFactor.Issuer == "" {
-		cfg.TwoFactor.Issuer = "ToolCenter"
-	}
-	mu.Lock()
-	Current = cfg
-	mu.Unlock()
-	return nil
+       if cfg.TwoFactor.Issuer == "" {
+               cfg.TwoFactor.Issuer = "ToolCenter"
+       }
+       if cfg.PasswordReset.TokenExpiryMinutes == 0 {
+               cfg.PasswordReset.TokenExpiryMinutes = 15
+       }
+       mu.Lock()
+       Current = cfg
+       mu.Unlock()
+       return nil
 }
 
 func Get() Config {

@@ -25,6 +25,8 @@ fetch('/ressources/utils/api').then(res => res.text()).then(url => { apiBaseURL 
 const loginButton = document.getElementById('login-button');
 const emailInput = document.querySelector('input[name="email"]');
 const passwordInput = document.querySelector('input[name="password"]');
+const twoFactorGroup = document.getElementById('twofactor-group');
+const twoFactorInput = document.querySelector('input[name="two_factor_code"]');
 const formError = document.getElementById('form-error');
 const errorText = document.getElementById('error-text');
 const loginForm = document.getElementById('login-form');
@@ -38,7 +40,11 @@ function validateEmail(email) {
 function updateButtonState() {
   const emailValid = validateEmail(emailInput.value.trim());
   const passwordValid = passwordInput.value.trim().length >= 6;
-  loginButton.disabled = !(emailValid && passwordValid);
+  let twofaValid = true;
+  if (twoFactorGroup.style.display !== 'none') {
+    twofaValid = twoFactorInput.value.trim().length === 6;
+  }
+  loginButton.disabled = !(emailValid && passwordValid && twofaValid);
 }
 emailInput.addEventListener('input', () => {
   updateButtonState();
@@ -50,6 +56,13 @@ passwordInput.addEventListener('input', () => {
   passwordInput.classList.remove('input-error');
   formError.classList.remove('show');
 });
+if(twoFactorInput){
+  twoFactorInput.addEventListener('input', () => {
+    updateButtonState();
+    twoFactorInput.classList.remove('input-error');
+    formError.classList.remove('show');
+  });
+}
 function showError(message) {
   errorText.textContent = message;
   formError.classList.add('show');
@@ -57,6 +70,9 @@ function showError(message) {
     emailInput.classList.add('input-error');
   } else if (message.toLowerCase().includes('mot de passe')) {
     passwordInput.classList.add('input-error');
+  } else if (message.toLowerCase().includes('2fa')) {
+    if(twoFactorGroup.style.display==='none'){ twoFactorGroup.style.display='block'; }
+    twoFactorInput.classList.add('input-error');
   } else {
     emailInput.classList.add('input-error');
     passwordInput.classList.add('input-error');
@@ -88,7 +104,8 @@ loginForm.addEventListener('submit', async function(e) {
       body: JSON.stringify({
         email: emailInput.value.trim(),
         password: passwordInput.value.trim(),
-        turnstile_token: captchaToken
+        turnstile_token: captchaToken,
+        two_factor_code: twoFactorInput.value.trim()
       })
     });
     const data = await response.json();
@@ -102,6 +119,9 @@ loginForm.addEventListener('submit', async function(e) {
       }, 1000);
     } else {
       showError(data.message || "Email ou mot de passe incorrect");
+      if(data.two_factor_required){
+        twoFactorGroup.style.display = 'block';
+      }
       loginButton.disabled = false;
       loginButton.innerHTML = '<span>Connexion</span>';
     }
