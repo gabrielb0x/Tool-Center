@@ -219,5 +219,18 @@
     "tags": [
       ""
     ]
+  },
+  {
+    "id": 28,
+    "date": "2025-09-20",
+    "displayDate": "20/09/2025",
+    "title": "Gestion des sessions actives",
+    "summary": "Vue d'ensemble des sessions et possibilité de les révoquer.",
+    "content": "La page sécurité affiche désormais toutes vos sessions actives. Vous pouvez déconnecter un appareil ou toutes vos sessions en un clic.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
   }
 ]

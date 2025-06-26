@@ -14,6 +14,7 @@
 - 💬 **Like, comment and share** other people's tools
 - 👤 **Manage your account**: avatar, security, statistics
 - 🔐 **Two-factor authentication** with Google Authenticator
+- 🖥️ **Manage active sessions** in your security settings
 - 🛡️ A clean **moderation system**
 - ⏳ **Ban durations** and role restrictions for moderators
 - 📜 **Comprehensive logs** for users and admins
@@ -61,6 +62,9 @@ The `moderation` section now includes `auto_unban` to automatically lift tempora
 - `POST /v{n}/admin/logs/clear` – clear all activity logs
 - `GET /v{n}/admin/users/{id}/tools` – list tools of a specific user
 - `GET /v{n}/admin/users/{id}/ban` – get last ban reason
+- `GET /v{n}/auth/sessions` – list active sessions
+- `DELETE /v{n}/auth/sessions` – revoke all other sessions
+- `DELETE /v{n}/auth/sessions/{id}` – revoke a specific session
 
 ---
 
