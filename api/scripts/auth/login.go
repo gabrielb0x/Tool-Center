@@ -140,7 +140,7 @@ func LoginHandler(c *gin.Context) {
 	hash := sha256.Sum256([]byte(token))
 	tokenHash := hex.EncodeToString(hash[:])
 
-	_, err = db.Exec(`
+	res, err := db.Exec(`
 INSERT INTO user_tokens (user_id, token, device_info, expires_at)
 VALUES (?, ?, ?, ?)`,
 		uid, tokenHash,
@@ -155,10 +155,12 @@ VALUES (?, ?, ?, ?)`,
 		})
 		return
 	}
+	sessionID, _ := res.LastInsertId()
 
 	utils.LogActivity(c, uid, "login", true, "")
 	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"token":   token,
+		"success":    true,
+		"token":      token,
+		"session_id": sessionID,
 	})
 }

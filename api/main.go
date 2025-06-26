@@ -123,6 +123,9 @@ func setupRoutes(r *gin.Engine) {
 	authGroup.POST("/login", auth.LoginHandler)
 	authGroup.POST("/register", auth.RegisterHandler)
 	authGroup.POST("/logout", auth.LogoutHandler)
+	authGroup.GET("/sessions", auth.GetSessionsHandler)
+	authGroup.DELETE("/sessions", auth.DeleteAllSessionsHandler)
+	authGroup.DELETE("/sessions/:id", auth.DeleteSessionHandler)
 
 	userGroup := api.Group("/user")
 	userGroup.GET("/verify_email", user.VerifyEmailHandler)

@@ -15,6 +15,7 @@ require (
 
 require (
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
+	github.com/mssola/user_agent v0.6.0 // indirect
 	golang.org/x/image v0.27.0 // indirect
 )
 
