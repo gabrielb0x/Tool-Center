@@ -52,5 +52,8 @@
   "two_factor": {
     "issuer": "ToolCenter"
   },
+  "password_reset": {
+    "token_expiry_minutes": 15
+  },
   "private_news_password": "change-me"
 }

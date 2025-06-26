@@ -232,5 +232,18 @@
     "tags": [
       ""
     ]
+  },
+  {
+    "id": 29,
+    "date": "2025-10-05",
+    "displayDate": "05/10/2025",
+    "title": "Réinitialisation du mot de passe et 2FA obligatoire",
+    "summary": "Mot de passe oublié ? Recevez un lien de réinitialisation par email.",
+    "content": "La page de connexion supporte maintenant l'authentification à deux facteurs et l'envoi d'un email pour réinitialiser votre mot de passe en toute sécurité.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      ""
+    ]
   }
 ]

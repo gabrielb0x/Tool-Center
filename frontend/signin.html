@@ -39,6 +39,10 @@
           <img src="/assets/password.png" alt="Password Icon" class="input-icon">
           <input type="password" name="password" placeholder="Mot de passe" required>
         </div>
+        <div class="input-group" id="twofactor-group" style="display:none;">
+          <img src="/assets/code.png" alt="2FA Icon" class="input-icon">
+          <input type="text" name="two_factor_code" placeholder="Code 2FA" maxlength="6">
+        </div>
         <div class="captcha-wrapper">
           <div id="signin-turnstile" class="cf-turnstile" data-sitekey="0x4AAAAAABgYeaoGcgRuhRX3" data-callback="onCaptchaSuccess"></div>
         </div>
@@ -47,6 +51,7 @@
         </button>
       </form>
       <div class="login-options">
+        <p><a href="/forgot">Mot de passe oublié ?</a></p>
         <p>Pas de compte ? <a href="/signup">Inscription</a></p>
       </div>
     </div>
