@@ -324,7 +324,7 @@
     font-weight: 600; 
     cursor: pointer; 
     transition: var(--transition); 
-    margin-top: 10px;
+    margin-top: -10px;
     box-shadow: 0 4px 15px rgba(42, 0, 217, 0.3);
     position: relative;
     overflow: hidden;
