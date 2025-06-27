@@ -2,6 +2,7 @@
     --primary-color: #2a00d9;
     --primary-hover: #3000FF;
     --error-color: #ff5a5a;
+    --success-color: #4BB543;
     --dark-bg: linear-gradient(135deg, #121212, #1a1a1a);
     --dark-card: #1e1e1e;
     --dark-input: #2a2a2a;
@@ -393,6 +394,40 @@
 
   .login-options a:hover::after {
     width: 100%;
+  }
+
+  .twofactor-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    animation: successContentIn 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) both;
+    animation-delay: 0.4s;
+  }
+
+  #twofactor-state .input-group {
+    margin-top: 20px;
+  }
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 25px;
+    animation: checkmark 0.6s cubic-bezier(0.2, 0.8, 0.4, 1.5) both;
+  }
+
+  .success-title {
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: var(--success-color);
+  }
+
+  .success-message {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
   }
 
   body.light-theme { 

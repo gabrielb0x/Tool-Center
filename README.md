@@ -14,6 +14,7 @@
 - 💬 **Like, comment and share** other people's tools
 - 👤 **Manage your account**: avatar, security, statistics
 - 🔐 **Two-factor authentication** with Google Authenticator
+- 🤖 Smooth 2FA prompt when signing in if your account requires it
 - 🔑 **Password reset** via email link
 - 🖥️ **Manage active sessions** in your security settings
 - 🛡️ A clean **moderation system**

@@ -54,6 +54,21 @@
         <p><a href="/forgot">Mot de passe oublié ?</a></p>
         <p>Pas de compte ? <a href="/signup">Inscription</a></p>
       </div>
+
+      <div class="twofactor-state" id="twofactor-state" style="display:none;">
+        <img src="/assets/code.png" alt="2FA" class="success-icon">
+        <h3 class="success-title">Code d'authentification requis</h3>
+        <p class="success-message">
+          Saisissez le code généré par votre application d'authentification pour poursuivre.
+        </p>
+        <div class="input-group">
+          <img src="/assets/code.png" alt="2FA Icon" class="input-icon">
+          <input type="text" id="twofactor-code" placeholder="Code 2FA" maxlength="6">
+        </div>
+        <button type="button" class="login-button" id="twofactor-button" disabled>
+          <span>Valider</span>
+        </button>
+      </div>
     </div>
   </div>
 </body>
