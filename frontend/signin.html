@@ -61,6 +61,9 @@
         <p class="success-message">
           Saisissez le code généré par votre application d'authentification pour poursuivre.
         </p>
+        <div class="captcha-wrapper">
+          <div id="signin-turnstile-2fa" class="cf-turnstile" data-sitekey="0x4AAAAAABgYeaoGcgRuhRX3" data-callback="onCaptchaSuccess2FA"></div>
+        </div>
         <div class="input-group">
           <img src="/assets/code.png" alt="2FA Icon" class="input-icon">
           <input type="text" id="twofactor-code" placeholder="Code 2FA" maxlength="6">

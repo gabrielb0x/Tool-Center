@@ -36,7 +36,12 @@ const loginForm = document.getElementById('login-form');
 let storedEmail = '';
 let storedPassword = '';
 let captchaToken = '';
+let captchaToken2FA = '';
 window.onCaptchaSuccess = function(token){ captchaToken = token; };
+window.onCaptchaSuccess2FA = function(token){
+  captchaToken2FA = token;
+  twoFactorButton.disabled = !(twoFactorCode.value.trim().length === 6 && captchaToken2FA);
+};
 const CAPTCHA_MISSING_MSG = 'Veuillez compléter le captcha';
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -176,6 +181,12 @@ if(twoFactorButton){
       showError('Veuillez entrer le code 2FA');
       return;
     }
+    if (!captchaToken2FA) {
+      showError('Veuillez compléter le captcha');
+      twoFactorButton.disabled = false;
+      twoFactorButton.innerHTML = '<span>Valider</span>';
+      return;
+    }
     twoFactorButton.disabled = true;
     twoFactorButton.innerHTML = '<span>Vérification...</span>';
     try {
@@ -187,7 +198,7 @@ if(twoFactorButton){
         body: JSON.stringify({
           email: storedEmail,
           password: storedPassword,
-          turnstile_token: captchaToken,
+          turnstile_token: captchaToken2FA,
           two_factor_code: twoFactorCode.value.trim()
         })
       });
@@ -203,6 +214,8 @@ if(twoFactorButton){
         twoFactorButton.disabled = false;
         twoFactorButton.innerHTML = '<span>Valider</span>';
       }
+      turnstile.reset('#signin-turnstile-2fa');
+      captchaToken2FA = '';
     } catch(err){
       showError('Erreur de connexion au serveur');
       twoFactorButton.disabled = false;
