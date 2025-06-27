@@ -245,5 +245,18 @@
     "tags": [
       ""
     ]
+  },
+  {
+    "id": 30,
+    "date": "2025-10-10",
+    "displayDate": "10/10/2025",
+    "title": "Nouvelle étape 2FA lors de la connexion",
+    "summary": "La transition vers la saisie du code d'authentification est maintenant animée, captcha conservé.",
+    "content": "Lorsqu'un compte protège la connexion par 2FA, la page affiche désormais automatiquement un écran dédié pour entrer le code après avoir validé l'email et le mot de passe tout en laissant le captcha visible.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "frontend"
+    ]
   }
 ]
