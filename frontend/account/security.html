@@ -1190,7 +1190,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Scannez ce QR Code avec Google Authenticator puis entrez le code généré.</p>
+                <p>Scannez ce QR Code avec votre application d'authentification puis entrez le code généré.</p>
                 <div id="qrCodeContainer" style="text-align:center;margin:20px 0;"></div>
                 <input type="text" id="twoFACodeInput" class="form-input" placeholder="Code 2FA">
                 <div id="twoFAError" class="error-message" style="display:none;margin-top:10px;">
@@ -1289,7 +1289,6 @@
             successContainer.classList.remove('hidden');
         }
         
-        
         function initTheme() {
             const themeSwitcher = document.getElementById("theme-switcher");
             const themeIcon = document.getElementById("theme-icon");
@@ -1360,58 +1359,61 @@
             const codeInput = document.getElementById('twoFACodeInput');
             const errorBox = document.getElementById('twoFAError');
             const errorText = document.getElementById('twoFAErrorText');
+            const modalBody = modal.querySelector('.modal-body');
 
             function closeModal() {
-                modal.classList.remove('active');
-                codeInput.value = '';
-                errorBox.style.display = 'none';
+            modal.classList.remove('active');
+            codeInput.value = '';
+            errorBox.style.display = 'none';
             }
 
             document.getElementById('close2FAModal').onclick = closeModal;
             document.getElementById('cancel2FAModal').onclick = closeModal;
 
             if (!twoFactorEnabled) {
-                fetch(`${apiBaseURL}/user/2fa/setup`, { headers: { 'Authorization': `Bearer ${token}` } })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        qrContainer.innerHTML = `<img src="data:image/png;base64,${data.qr_code}" alt="QR Code">`;
-                        modal.classList.add('active');
-                        document.getElementById('confirm2FAModal').onclick = () => {
-                            const code = codeInput.value.trim();
-                            if (!code) return;
-                            fetch(`${apiBaseURL}/user/enable_2fa`, {
-                                method: 'POST',
-                                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ secret: data.secret, code })
-                            }).then(resp => resp.json()).then(res => {
-                                if (res.success) {
-                                    twoFactorEnabled = true;
-                                    document.getElementById('enable2faBtn').textContent = 'Désactiver';
-                                    closeModal();
-                                } else {
-                                    errorText.textContent = res.message || 'Erreur';
-                                    errorBox.style.display = 'flex';
-                                }
-                            });
-                        };
-                    } else {
-                        showError(data.message || 'Erreur');
-                    }
-                });
-            } else {
-                const code = prompt('Code 2FA pour désactiver');
-                if (!code) return;
-                fetch(`${apiBaseURL}/user/disable_2fa`, {
+            fetch(`${apiBaseURL}/user/2fa/setup`, { headers: { 'Authorization': `Bearer ${token}` } })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                qrContainer.innerHTML = `<img src="data:image/png;base64,${data.qr_code}" alt="QR Code">`;
+                // Ajoute la clé secrète dans le <p>
+                modalBody.querySelector('p').innerHTML = `Scannez ce QR Code avec votre application d'authentification puis entrez le code généré.<br><br><strong>Ou entrez cette clé manuellement&nbsp;:</strong><br><code style="font-size:1.1em;word-break:break-all;">${data.secret}</code>`;
+                modal.classList.add('active');
+                document.getElementById('confirm2FAModal').onclick = () => {
+                    const code = codeInput.value.trim();
+                    if (!code) return;
+                    fetch(`${apiBaseURL}/user/enable_2fa`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code.trim() })
-                }).then(r => r.json()).then(res => {
+                    body: JSON.stringify({ secret: data.secret, code })
+                    }).then(resp => resp.json()).then(res => {
                     if (res.success) {
-                        twoFactorEnabled = false;
-                        document.getElementById('enable2faBtn').textContent = 'Activer';
-                    } else { alert(res.message || 'Erreur'); }
-                });
+                        twoFactorEnabled = true;
+                        document.getElementById('enable2faBtn').textContent = 'Désactiver';
+                        closeModal();
+                    } else {
+                        errorText.textContent = res.message || 'Erreur';
+                        errorBox.style.display = 'flex';
+                    }
+                    });
+                };
+                } else {
+                showError(data.message || 'Erreur');
+                }
+            });
+            } else {
+            const code = prompt('Code 2FA pour désactiver');
+            if (!code) return;
+            fetch(`${apiBaseURL}/user/disable_2fa`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code.trim() })
+            }).then(r => r.json()).then(res => {
+                if (res.success) {
+                twoFactorEnabled = false;
+                document.getElementById('enable2faBtn').textContent = 'Activer';
+                } else { alert(res.message || 'Erreur'); }
+            });
             }
         }
 
@@ -1485,7 +1487,6 @@
                 sessionsList.appendChild(sessionItem);
             });
             
-            // Ajouter les écouteurs d'événements
             document.querySelectorAll('.session-action-btn:not([disabled])').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const sessionId = e.currentTarget.getAttribute('data-id');
