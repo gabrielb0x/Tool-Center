@@ -1378,7 +1378,7 @@
 
     function toggleTheme() {
       document.body.classList.toggle('light-theme');
-      localStorage.setItem('admin-theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+      localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
       updateThemeIcon();
     }
 
@@ -1392,7 +1392,7 @@
     }
 
     themeToggle.addEventListener('click', toggleTheme);
-    if (localStorage.getItem('admin-theme') === 'light') {
+    if (localStorage.getItem('theme') === 'light') {
       document.body.classList.add('light-theme');
     }
     updateThemeIcon();
