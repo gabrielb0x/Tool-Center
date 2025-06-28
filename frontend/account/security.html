@@ -1181,6 +1181,72 @@
 
     </div>
 
+    <div class="modal-overlay" id="emailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Modifier mon email</h3>
+                <button class="modal-close" id="closeEmailModal">
+                    <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newEmail" class="form-label">Nouvel email</label>
+                    <input type="email" id="newEmail" class="form-input" placeholder="nouvel@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="currentEmailPassword" class="form-label">Mot de passe actuel</label>
+                    <input type="password" id="currentEmailPassword" class="form-input" placeholder="Mot de passe">
+                </div>
+                <div id="emailError" class="error-message" style="display:none;">
+                    <img src="/assets/error.png" alt="Erreur" class="error-icon">
+                    <span id="emailErrorText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelEmailModal">Annuler</button>
+                <button class="btn btn-primary" id="confirmEmailModal">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Modifier mon mot de passe</h3>
+                <button class="modal-close" id="closePasswordModal">
+                    <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="currentPassword" class="form-label">Mot de passe actuel</label>
+                    <input type="password" id="currentPassword" class="form-input" placeholder="Mot de passe actuel">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+                    <input type="password" id="newPassword" class="form-input" placeholder="Nouveau mot de passe">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="Confirmer">
+                </div>
+                <div class="form-group" id="password2FAGroup" style="display:none;">
+                    <label for="password2FACode" class="form-label">Code 2FA</label>
+                    <input type="text" id="password2FACode" class="form-input" maxlength="6" placeholder="123456">
+                </div>
+                <div id="passwordError" class="error-message" style="display:none;">
+                    <img src="/assets/error.png" alt="Erreur" class="error-icon">
+                    <span id="passwordErrorText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPasswordModal">Annuler</button>
+                <button class="btn btn-primary" id="confirmPasswordModal">Valider</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="twoFAModal">
         <div class="modal">
             <div class="modal-header">
@@ -1226,6 +1292,12 @@
                         initTheme();
                         initSecurityButtons();
                         checkTwoFactor();
+                        document.getElementById('closeEmailModal').onclick = closeEmailModal;
+                        document.getElementById('cancelEmailModal').onclick = closeEmailModal;
+                        document.getElementById('confirmEmailModal').onclick = submitEmailUpdate;
+                        document.getElementById('closePasswordModal').onclick = closePasswordModal;
+                        document.getElementById('cancelPasswordModal').onclick = closePasswordModal;
+                        document.getElementById('confirmPasswordModal').onclick = submitPasswordUpdate;
                     })
                     .catch(error => {
                         console.error('Erreur:', error);
@@ -1321,13 +1393,9 @@
         }
         
         function initSecurityButtons() {
-            document.getElementById('changeEmailBtn').addEventListener('click', () => {
-                alert('Fonctionnalité de changement d\'email à implémenter');
-            });
+            document.getElementById('changeEmailBtn').addEventListener('click', openEmailModal);
 
-            document.getElementById('changePasswordBtn').addEventListener('click', () => {
-                alert('Fonctionnalité de changement de mot de passe à implémenter');
-            });
+            document.getElementById('changePasswordBtn').addEventListener('click', openPasswordModal);
 
             document.getElementById('enable2faBtn').addEventListener('click', handle2FA);
 
@@ -1350,6 +1418,36 @@
                     document.getElementById('enable2faBtn').textContent = twoFactorEnabled ? 'Désactiver' : 'Activer';
                 }
             });
+        }
+
+        function openEmailModal() {
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('newEmail').value = '';
+            document.getElementById('currentEmailPassword').value = '';
+            document.getElementById('emailModal').classList.add('active');
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').classList.remove('active');
+        }
+
+        function openPasswordModal() {
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('password2FACode').value = '';
+            document.getElementById('password2FAGroup').style.display = twoFactorEnabled ? 'block' : 'none';
+            document.getElementById('passwordModal').classList.add('active');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
         }
 
         function handle2FA() {
@@ -1415,6 +1513,114 @@
                 } else { alert(res.message || 'Erreur'); }
             });
             }
+        }
+
+        function submitEmailUpdate() {
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const password = document.getElementById('currentEmailPassword').value;
+            const btn = document.getElementById('confirmEmailModal');
+            const errorBox = document.getElementById('emailError');
+            const errorText = document.getElementById('emailErrorText');
+            errorBox.style.display = 'none';
+
+            if (!validateEmail(newEmail)) {
+                errorText.textContent = "Email invalide";
+                errorBox.style.display = 'flex';
+                return;
+            }
+            if (password.length < 6) {
+                errorText.textContent = "Mot de passe incorrect";
+                errorBox.style.display = 'flex';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+
+            const token = localStorage.getItem('token');
+            fetch(`${apiBaseURL}/user/update_email`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ new_email: newEmail, current_password: password })
+            }).then(r => r.json()).then(res => {
+                if (res.success) {
+                    closeEmailModal();
+                    showSuccess('Email mis à jour. Vérifiez votre boîte de réception.');
+                } else {
+                    errorText.textContent = res.message || 'Erreur';
+                    errorBox.style.display = 'flex';
+                }
+            }).catch(() => {
+                errorText.textContent = 'Erreur de connexion au serveur';
+                errorBox.style.display = 'flex';
+            }).finally(() => {
+                btn.disabled = false;
+                btn.textContent = 'Valider';
+            });
+        }
+
+        function submitPasswordUpdate() {
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const code = document.getElementById('password2FACode').value.trim();
+            const btn = document.getElementById('confirmPasswordModal');
+            const errorBox = document.getElementById('passwordError');
+            const errorText = document.getElementById('passwordErrorText');
+            errorBox.style.display = 'none';
+
+            if (currentPass.length < 6) {
+                errorText.textContent = 'Mot de passe actuel invalide';
+                errorBox.style.display = 'flex';
+                return;
+            }
+            if (newPass.length < 7 || newPass.length > 30) {
+                errorText.textContent = 'Le nouveau mot de passe doit faire 7 à 30 caractères';
+                errorBox.style.display = 'flex';
+                return;
+            }
+            if (newPass !== confirmPass) {
+                errorText.textContent = 'Les mots de passe ne correspondent pas';
+                errorBox.style.display = 'flex';
+                return;
+            }
+            if (twoFactorEnabled && code.length !== 6) {
+                errorText.textContent = 'Code 2FA invalide';
+                errorBox.style.display = 'flex';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+
+            const token = localStorage.getItem('token');
+            const payload = { current_password: currentPass, new_password: newPass };
+            if (twoFactorEnabled) payload.two_factor_code = code;
+            fetch(`${apiBaseURL}/user/update_password`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(r => r.json()).then(res => {
+                if (res.success) {
+                    closePasswordModal();
+                    showSuccess('Mot de passe mis à jour');
+                } else {
+                    errorText.textContent = res.message || 'Erreur';
+                    errorBox.style.display = 'flex';
+                }
+            }).catch(() => {
+                errorText.textContent = 'Erreur de connexion au serveur';
+                errorBox.style.display = 'flex';
+            }).finally(() => {
+                btn.disabled = false;
+                btn.textContent = 'Valider';
+            });
         }
 
         function fetchSessions() {
