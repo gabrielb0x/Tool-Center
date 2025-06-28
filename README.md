@@ -17,6 +17,7 @@
 - 🤖 Smooth 2FA prompt when signing in if your account requires it
 - 🔑 **Password reset** via email link
 - 🖥️ **Manage active sessions** in your security settings
+- ✏️ **Update email and password** directly from the security page
 - 🛡️ A clean **moderation system**
 - ⏳ **Ban durations** and role restrictions for moderators
 - 📜 **Comprehensive logs** for users and admins
@@ -106,7 +107,7 @@ Want to contribute or report a bug?
 - 📊 Public statistics & user ranking
 - ⚔️ Gamification and level system
 - 🌍 Multilingual translations
-- 🔐 Account security page with password updates
+- 🔐 More security tools and audits
 
 ---
 ## **© Gabriel B., 2024-2025 — All rights reserved.**

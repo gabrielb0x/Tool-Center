@@ -258,5 +258,18 @@
     "tags": [
       "frontend"
     ]
+  },
+  {
+    "id": 31,
+    "date": "2025-10-15",
+    "displayDate": "15/10/2025",
+    "title": "Changement d'email depuis la sécurité",
+    "summary": "Les utilisateurs peuvent modifier leur adresse email après saisie du mot de passe.",
+    "content": "La page de sécurité inclut désormais un formulaire pour changer son email. L'opération nécessite le mot de passe actuel et envoie un nouveau mail de vérification.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "frontend"
+    ]
   }
 ]
