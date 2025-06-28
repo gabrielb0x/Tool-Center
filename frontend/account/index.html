@@ -1495,6 +1495,10 @@
                         <label for="currentPassword" class="form-label">Mot de passe actuel</label>
                         <input type="password" id="currentPassword" class="form-input" placeholder="Entrez votre mot de passe actuel">
                     </div>
+                    <div class="form-group" id="email2FAGroup" style="display:none;">
+                        <label for="email2FACode" class="form-label">Code 2FA</label>
+                        <input type="text" id="email2FACode" class="form-input" maxlength="6" placeholder="123456">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" id="cancelEmailChange">Annuler</button>
@@ -1549,6 +1553,7 @@
     <script>
         let apiBaseURL = "";
         let currentUserData = null;
+        let twoFactorEnabled = false;
         
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1669,12 +1674,20 @@
             .then(data => {
                 if (data.success) {
                     currentUserData = data.user;
+                    twoFactorEnabled = data.user.two_factor_enabled === true;
                     displayUserData(data.user);
                     return data;
                 } else {
                     throw new Error(data.message || "Erreur lors de la récupération des données utilisateur");
                 }
             });
+        }
+
+        function checkTwoFactorStatus() {
+            const token = localStorage.getItem('token');
+            return fetch(`${apiBaseURL}/user/me`, { headers: { 'Authorization': `Bearer ${token}` } })
+                .then(r => r.json())
+                .then(d => { if (d.success) twoFactorEnabled = d.user.two_factor_enabled === true; });
         }
         
         function displayUserData(userData) {
@@ -1810,29 +1823,40 @@
             const editEmail = document.getElementById("editEmail");
             const newEmailInput = document.getElementById("newEmail");
             const currentPasswordInput = document.getElementById("currentPassword");
+            const codeInput = document.getElementById("email2FACode");
             const confirmEmailChange = document.getElementById("confirmEmailChange");
-            
+
             editEmail.addEventListener("click", () => {
-                emailModal.classList.add("active");
-                newEmailInput.focus();
+                checkTwoFactorStatus().finally(() => {
+                    document.getElementById("email2FAGroup").style.display = twoFactorEnabled ? 'block' : 'none';
+                    emailModal.classList.add("active");
+                    newEmailInput.focus();
+                });
             });
             closeEmailModal.addEventListener("click", () => {
                 emailModal.classList.remove("active");
                 newEmailInput.value = "";
                 currentPasswordInput.value = "";
+                codeInput.value = "";
             });
             cancelEmailChange.addEventListener("click", () => {
                 emailModal.classList.remove("active");
                 newEmailInput.value = "";
                 currentPasswordInput.value = "";
+                codeInput.value = "";
             });
-            
+
             confirmEmailChange.addEventListener("click", () => {
                 const newEmail = newEmailInput.value.trim();
                 const currentPassword = currentPasswordInput.value.trim();
-                
+                const code = codeInput.value.trim();
+
                 if (!newEmail || !currentPassword) {
                     showError("Veuillez remplir tous les champs");
+                    return;
+                }
+                if (twoFactorEnabled && code.length !== 6) {
+                    showError("Code 2FA invalide");
                     return;
                 }
 
@@ -1843,17 +1867,16 @@
                 cancelEmailChange.disabled = true;
                 confirmEmailChange.disabled = true;
                 const token = localStorage.getItem("token");
-                
+
+                const payload = { new_email: newEmail, current_password: currentPassword };
+                if (twoFactorEnabled) payload.two_factor_code = code;
                 fetch(`${apiBaseURL}/user/update_email`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    new_email: newEmail,
-                    current_password: currentPassword
-                })
+                body: JSON.stringify(payload)
                 })
                 .then(response => response.json())
                 .then(data => {
