@@ -271,5 +271,19 @@
     "tags": [
       "frontend"
     ]
+  },
+  {
+    "id": 32,
+    "date": "2025-10-20",
+    "displayDate": "20/10/2025",
+    "title": "2FA obligatoire pour modifier l'email ou le mot de passe",
+    "summary": "Les modifications sensibles requièrent désormais le code 2FA si activé.",
+    "content": "Lors du changement d'adresse email ou de mot de passe, un code d'authentification à deux facteurs est demandé et vérifié côté serveur lorsque l'option est activée.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "frontend",
+      "backend"
+    ]
   }
 ]

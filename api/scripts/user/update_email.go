@@ -1,6 +1,7 @@
 package user
 
 import (
+	"database/sql"
 	"net/http"
 	"strings"
 	"time"
@@ -10,12 +11,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/pquerna/otp/totp"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type updateEmailRequest struct {
 	NewEmail        string `json:"new_email"`
 	CurrentPassword string `json:"current_password"`
+	TwoFactorCode   string `json:"two_factor_code"`
 }
 
 func UpdateEmailHandler(c *gin.Context) {
@@ -77,8 +80,11 @@ func UpdateEmailHandler(c *gin.Context) {
 		return
 	}
 
-	var hash string
-	err = db.QueryRow(`SELECT password_hash FROM users WHERE user_id = ?`, uid).Scan(&hash)
+	var (
+		hash   string
+		secret sql.NullString
+	)
+	err = db.QueryRow(`SELECT password_hash, authenticator_secret FROM users WHERE user_id = ?`, uid).Scan(&hash, &secret)
 	if err != nil {
 		utils.LogActivity(c, uid, "update_email", false, "select error")
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
@@ -88,6 +94,14 @@ func UpdateEmailHandler(c *gin.Context) {
 		utils.LogActivity(c, uid, "update_email", false, "wrong password")
 		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "Mot de passe incorrect"})
 		return
+	}
+
+	if secret.Valid && secret.String != "" {
+		if len(req.TwoFactorCode) != 6 || !totp.Validate(req.TwoFactorCode, secret.String) {
+			utils.LogActivity(c, uid, "update_email", false, "invalid 2fa code")
+			c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": "Code 2FA invalide"})
+			return
+		}
 	}
 
 	var exists int
