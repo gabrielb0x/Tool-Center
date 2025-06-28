@@ -1200,6 +1200,10 @@
                     <label for="currentEmailPassword" class="form-label">Mot de passe actuel</label>
                     <input type="password" id="currentEmailPassword" class="form-input" placeholder="Mot de passe">
                 </div>
+                <div class="form-group" id="email2FAGroup" style="display:none;">
+                    <label for="email2FACode" class="form-label">Code 2FA</label>
+                    <input type="text" id="email2FACode" class="form-input" maxlength="6" placeholder="123456">
+                </div>
                 <div id="emailError" class="error-message" style="display:none;">
                     <img src="/assets/error.png" alt="Erreur" class="error-icon">
                     <span id="emailErrorText"></span>
@@ -1426,11 +1430,15 @@
             document.getElementById('emailError').style.display = 'none';
             document.getElementById('newEmail').value = '';
             document.getElementById('currentEmailPassword').value = '';
+            document.getElementById('email2FACode').value = '';
+            checkTwoFactor();
+            document.getElementById('email2FAGroup').style.display = twoFactorEnabled ? 'block' : 'none';
             document.getElementById('emailModal').classList.add('active');
         }
 
         function closeEmailModal() {
             document.getElementById('emailModal').classList.remove('active');
+            document.getElementById('email2FAGroup').style.display = 'none';
         }
 
         function openPasswordModal() {
@@ -1439,6 +1447,7 @@
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmPassword').value = '';
             document.getElementById('password2FACode').value = '';
+            checkTwoFactor();
             document.getElementById('password2FAGroup').style.display = twoFactorEnabled ? 'block' : 'none';
             document.getElementById('passwordModal').classList.add('active');
         }
@@ -1520,6 +1529,7 @@
         function submitEmailUpdate() {
             const newEmail = document.getElementById('newEmail').value.trim();
             const password = document.getElementById('currentEmailPassword').value;
+            const code = document.getElementById('email2FACode').value.trim();
             const btn = document.getElementById('confirmEmailModal');
             const errorBox = document.getElementById('emailError');
             const errorText = document.getElementById('emailErrorText');
@@ -1536,17 +1546,25 @@
                 return;
             }
 
+            if (twoFactorEnabled && code.length !== 6) {
+                errorText.textContent = 'Code 2FA invalide';
+                errorBox.style.display = 'flex';
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>';
 
             const token = localStorage.getItem('token');
+            const payload = { new_email: newEmail, current_password: password };
+            if (twoFactorEnabled) payload.two_factor_code = code;
             fetch(`${apiBaseURL}/user/update_email`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ new_email: newEmail, current_password: password })
+                body: JSON.stringify(payload)
             }).then(r => r.json()).then(res => {
                 if (res.success) {
                     closeEmailModal();

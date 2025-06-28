@@ -17,7 +17,7 @@
 - 🤖 Smooth 2FA prompt when signing in if your account requires it
 - 🔑 **Password reset** via email link
 - 🖥️ **Manage active sessions** in your security settings
-- ✏️ **Update email and password** directly from the security page
+- ✏️ **Update email and password** directly from the security page (2FA required when enabled)
 - 🛡️ A clean **moderation system**
 - ⏳ **Ban durations** and role restrictions for moderators
 - 📜 **Comprehensive logs** for users and admins
