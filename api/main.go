@@ -113,20 +113,20 @@ func setupRoutes(r *gin.Engine) {
 
 	api := r.Group("/" + cfg.URLVersion)
 
-        api.GET("/", func(c *gin.Context) {
-                c.JSON(200, gin.H{
-                        "message": fmt.Sprintf("ToolCenter API v%s is running", cfg.Version),
-                })
-        })
-       api.GET("/status", utils.StatusHandler)
+	api.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": fmt.Sprintf("ToolCenter API v%s is running", cfg.Version),
+		})
+	})
+	api.GET("/status", utils.StatusHandler)
 
 	authGroup := api.Group("/auth")
 	authGroup.POST("/login", auth.LoginHandler)
 	authGroup.POST("/register", auth.RegisterHandler)
-       authGroup.POST("/logout", auth.LogoutHandler)
-       authGroup.POST("/password_reset/request", auth.RequestPasswordResetHandler)
-       authGroup.POST("/password_reset/confirm", auth.ResetPasswordHandler)
-       authGroup.GET("/sessions", auth.GetSessionsHandler)
+	authGroup.POST("/logout", auth.LogoutHandler)
+	authGroup.POST("/password_reset/request", auth.RequestPasswordResetHandler)
+	authGroup.POST("/password_reset/confirm", auth.ResetPasswordHandler)
+	authGroup.GET("/sessions", auth.GetSessionsHandler)
 	authGroup.DELETE("/sessions", auth.DeleteAllSessionsHandler)
 	authGroup.DELETE("/sessions/:id", auth.DeleteSessionHandler)
 
@@ -187,10 +187,10 @@ func main() {
 		gin.SetMode(cfg.GinMode)
 	}
 
-       r := gin.Default()
-       r.Use(corsMiddleware())
-       r.Use(utils.MonitorMiddleware())
-       setupRoutes(r)
+	r := gin.Default()
+	r.Use(corsMiddleware())
+	r.Use(utils.MonitorMiddleware())
+	setupRoutes(r)
 
 	log.Printf("✅ API ToolCenter démarrée sur le port %d", cfg.Port)
 	r.Run(fmt.Sprintf(":%d", cfg.Port))
