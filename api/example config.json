@@ -59,7 +59,8 @@
     "error_rate_threshold": 0.3,
     "window_minutes": 10,
     "link": "",
-    "message": "Des perturbations sont en cours."
+    "message": "Des perturbations sont en cours.",
+    "activated_for_testing": true
   },
   "private_news_password": "change-me"
 }
