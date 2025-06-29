@@ -113,11 +113,12 @@ func setupRoutes(r *gin.Engine) {
 
 	api := r.Group("/" + cfg.URLVersion)
 
-	api.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": fmt.Sprintf("ToolCenter API v%s is running", cfg.Version),
-		})
-	})
+        api.GET("/", func(c *gin.Context) {
+                c.JSON(200, gin.H{
+                        "message": fmt.Sprintf("ToolCenter API v%s is running", cfg.Version),
+                })
+        })
+       api.GET("/status", utils.StatusHandler)
 
 	authGroup := api.Group("/auth")
 	authGroup.POST("/login", auth.LoginHandler)
@@ -186,9 +187,10 @@ func main() {
 		gin.SetMode(cfg.GinMode)
 	}
 
-	r := gin.Default()
-	r.Use(corsMiddleware())
-	setupRoutes(r)
+       r := gin.Default()
+       r.Use(corsMiddleware())
+       r.Use(utils.MonitorMiddleware())
+       setupRoutes(r)
 
 	log.Printf("✅ API ToolCenter démarrée sur le port %d", cfg.Port)
 	r.Run(fmt.Sprintf(":%d", cfg.Port))

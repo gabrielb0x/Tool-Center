@@ -65,9 +65,15 @@ type Config struct {
         TwoFactor struct {
                 Issuer string `json:"issuer"`
         } `json:"two_factor"`
-       PasswordReset struct {
-               TokenExpiryMinutes int `json:"token_expiry_minutes"`
-       } `json:"password_reset"`
+        PasswordReset struct {
+                TokenExpiryMinutes int `json:"token_expiry_minutes"`
+        } `json:"password_reset"`
+       StatusBanner struct {
+               ErrorRateThreshold float64 `json:"error_rate_threshold"`
+               WindowMinutes      int     `json:"window_minutes"`
+               Link               string  `json:"link"`
+               Message            string  `json:"message"`
+       } `json:"status_banner"`
         PrivateNewsPassword string `json:"private_news_password"`
 }
 
@@ -91,6 +97,15 @@ func Load(path string) error {
        }
        if cfg.PasswordReset.TokenExpiryMinutes == 0 {
                cfg.PasswordReset.TokenExpiryMinutes = 15
+       }
+       if cfg.StatusBanner.WindowMinutes == 0 {
+               cfg.StatusBanner.WindowMinutes = 10
+       }
+       if cfg.StatusBanner.ErrorRateThreshold == 0 {
+               cfg.StatusBanner.ErrorRateThreshold = 0.3
+       }
+       if cfg.StatusBanner.Message == "" {
+               cfg.StatusBanner.Message = "Des perturbations sont en cours."
        }
        mu.Lock()
        Current = cfg
