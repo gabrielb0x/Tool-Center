@@ -285,5 +285,19 @@
       "frontend",
       "backend"
     ]
+  },
+  {
+    "id": 33,
+    "date": "2025-10-30",
+    "displayDate": "30/10/2025",
+    "title": "Bandeau d'alerte automatique",
+    "summary": "Un bandeau informe des problèmes serveur selon le taux d'erreur.",
+    "content": "Un nouveau script vérifie l'API et affiche un bandeau en haut du site lorsque le taux d'erreur dépasse un seuil défini dans la configuration.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "frontend",
+      "backend"
+    ]
   }
 ]

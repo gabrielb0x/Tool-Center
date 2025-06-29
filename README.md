@@ -60,6 +60,7 @@ A new `private_news_password` field secures access to private news articles.
 Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
 Use the `storage` section to configure directories for avatars and tool images.
 The `moderation` section now includes `auto_unban` to automatically lift temporary bans when expired.
+The `status_banner` section controls the outage banner displayed on the frontend.
 
 ### Useful API endpoints
 - `POST /v{n}/admin/logs/clear` – clear all activity logs
@@ -68,6 +69,7 @@ The `moderation` section now includes `auto_unban` to automatically lift tempora
 - `GET /v{n}/auth/sessions` – list active sessions
 - `DELETE /v{n}/auth/sessions` – revoke all other sessions
 - `DELETE /v{n}/auth/sessions/{id}` – revoke a specific session
+- `GET /v{n}/status` – check API health status
 
 ---
 

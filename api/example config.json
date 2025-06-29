@@ -55,5 +55,11 @@
   "password_reset": {
     "token_expiry_minutes": 15
   },
+  "status_banner": {
+    "error_rate_threshold": 0.3,
+    "window_minutes": 10,
+    "link": "",
+    "message": "Des perturbations sont en cours."
+  },
   "private_news_password": "change-me"
 }
