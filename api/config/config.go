@@ -41,8 +41,9 @@ type Config struct {
 	DiscordWebhookURL string `json:"discord_webhook_url"`
 	WebhookSecret     string `json:"webhook_secret"`
 	Turnstile         struct {
-		SignInSecret string `json:"signin_secret"`
-		SignUpSecret string `json:"signup_secret"`
+		SignInSecret   string `json:"signin_secret"`
+		SignUpSecret   string `json:"signup_secret"`
+		TimeoutSeconds int    `json:"timeout_seconds"`
 	} `json:"turnstile"`
 	Cleanup struct {
 		CheckInterval int `json:"check_interval"`
@@ -75,7 +76,10 @@ type Config struct {
 		Message             string  `json:"message"`
 		ActivatedForTesting bool    `json:"activated_for_testing"`
 	} `json:"status_banner"`
-	PrivateNewsPassword string `json:"private_news_password"`
+	PrivateNews struct {
+		Password   string `json:"password"`
+		TokenHours int    `json:"token_hours"`
+	} `json:"private_news"`
 }
 
 func Load(path string) error {
@@ -107,6 +111,12 @@ func Load(path string) error {
 	}
 	if cfg.StatusBanner.Message == "" {
 		cfg.StatusBanner.Message = "Des perturbations sont en cours."
+	}
+	if cfg.Turnstile.TimeoutSeconds == 0 {
+		cfg.Turnstile.TimeoutSeconds = 5
+	}
+	if cfg.PrivateNews.TokenHours == 0 {
+		cfg.PrivateNews.TokenHours = 24
 	}
 	mu.Lock()
 	Current = cfg

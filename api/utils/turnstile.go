@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"time"
+
+	"toolcenter/config"
 )
 
 func VerifyTurnstile(token, secret, remoteIP string) (bool, error) {
@@ -13,7 +16,12 @@ func VerifyTurnstile(token, secret, remoteIP string) (bool, error) {
 	if remoteIP != "" {
 		data.Set("remoteip", remoteIP)
 	}
-	resp, err := http.PostForm("https://challenges.cloudflare.com/turnstile/v0/siteverify", data)
+	timeout := time.Duration(config.Get().Turnstile.TimeoutSeconds) * time.Second
+	if timeout == 0 {
+		timeout = 5 * time.Second
+	}
+	client := &http.Client{Timeout: timeout}
+	resp, err := client.PostForm("https://challenges.cloudflare.com/turnstile/v0/siteverify", data)
 	if err != nil {
 		return false, err
 	}
