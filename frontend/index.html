@@ -13,24 +13,21 @@
   <title>ToolCenter - Accueil</title>
   <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/ressources/CSS/index.css">
   <link rel="preload" href="/assets/croix.png" as="image">
   <link rel="preload" href="/assets/switcher-noir.png" as="image">
-  <link rel="stylesheet" href="/ressources/CSS/index.css">
-  <script src="/ressources/JS/main.js" defer></script>
-  <script src="/ressources/utils/anti-scam.js" defer></script>
-  <script src="/ressources/JS/api-status-banner.js" defer></script>
 </head>
 <body>
   <div id="preloader">
     <div class="spinner"></div>
-    <div id="preloader-message">Le site est en train de charger, c'est selon votre connection...</div>
+    <div id="preloader-message">Le site est en train de charger, c'est selon votre connexion...</div>
   </div>
   <header>
     <nav class="navbar">
       <div class="container">
         <div class="nav-left">
           <span class="menu-icon" id="menu-icon" onclick="toggleNav()"></span>
-          <a href="https://tool-center.fr" class="logo-link">
+          <a href="/" class="logo-link">
             <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo">
             <span class="logo-text">ToolCenter (BETA)</span>
           </a>
@@ -40,10 +37,10 @@
             <img src="/assets/switcher.png" alt="Switcher Icon">
           </button>
           <div class="auth-buttons">
-            <a href="https://tool-center.fr/signin" class="btn btn-signin">Sign In</a>
-            <a href="https://tool-center.fr/signup" class="btn btn-signup">Sign Up</a>
+            <a href="/signin" class="btn btn-signin">Sign In</a>
+            <a href="/signup" class="btn btn-signup">Sign Up</a>
           </div>
-          <a href="https://tool-center.fr/account" class="account-icon">
+          <a href="/account/" class="account-icon">
             <img src="/assets/account.png" alt="Account Icon">
           </a>
         </div>
@@ -51,11 +48,11 @@
     </nav>
   </header>
   <div id="side-menu" class="side-menu">
-    <a href="https://tool-center.fr">Home</a>
-    <a href="https://tool-center.fr/tools">Tools</a>
-    <a href="https://tool-center.fr/account">Account</a>
-    <a href="https://tool-center.fr/about">About</a>
-    <a href="https://tool-center.fr/legals">Légals</a>
+    <a href="/">Home</a>
+    <a href="/tools">Tools</a>
+    <a href="/account">Account</a>
+    <a href="/about">About</a>
+    <a href="/legals">Légals</a>
   </div>
   <main>
     <div class="intro-container">
@@ -69,7 +66,7 @@
       <div class="intro-subtext">
         Les meilleurs des tools/outils disponibles gratuitement ! Ajoutez vous-mêmes vos tools et discutez avec une communauté active.
       </div>
-      <a href="https://tool-center.fr/signup" class="intro-btn">Commencez gratuitement !</a>
+      <a href="/signup" class="intro-btn">Commencez gratuitement !</a>
     </div>
     <div class="centered-intro-text">
       <span>Simplifiez votre</span> <span class="highlighted-word">travail</span>.
@@ -79,7 +76,7 @@
         <img src="/assets/code.png" alt="Icon 1">
         <div class="feature-text">
           <h3>Diversité des outils</h3>
-          <p>Accédez à une large gamme d'outils conçu pour vous simplifier la vie.</p>
+          <p>Accédez à une large gamme d'outils conçus pour vous simplifier la vie.</p>
         </div>
       </div>
       <div class="feature-item">
@@ -144,11 +141,16 @@
   <div class="footer-separator"></div>
   <footer>
     <p>
-      <a href="https://tool-center.fr/legals" target="_blank">Mentions légales</a> | 
-      <a href="https://tool-center.fr/contact" target="_blank">Contact</a> | 
-      <a href="https://tool-center.fr/about" target="_blank">À propos</a><br>
+      <a href="/legals" target="_blank">Mentions légales</a> | 
+      <a href="/contact" target="_blank">Contact</a> | 
+      <a href="/about" target="_blank">À propos</a><br>
       © 2024-2025, tool-center. Tous droits réservés.
     </p>
   </footer>
+  
+  <script src="/ressources/JS/main.js" defer></script>
+  <script src="/ressources/utils/anti-scam.js" defer></script>
+  <script type="module" src="/ressources/utils/anti-scam.js"></script>
+  <script src="/ressources/JS/api-status-banner.js" defer></script>
 </body>
 </html>
