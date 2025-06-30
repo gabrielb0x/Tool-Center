@@ -29,7 +29,8 @@
   "webhook_secret": "",
   "turnstile": {
     "signin_secret": "YOUR_SIGNIN_SECRET_KEY",
-    "signup_secret": "YOUR_SIGNUP_SECRET_KEY"
+    "signup_secret": "YOUR_SIGNUP_SECRET_KEY",
+    "timeout_seconds": 5
   },
   "cleanup": {
     "check_interval": 600,
@@ -62,5 +63,8 @@
     "message": "Des perturbations sont en cours.",
     "activated_for_testing": true
   },
-  "private_news_password": "change-me"
+  "private_news": {
+    "password": "change-me",
+    "token_hours": 24
+  }
 }

@@ -330,4 +330,6 @@ Le worker Go embarqué tourne en continu et **supprime** les comptes **non véri
 
 * Pense à importer le **schema SQL** (`db/schema.sql`) avant premier lancement.
 * Active les logs pour savoir quand ça casse (fichier `logs/api.log`).
+* Même les actions réussies enregistrent désormais un message explicite dans les logs.
+* Les logs indiquent la page d'origine pour chaque appel API (`<page> | message`).
 * Contributions bienvenues : *fork → feat branch → PR* 🚀
