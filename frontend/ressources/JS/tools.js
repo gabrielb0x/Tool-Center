@@ -31,6 +31,9 @@ async function fetchUserInfo() {
       menuIcon.classList.add("open");
     }
   }
+
+  // Make function accessible globally when using ES modules
+  window.toggleNav = toggleNav;
   const themeSwitcher = document.getElementById('theme-switcher');
   const body = document.body;
   if (localStorage.getItem('theme') === 'light') {
@@ -64,6 +67,9 @@ async function fetchUserInfo() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Export for inline event handler usage
+  window.scrollToTop = scrollToTop;
+
   // Filtrage des outils
   const filterItems = document.querySelectorAll('.filter-item');
   filterItems.forEach(item => {
@@ -93,3 +99,4 @@ async function fetchUserInfo() {
       // Ici vous ajouteriez la logique pour rechercher les outils
     }
   }
+
