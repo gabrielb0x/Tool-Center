@@ -1,6 +1,6 @@
 async function checkApiStatus() {
   try {
-    const baseUrl = (await (await fetch('/ressources/utils/api')).text()).trim();
+    const baseUrl = window.API_BASE_URL;
     const data    = await (await fetch(baseUrl + '/status')).json();
     data.show_banner ? showStatusBanner(data.message, data.link)
                      : removeStatusBanner();

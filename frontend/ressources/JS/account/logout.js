@@ -28,18 +28,9 @@ function initTheme() {
     });
 }
 
-let apiBaseURL = "";
-async function getApiBaseUrl() {
-    try {
-        const resp = await fetch('/ressources/utils/api');
-        apiBaseURL = await resp.text();
-    } catch (err) {
-        console.error("Erreur fetch API base URL :", err);
-    }
-}
+let apiBaseURL = window.API_BASE_URL;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await getApiBaseUrl();
     initTheme();
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {

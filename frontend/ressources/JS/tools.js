@@ -1,7 +1,6 @@
 async function fetchUserInfo() {
     const token = localStorage.getItem('token');
-    const baseUrlResponse = await fetch('/ressources/utils/api');
-    const baseUrl = (await baseUrlResponse.text()).trim();
+    const baseUrl = window.API_BASE_URL;
     if (!token || token === 'undefined' || token === 'null') return;
     try {
       const response = await fetch(baseUrl + '/get_acc_info.php', {

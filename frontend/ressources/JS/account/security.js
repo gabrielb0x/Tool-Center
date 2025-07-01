@@ -1,4 +1,4 @@
-let apiBaseURL = "";
+let apiBaseURL = window.API_BASE_URL;
 let twoFactorEnabled = false;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,11 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         showMainContent();
         
-        fetch('/ressources/utils/api')
-            .then(res => res.text())
-            .then(url => {
-                apiBaseURL = url;
-            })
+        Promise.resolve()
             .then(() => {
                 initTheme();
                 initSecurityButtons();
