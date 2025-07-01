@@ -44,6 +44,9 @@ async function fetchUserInfo() {
       menuIcon.classList.add("open");
     }
   }
+
+  // Expose functions used by inline handlers when scripts are loaded as modules
+  window.toggleNav = toggleNav;
   const themeSwitcher = document.getElementById('theme-switcher');
   const body = document.body;
   if (localStorage.getItem('theme') === 'light') {
@@ -93,3 +96,7 @@ async function fetchUserInfo() {
   function toggleFaq(item) {
     item.classList.toggle('open');
   }
+
+  // Export additional functions for inline usage
+  window.scrollToTop = scrollToTop;
+  window.toggleFaq = toggleFaq;

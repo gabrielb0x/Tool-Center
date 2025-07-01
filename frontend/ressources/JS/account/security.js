@@ -374,14 +374,14 @@ function fetchSessions() {
     .then(data => {
         if (data.success) {
             renderSessions(data.sessions);
-            skeletonSession.classList.add('hidden');
+            if (skeletonSession) skeletonSession.classList.add('hidden');
         } else {
             throw new Error(data.message || 'Erreur lors de la récupération des sessions');
         }
     })
     .catch(error => {
         showError(error.message);
-        skeletonSession.classList.add('hidden');
+        if (skeletonSession) skeletonSession.classList.add('hidden');
     });
 }
 
