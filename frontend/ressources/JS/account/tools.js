@@ -1,4 +1,4 @@
-let apiBaseURL = "";
+let apiBaseURL = window.API_BASE_URL;
 let currentUserTools = [];
 let currentEditingToolId = null;
 
@@ -10,12 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         showMainContent();
         
-        fetch('/ressources/utils/api')
-            .then(res => res.text())
-            .then(url => {
-                apiBaseURL = url;
-                return fetchUserTools();
-            })
+        Promise.resolve()
+            .then(() => fetchUserTools())
             .then(() => {
                 initTheme();
                 initToolModal();

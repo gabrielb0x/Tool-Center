@@ -876,6 +876,7 @@
     </svg>
   </button>
 
+  <script src="/ressources/utils/config.js"></script>
   <script>
     const menuIcon = document.getElementById('menu-icon');
     const sideMenu = document.getElementById('side-menu');
@@ -991,7 +992,7 @@
 
     async function fetchUserInfo () {
       const token   = localStorage.getItem('token');
-      const baseUrl = (await (await fetch('/ressources/utils/api')).text()).trim();
+      const baseUrl = window.API_BASE_URL;
       if (!token) return;
 
       try {

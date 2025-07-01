@@ -20,8 +20,7 @@ themeSwitcher.addEventListener('click', () => {
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
   updateSwitcherIcon();
 });
-let apiBaseURL = "";
-fetch('/ressources/utils/api').then(res => res.text()).then(url => { apiBaseURL = url.trim(); });
+let apiBaseURL = window.API_BASE_URL;
 const resetButton = document.getElementById('reset-button');
 const passwordInput = document.querySelector('input[name="password"]');
 const formError = document.getElementById('form-error');

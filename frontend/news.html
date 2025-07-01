@@ -1548,15 +1548,14 @@
     </div>
   </div>
   
+  <script src="/ressources/utils/config.js"></script>
   <script>
-    let API_BASE_URL = '';
+    let API_BASE_URL = window.API_BASE_URL;
     const PRIVATE_NEWS_ENDPOINT = '/utils/privates_news';
-      
+
     document.addEventListener('DOMContentLoaded', () => {
-      fetch('https://tool-center.fr/ressources/utils/api')
-        .then(r => r.ok ? r.text() : Promise.reject("Impossible de récupérer l'URL d'API"))
-        .then(url => {
-          API_BASE_URL = url.trim();
+      Promise.resolve()
+        .then(() => {
           displayArticles(getFilteredArticles());
           setupEventListeners();
 

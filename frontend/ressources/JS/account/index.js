@@ -1,4 +1,4 @@
-let apiBaseURL = "";
+let apiBaseURL = window.API_BASE_URL;
 let currentUserData = null;
 let twoFactorEnabled = false;
 
@@ -17,12 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         showMainContent();
         
-        fetch('/ressources/utils/api')
-            .then(res => res.text())
-            .then(url => {
-                apiBaseURL = url;
-                return fetchUserData();
-            })
+        Promise.resolve()
+            .then(() => fetchUserData())
             .then(() => {
                 initAvatarModal();
                 initEmailModal();

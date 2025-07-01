@@ -20,8 +20,7 @@ themeSwitcher.addEventListener('click', () => {
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
   updateSwitcherIcon();
 }); 
-let apiBaseURL = "";
-fetch('/ressources/utils/api').then(res => res.text()).then(url => { apiBaseURL = url; });
+let apiBaseURL = window.API_BASE_URL;
 const signupButton = document.getElementById('signup-button');
 const usernameInput = document.querySelector('input[name="username"]');
 const emailInput = document.querySelector('input[name="email"]');

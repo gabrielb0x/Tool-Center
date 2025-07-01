@@ -1,5 +1,4 @@
-let apiBase = '';
-fetch('/ressources/utils/api').then(r => r.text()).then(t => { apiBase = t.trim(); });
+let apiBase = window.API_BASE_URL;
 const token = localStorage.getItem('token');
 const currentPwd = document.getElementById('currentPwd');
 const newPwd = document.getElementById('newPwd');
