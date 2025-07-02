@@ -3,7 +3,7 @@
     font-weight: 400;
     font-style: normal;
     font-display: swap;
-    src: url('/ressources/utils/font/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2') format('woff2');
+    src: url('/src/utils/font/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2') format('woff2');
 }
   
 @font-face {
@@ -11,5 +11,5 @@
     font-weight: 600;
     font-style: normal;
     font-display: swap;
-    src: url('/ressources/utils/font/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2') format('woff2');
+    src: url('/src/utils/font/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2') format('woff2');
 }

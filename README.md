@@ -61,7 +61,7 @@ Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
 Use the `storage` section to configure directories for avatars and tool images.
 The `moderation` section now includes `auto_unban` to automatically lift temporary bans when expired.
 The `status_banner` section controls the outage banner displayed on the frontend.
-Update `frontend/ressources/utils/config.js` to change the API base URL used by the static pages.
+Update `frontend/src/utils/config.js` to change the API base URL used by the static pages.
 
 ### Useful API endpoints
 - `POST /v{n}/admin/logs/clear` – clear all activity logs
