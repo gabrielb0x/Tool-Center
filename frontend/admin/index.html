@@ -1230,7 +1230,7 @@
       </div>
       <div class="modal-body">
         <div class="user-profile-header">
-          <img src="https://tool-center.fr/assets/account.png" alt="User" class="user-avatar-lg" id="modal-avatar">
+          <img src="/assets/account.png" alt="User" class="user-avatar-lg" id="modal-avatar">
           <div class="user-details">
             <div class="user-name-wrapper">
               <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
@@ -1461,10 +1461,10 @@
 
         const user = data.user;
         currentUserRole = user.role;
-        adminAvatar.src = user.avatar_url ? `${user.avatar_url}` : 'https://tool-center.fr/assets/account.png';
+        adminAvatar.src = user.avatar_url ? `${user.avatar_url}` : '/assets/account.png';
         
         if (user.role === 'Moderator') {
-          window.location.href = 'https://tool-center.fr/moderator';
+          window.location.href = '/moderator';
           return false;
         }
 
@@ -1878,7 +1878,7 @@
       tr.innerHTML = `
         <td>
         <div class="user-cell">
-          <img src="${user.avatar_url || 'https://tool-center.fr/assets/account.png'}" alt="${user.username}" class="user-avatar-sm">
+          <img src="${user.avatar_url || '/assets/account.png'}" alt="${user.username}" class="user-avatar-sm">
           <div class="user-info">
           <span class="user-name" style="
             ${user.role === 'admin' ? 'color:#ef4444;font-weight:600;' : 
@@ -2024,7 +2024,7 @@
           <td>
             ${log.user ? `
             <div class="user-cell">
-              <img src="${log.user.avatar || 'https://tool-center.fr/assets/account.png'}" alt="${log.user.username}" class="user-avatar-sm">
+              <img src="${log.user.avatar || '/assets/account.png'}" alt="${log.user.username}" class="user-avatar-sm">
               <span class="user-name">${log.user.username}</span>
             </div>
             ` : 'Système'}
@@ -2140,7 +2140,7 @@
         <i class="fas fa-ban"></i>
         <h2>Accès refusé</h2>
         <p>Vous n'avez pas les permissions nécessaires pour accéder à cette section. Seuls les administrateurs peuvent accéder au panel admin.</p>
-        <a href="https://tool-center.fr" class="btn btn-primary">
+        <a href="/" class="btn btn-primary">
           <i class="fas fa-home"></i> Retour à l'accueil
         </a>
       `;
