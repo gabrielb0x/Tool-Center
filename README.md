@@ -71,13 +71,13 @@ Update `frontend/src/utils/config.js` to change the API base URL used by the sta
 - `DELETE /v{n}/auth/sessions` – revoke all other sessions
 - `DELETE /v{n}/auth/sessions/{id}` – revoke a specific session
 - `GET /v{n}/status` – check API health status
-- `GET /v{n}/users/search?query=<name>&page=<n>` – search users by username
+- `GET /v{n}/users/search?q=<name>&page=<n>` – search users by username
 - `GET /v{n}/users/{username}` – public profile of a user
 
 Example search request:
 
 ```bash
-curl "https://api.tool-center.fr/v1/users/search?query=gab&page=1"
+curl "https://api.tool-center.fr/v1/users/search?q=gab&page=1"
 ```
 
 Example profile request:
