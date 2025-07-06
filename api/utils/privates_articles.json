@@ -299,5 +299,18 @@
       "frontend",
       "backend"
     ]
+  },
+  {
+    "id": 34,
+    "date": "2025-10-31",
+    "displayDate": "31/10/2025",
+    "title": "Recherche et profils publics",
+    "summary": "Ajout des endpoints de recherche d'utilisateurs et de consultation des profils.",
+    "content": "L'API permet maintenant de rechercher un utilisateur par pseudo et de consulter son profil public via des routes dédiées.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "backend"
+    ]
   }
 ]

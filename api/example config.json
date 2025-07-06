@@ -66,5 +66,6 @@
   "private_news": {
     "password": "change-me",
     "token_hours": 24
-  }
+  },
+  "user_search_limit": 10
 }
