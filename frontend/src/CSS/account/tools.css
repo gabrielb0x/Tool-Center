@@ -1218,3 +1218,48 @@ input:checked + .slider:before {
         grid-template-columns: 1fr;
     }
 }
+
+/* Collaborator search results */
+#collaboratorResults {
+    border: 1px solid var(--dark-border);
+    background-color: var(--dark-card);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    max-height: 240px;
+    overflow-y: auto;
+    display: none;
+    z-index: 50;
+}
+
+.light-mode #collaboratorResults {
+    background-color: var(--light-card);
+    border: 1px solid var(--light-border);
+}
+
+.collab-result-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.collab-result-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.light-mode .collab-result-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.collab-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.collab-badge {
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+}

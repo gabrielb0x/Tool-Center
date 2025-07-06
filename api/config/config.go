@@ -76,11 +76,12 @@ type Config struct {
 		Message             string  `json:"message"`
 		ActivatedForTesting bool    `json:"activated_for_testing"`
 	} `json:"status_banner"`
-        PrivateNews struct {
-                Password   string `json:"password"`
-                TokenHours int    `json:"token_hours"`
-        } `json:"private_news"`
-       UserSearchLimit int `json:"user_search_limit"`
+	PrivateNews struct {
+		Password   string `json:"password"`
+		TokenHours int    `json:"token_hours"`
+	} `json:"private_news"`
+	UserSearchLimit      int `json:"user_search_limit"`
+	UserPublicToolsLimit int `json:"user_public_tools_limit"`
 }
 
 func Load(path string) error {
@@ -116,16 +117,19 @@ func Load(path string) error {
 	if cfg.Turnstile.TimeoutSeconds == 0 {
 		cfg.Turnstile.TimeoutSeconds = 5
 	}
-        if cfg.PrivateNews.TokenHours == 0 {
-                cfg.PrivateNews.TokenHours = 24
-        }
-       if cfg.UserSearchLimit <= 0 || cfg.UserSearchLimit > 20 {
-               cfg.UserSearchLimit = 10
-       }
-        mu.Lock()
-        Current = cfg
-        mu.Unlock()
-        return nil
+	if cfg.PrivateNews.TokenHours == 0 {
+		cfg.PrivateNews.TokenHours = 24
+	}
+	if cfg.UserSearchLimit <= 0 || cfg.UserSearchLimit > 20 {
+		cfg.UserSearchLimit = 10
+	}
+	if cfg.UserPublicToolsLimit <= 0 || cfg.UserPublicToolsLimit > 10 {
+		cfg.UserPublicToolsLimit = 3
+	}
+	mu.Lock()
+	Current = cfg
+	mu.Unlock()
+	return nil
 }
 
 func Get() Config {

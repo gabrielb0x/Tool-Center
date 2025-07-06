@@ -295,7 +295,7 @@ function initToolModal() {
     const collaboratorSearch = document.getElementById('collaboratorSearch');
     const collaboratorResults = document.getElementById('collaboratorResults');
     const selectedCollaborators = document.getElementById('selectedCollaborators');
-    const collaborators = new Set();
+    const collaborators = new Map();
 
     collaboratorSearch.addEventListener('input', function() {
         const searchTerm = this.value.trim();
@@ -315,14 +315,19 @@ function initToolModal() {
                 collaboratorResults.innerHTML = '';
                 data.users.forEach(user => {
                     const userDiv = document.createElement('div');
-                    userDiv.className = 'flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
+                    userDiv.className = 'collab-result-item';
                     userDiv.innerHTML = `
-                        <img src="${user.avatar || '/assets/default-avatar.png'}" class="w-8 h-8 rounded-full mr-2">
-                        <span>${user.username}</span>
+                        <img src="${user.avatar_url || '/assets/default-avatar.png'}" class="collab-avatar">
+                        <span class="collab-name">${user.username}</span>
+                        ${user.is_verified ? '<img src="/assets/verified-icon.png" class="collab-badge" alt="Vérifié">' : ''}
                     `;
                     userDiv.addEventListener('click', () => {
-                        if (!collaborators.has(user.id)) {
-                            collaborators.add(user.id);
+                        if (!collaborators.has(user.user_id)) {
+                            collaborators.set(user.user_id, {
+                                id: user.user_id,
+                                username: user.username,
+                                avatar: user.avatar_url
+                            });
                             renderSelectedCollaborators();
                         }
                         collaboratorSearch.value = '';
@@ -337,8 +342,7 @@ function initToolModal() {
 
     function renderSelectedCollaborators() {
         selectedCollaborators.innerHTML = '';
-        collaborators.forEach(userId => {
-            const user = Array.from(collaborators).find(u => u.id === userId);
+        collaborators.forEach((user, userId) => {
             const collaboratorDiv = document.createElement('div');
             collaboratorDiv.className = 'flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1';
             collaboratorDiv.innerHTML = `
@@ -441,7 +445,7 @@ function initToolModal() {
         formData.append('is_visible', isVisible);
         
         // Add collaborators
-        collaborators.forEach(userId => {
+        collaborators.forEach((_, userId) => {
             formData.append('collaborators[]', userId);
         });
         
