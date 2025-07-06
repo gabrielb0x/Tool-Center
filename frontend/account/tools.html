@@ -172,20 +172,40 @@
                         
                         <div class="form-group">
                             <label for="toolCategory" class="form-label">Catégorie</label>
-                            <select id="toolCategory" class="form-input form-select" required>
-                                <option value="">Sélectionnez une catégorie</option>
-                                <option value="productivity">Productivité</option>
-                                <option value="development">Développement</option>
-                                <option value="design">Design</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="education">Éducation</option>
-                                <option value="other">Autre</option>
-                            </select>
+                            <div class="custom-select">
+                                <div class="select-selected">Sélectionnez une catégorie</div>
+                                <div class="select-items" id="categorySelect">
+                                    <div value="productivity">Productivité</div>
+                                    <div value="development">Développement</div>
+                                    <div value="design">Design</div>
+                                    <div value="marketing">Marketing</div>
+                                    <div value="education">Éducation</div>
+                                    <div value="other">Autre</div>
+                                </div>
+                                <input type="hidden" id="toolCategory" required>
+                            </div>
                         </div>
                         
                         <div class="form-group">
+                            <label class="form-label">Type de tool</label>
+                            <div class="custom-select">
+                                <div class="select-selected">Sélectionnez un type</div>
+                                <div class="select-items" id="typeSelect">
+                                    <div value="link">Lien externe</div>
+                                    <div value="file">Fichier uploadé</div>
+                                </div>
+                                <input type="hidden" id="toolType" required>
+                            </div>
+                        </div>
+
+                        <div id="linkInputContainer" class="form-group" style="display:none;">
                             <label for="toolUrl" class="form-label">URL du tool</label>
-                            <input type="url" id="toolUrl" class="form-input" placeholder="https://example.com" required>
+                            <input type="url" id="toolUrl" class="form-input" placeholder="https://example.com">
+                        </div>
+
+                        <div id="fileInputContainer" class="form-group" style="display:none;">
+                            <label for="toolFile" class="form-label">Fichier</label>
+                            <input type="file" id="toolFile" class="form-input">
                         </div>
                         
                         <div class="form-group">
@@ -198,6 +218,47 @@
                             <label for="toolTags" class="form-label">Tags (optionnel)</label>
                             <input type="text" id="toolTags" class="form-input" placeholder="tag1, tag2, tag3">
                             <small>Séparez les tags par des virgules</small>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="flex items-center mb-2">
+                                <label class="switch">
+                                    <input type="checkbox" id="isPaidTool">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="form-label">Tool payant</span>
+                            </div>
+                            <div id="priceInputContainer" style="display:none;">
+                                <label for="toolPrice" class="form-label">Prix (€)</label>
+                                <input type="number" id="toolPrice" class="form-input" min="0" step="0.01">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="flex items-center">
+                                <label class="switch">
+                                    <input type="checkbox" id="allowComments" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="form-label">Autoriser les commentaires</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="flex items-center">
+                                <label class="switch">
+                                    <input type="checkbox" id="toolVisibility" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="form-label">Rendre public</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="collaboratorSearch" class="form-label">Ajouter des collaborateurs (optionnel)</label>
+                            <input type="text" id="collaboratorSearch" class="form-input" placeholder="Rechercher des utilisateurs...">
+                            <div id="collaboratorResults" class="hidden bg-white dark:bg-[#1a1a23] rounded-md shadow-lg mt-1 max-h-60 overflow-auto"></div>
+                            <div id="selectedCollaborators" class="flex flex-wrap gap-2 mt-2"></div>
                         </div>
                     </form>
                 </div>

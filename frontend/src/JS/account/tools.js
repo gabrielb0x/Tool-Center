@@ -246,6 +246,118 @@ function initTheme() {
 }
 
 function initToolModal() {
+    // Initialize custom selects
+    document.querySelectorAll('.custom-select').forEach(select => {
+        const selected = select.querySelector('.select-selected');
+        const items = select.querySelector('.select-items');
+        const hiddenInput = select.querySelector('input[type="hidden"]');
+        
+        selected.addEventListener('click', function(e) {
+            e.stopPropagation();
+            items.style.display = items.style.display === 'block' ? 'none' : 'block';
+            selected.classList.toggle('select-arrow-active');
+        });
+        
+        items.querySelectorAll('div').forEach(item => {
+            item.addEventListener('click', function() {
+                selected.textContent = this.textContent;
+                hiddenInput.value = this.getAttribute('value');
+                items.style.display = 'none';
+                selected.classList.remove('select-arrow-active');
+                
+                if (hiddenInput.id === 'toolType') {
+                    document.getElementById('linkInputContainer').style.display = 'none';
+                    document.getElementById('fileInputContainer').style.display = 'none';
+                    
+                    if (hiddenInput.value === 'link') {
+                        document.getElementById('linkInputContainer').style.display = 'block';
+                        document.getElementById('toolUrl').required = true;
+                    } else if (hiddenInput.value === 'file') {
+                        document.getElementById('fileInputContainer').style.display = 'block';
+                        document.getElementById('toolFile').required = true;
+                    }
+                }
+            });
+        });
+        
+        document.addEventListener('click', function() {
+            items.style.display = 'none';
+            selected.classList.remove('select-arrow-active');
+        });
+    });
+
+    // Toggle price input based on paid status
+    document.getElementById('isPaidTool').addEventListener('change', function() {
+        document.getElementById('priceInputContainer').style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Collaborator search functionality
+    const collaboratorSearch = document.getElementById('collaboratorSearch');
+    const collaboratorResults = document.getElementById('collaboratorResults');
+    const selectedCollaborators = document.getElementById('selectedCollaborators');
+    const collaborators = new Set();
+
+    collaboratorSearch.addEventListener('input', function() {
+        const searchTerm = this.value.trim();
+        if (searchTerm.length < 2) {
+            collaboratorResults.classList.add('hidden');
+            return;
+        }
+
+        fetch(`${apiBaseURL}/users/search?q=${encodeURIComponent(searchTerm)}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                collaboratorResults.innerHTML = '';
+                data.users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer';
+                    userDiv.innerHTML = `
+                        <img src="${user.avatar || '/assets/default-avatar.png'}" class="w-8 h-8 rounded-full mr-2">
+                        <span>${user.username}</span>
+                    `;
+                    userDiv.addEventListener('click', () => {
+                        if (!collaborators.has(user.id)) {
+                            collaborators.add(user.id);
+                            renderSelectedCollaborators();
+                        }
+                        collaboratorSearch.value = '';
+                        collaboratorResults.classList.add('hidden');
+                    });
+                    collaboratorResults.appendChild(userDiv);
+                });
+                collaboratorResults.classList.remove('hidden');
+            }
+        });
+    });
+
+    function renderSelectedCollaborators() {
+        selectedCollaborators.innerHTML = '';
+        collaborators.forEach(userId => {
+            const user = Array.from(collaborators).find(u => u.id === userId);
+            const collaboratorDiv = document.createElement('div');
+            collaboratorDiv.className = 'flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1';
+            collaboratorDiv.innerHTML = `
+                <img src="${user.avatar || '/assets/default-avatar.png'}" class="w-6 h-6 rounded-full mr-2">
+                <span class="text-sm">${user.username}</span>
+                <button class="ml-2 text-red-500 remove-collab" data-id="${userId}">
+                    ×
+                </button>
+            `;
+            selectedCollaborators.appendChild(collaboratorDiv);
+        });
+
+        document.querySelectorAll('.remove-collab').forEach(btn => {
+            btn.addEventListener('click', function() {
+                collaborators.delete(this.getAttribute('data-id'));
+                renderSelectedCollaborators();
+            });
+        });
+    }
     const toolModal = document.getElementById('toolModal');
     const addToolBtn = document.getElementById('addToolBtn');
     const addToolBtnEmpty = document.getElementById('addToolBtnEmpty');
@@ -289,11 +401,19 @@ function initToolModal() {
         const title = document.getElementById('toolTitle').value.trim();
         const description = document.getElementById('toolDescription').value.trim();
         const category = document.getElementById('toolCategory').value;
-        const url = document.getElementById('toolUrl').value.trim();
+        const toolType = document.getElementById('toolType').value;
+        const url = toolType === 'link' ? document.getElementById('toolUrl').value.trim() : '';
+        const file = toolType === 'file' ? document.getElementById('toolFile').files[0] : null;
         const tags = document.getElementById('toolTags').value.trim();
         const imageFile = document.getElementById('toolImage').files[0];
+        const isPaid = document.getElementById('isPaidTool').checked;
+        const price = isPaid ? document.getElementById('toolPrice').value : 0;
+        const allowComments = document.getElementById('allowComments').checked;
+        const isVisible = document.getElementById('toolVisibility').checked;
         
-        if (!title || !description || !category || !url) {
+        if (!title || !description || !category || !toolType || 
+            (toolType === 'link' && !url) || 
+            (toolType === 'file' && !file)) {
             showModalError('Veuillez remplir tous les champs obligatoires');
             return;
         }
@@ -310,9 +430,20 @@ function initToolModal() {
         formData.append('title', title);
         formData.append('description', description);
         formData.append('category', category);
-        formData.append('url', url);
+        formData.append('type', toolType);
+        if (url) formData.append('url', url);
+        if (file) formData.append('file', file);
         if (tags) formData.append('tags', tags);
         if (imageFile) formData.append('image', imageFile);
+        formData.append('is_paid', isPaid);
+        if (isPaid) formData.append('price', price);
+        formData.append('allow_comments', allowComments);
+        formData.append('is_visible', isVisible);
+        
+        // Add collaborators
+        collaborators.forEach(userId => {
+            formData.append('collaborators[]', userId);
+        });
         
         let apiEndpoint = `${apiBaseURL}/tools/add`;
         let method = 'POST';
