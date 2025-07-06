@@ -1263,3 +1263,88 @@ input:checked + .slider:before {
     height: 16px;
     margin-left: 4px;
 }
+
+.skeleton-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.skeleton-line {
+    flex: 1;
+    height: 14px;
+    border-radius: 4px;
+    background-color: var(--skeleton-color);
+}
+.light-mode .skeleton-line {
+    background-color: var(--skeleton-light);
+}
+
+.skeleton-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.skeleton-line {
+    flex: 1;
+    height: 14px;
+    border-radius: 4px;
+    background-color: var(--skeleton-color);
+}
+.light-mode .skeleton-line {
+    background-color: var(--skeleton-light);
+}
+
+.collab-chip {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--dark-border);
+    color: var(--dark-text);
+    border-radius: 9999px;
+    padding: 4px 10px;
+    font-size: .85rem;
+    animation: fadeIn .2s ease;
+}
+
+.light-mode .collab-chip {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--light-border);
+    color: var(--light-text);
+}
+
+.collab-chip img {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.collab-chip .chip-badge {
+    width: 16px;
+    height: 16px;
+}
+
+.collab-chip .remove-chip {
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: 4px;
+    opacity: .6;
+    transition: var(--transition);
+}
+.collab-chip .remove-chip:hover {
+    opacity: 1;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+.shake {
+    animation: shake .3s ease;
+}

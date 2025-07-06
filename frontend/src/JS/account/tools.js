@@ -1,6 +1,7 @@
 let apiBaseURL = window.API_BASE_URL;
 let currentUserTools = [];
 let currentEditingToolId = null;
+const MAX_COLLABS = 3;
 
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
@@ -246,7 +247,6 @@ function initTheme() {
 }
 
 function initToolModal() {
-    // Initialize custom selects
     document.querySelectorAll('.custom-select').forEach(select => {
         const selected = select.querySelector('.select-selected');
         const items = select.querySelector('.select-items');
@@ -286,82 +286,141 @@ function initToolModal() {
         });
     });
 
-    // Toggle price input based on paid status
     document.getElementById('isPaidTool').addEventListener('change', function() {
         document.getElementById('priceInputContainer').style.display = this.checked ? 'block' : 'none';
     });
 
-    // Collaborator search functionality
     const collaboratorSearch = document.getElementById('collaboratorSearch');
     const collaboratorResults = document.getElementById('collaboratorResults');
     const selectedCollaborators = document.getElementById('selectedCollaborators');
     const collaborators = new Map();
 
+    function showCollabSkeleton() {
+        collaboratorResults.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            const skel = document.createElement('div');
+            skel.className = 'collab-result-item';
+            skel.innerHTML = `
+                <div class="skeleton skeleton-avatar"></div>
+                <div class="skeleton skeleton-line" style="margin-left:8px;"></div>
+            `;
+            collaboratorResults.appendChild(skel);
+        }
+        collaboratorResults.classList.remove('hidden');
+        collaboratorResults.style.display = 'block';
+    }
+
+    function hideCollabSkeleton() {
+        collaboratorResults.innerHTML = '';
+        collaboratorResults.style.display = 'none';
+    }
+
     collaboratorSearch.addEventListener('input', function() {
         const searchTerm = this.value.trim();
+
         if (searchTerm.length < 2) {
             collaboratorResults.classList.add('hidden');
+            collaboratorResults.innerHTML = '';
             return;
         }
 
+        showCollabSkeleton();
+
         fetch(`${apiBaseURL}/users/search?q=${encodeURIComponent(searchTerm)}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            if (data.success) {
-                collaboratorResults.innerHTML = '';
+            hideCollabSkeleton();
+            collaboratorResults.style.display = 'block';
+            collaboratorResults.innerHTML = '';
+
+            if (data.success && data.users.length) {
                 data.users.forEach(user => {
-                    const userDiv = document.createElement('div');
-                    userDiv.className = 'collab-result-item';
-                    userDiv.innerHTML = `
+                    const item = document.createElement('div');
+                    item.className = 'collab-result-item';
+                    item.innerHTML = `
                         <img src="${user.avatar_url || '/assets/default-avatar.png'}" class="collab-avatar">
                         <span class="collab-name">${user.username}</span>
-                        ${user.is_verified ? '<img src="/assets/verified-icon.png" class="collab-badge" alt="Vérifié">' : ''}
+                        ${user.is_verified ? '<img src="/assets/verified.png" class="collab-badge" alt="Vérifié">' : ''}
                     `;
-                    userDiv.addEventListener('click', () => {
+                    item.addEventListener('click', () => {
+                        if (collaborators.size >= MAX_COLLABS) {
+                            collaboratorSearch.classList.add('shake');
+                            setTimeout(() => collaboratorSearch.classList.remove('shake'), 400);
+                            collaboratorResults.classList.add('hidden');
+                            collaboratorResults.style.display = 'none';
+                            return;
+                        }
+
                         if (!collaborators.has(user.user_id)) {
                             collaborators.set(user.user_id, {
                                 id: user.user_id,
                                 username: user.username,
-                                avatar: user.avatar_url
+                                avatar: user.avatar_url,
+                                verified: user.is_verified
                             });
                             renderSelectedCollaborators();
                         }
+
                         collaboratorSearch.value = '';
                         collaboratorResults.classList.add('hidden');
+                        collaboratorResults.style.display = 'none';
                     });
-                    collaboratorResults.appendChild(userDiv);
+                    collaboratorResults.appendChild(item);
                 });
-                collaboratorResults.classList.remove('hidden');
+            } else {
+                collaboratorResults.innerHTML = `
+                    <div class="collab-result-item">
+                        <span style="opacity:.6;">Aucun utilisateur trouvé</span>
+                    </div>`;
             }
+
+            collaboratorResults.classList.remove('hidden');
+        })
+        .catch(err => {
+            console.error(err);
+            hideCollabSkeleton();
+            collaboratorResults.innerHTML = `
+                <div class="collab-result-item">
+                    <span style="color:#e94434;">Erreur 😕</span>
+                </div>`;
+            collaboratorResults.classList.remove('hidden');
         });
     });
 
     function renderSelectedCollaborators() {
         selectedCollaborators.innerHTML = '';
+
         collaborators.forEach((user, userId) => {
-            const collaboratorDiv = document.createElement('div');
-            collaboratorDiv.className = 'flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-1';
-            collaboratorDiv.innerHTML = `
-                <img src="${user.avatar || '/assets/default-avatar.png'}" class="w-6 h-6 rounded-full mr-2">
-                <span class="text-sm">${user.username}</span>
-                <button class="ml-2 text-red-500 remove-collab" data-id="${userId}">
-                    ×
-                </button>
+            const chip = document.createElement('div');
+            chip.className = 'collab-chip';
+
+            chip.innerHTML = `
+                <img src="${user.avatar || '/assets/default-avatar.png'}" alt="">
+                <span>${user.username}</span>
+                ${user.verified ? '<img src="/assets/verified.png" class="chip-badge" alt="Vérifié">' : ''}
+                <span class="remove-chip" data-id="${userId}">&times;</span>
             `;
-            selectedCollaborators.appendChild(collaboratorDiv);
+            selectedCollaborators.appendChild(chip);
         });
 
-        document.querySelectorAll('.remove-collab').forEach(btn => {
-            btn.addEventListener('click', function() {
+        selectedCollaborators.querySelectorAll('.remove-chip').forEach(btn => {
+            btn.addEventListener('click', function () {
                 collaborators.delete(this.getAttribute('data-id'));
                 renderSelectedCollaborators();
             });
         });
+
+        if (collaborators.size >= MAX_COLLABS) {
+            collaboratorSearch.disabled = true;
+            collaboratorSearch.placeholder = 'Limite de 5 atteinte';
+        } else {
+            collaboratorSearch.disabled = false;
+            collaboratorSearch.placeholder = 'Rechercher des utilisateurs...';
+        }
     }
+
     const toolModal = document.getElementById('toolModal');
     const addToolBtn = document.getElementById('addToolBtn');
     const addToolBtnEmpty = document.getElementById('addToolBtnEmpty');
@@ -444,7 +503,6 @@ function initToolModal() {
         formData.append('allow_comments', allowComments);
         formData.append('is_visible', isVisible);
         
-        // Add collaborators
         collaborators.forEach((_, userId) => {
             formData.append('collaborators[]', userId);
         });
