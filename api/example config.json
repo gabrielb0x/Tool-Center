@@ -67,5 +67,6 @@
     "password": "change-me",
     "token_hours": 24
   },
-  "user_search_limit": 10
+  "user_search_limit": 10,
+  "user_public_tools_limit": 3
 }

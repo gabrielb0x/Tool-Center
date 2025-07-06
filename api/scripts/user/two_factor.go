@@ -14,11 +14,6 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
-type twoFactorSetupResponse struct {
-	Secret string `json:"secret"`
-	QRCode string `json:"qr_code"`
-}
-
 type enable2FARequest struct {
 	Secret string `json:"secret"`
 	Code   string `json:"code"`

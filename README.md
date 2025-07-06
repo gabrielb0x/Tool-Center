@@ -61,6 +61,7 @@ Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
 Use the `storage` section to configure directories for avatars and tool images.
 The `moderation` section now includes `auto_unban` to automatically lift temporary bans when expired.
 The `status_banner` section controls the outage banner displayed on the frontend.
+`user_public_tools_limit` defines how many public tools are returned in user search results.
 Update `frontend/src/utils/config.js` to change the API base URL used by the static pages.
 
 ### Useful API endpoints
@@ -71,7 +72,7 @@ Update `frontend/src/utils/config.js` to change the API base URL used by the sta
 - `DELETE /v{n}/auth/sessions` – revoke all other sessions
 - `DELETE /v{n}/auth/sessions/{id}` – revoke a specific session
 - `GET /v{n}/status` – check API health status
-- `GET /v{n}/users/search?q=<name>&page=<n>` – search users by username
+- `GET /v{n}/users/search?q=<name>&page=<n>` – search users by username. Results include `is_verified` and a list of public tools.
 - `GET /v{n}/users/{username}` – public profile of a user
 
 Example search request:
