@@ -3,16 +3,29 @@ async function fetchUserInfo() {
     const baseUrl = window.API_BASE_URL;
     if (!token || token === 'undefined' || token === 'null') return;
     try {
-      const response = await fetch(baseUrl + '/get_acc_info.php', {
+      const response = await fetch(baseUrl + '/user/me', {
         method: 'GET',
         headers: { 'Authorization': 'Bearer ' + token }
       });
       const data = await response.json();
-      if (data.success) {
+      if (data.success && data.user) {
         const accountIcon = document.querySelector('.account-icon img');
-        if (data.user_info.profile_picture) {
-          accountIcon.src = data.user_info.profile_picture;
-          document.querySelector('.auth-buttons').style.display = 'none';
+        if (data.user.avatar_url) {
+          accountIcon.src = data.user.avatar_url;
+        }
+        document.querySelector('.auth-buttons').style.display = 'none';
+
+        if (data.user.role && data.user.role === 'Admin') {
+          if (!document.getElementById('admin-panel-btn')) {
+            const navRight = document.querySelector('.nav-right');
+            const adminBtn = document.createElement('a');
+            adminBtn.href = '/admin/';
+            adminBtn.id = 'admin-panel-btn';
+            adminBtn.className = 'btn btn-admin';
+            adminBtn.style.marginBottom = '5px';
+            adminBtn.textContent = 'Admin Panel';
+            navRight.insertBefore(adminBtn, navRight.children[1]);
+          }
         }
       }
     } catch (error) {
