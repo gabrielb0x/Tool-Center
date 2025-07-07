@@ -1,0 +1,1066 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ToolCenter - La meilleure plateforme d'outils en ligne, simple, intuitive et 100% open-source.">
+  <meta name="keywords" content="tools, outils, open-source, ToolCenter, en ligne, gratuit">
+  <meta property="og:title" content="ToolCenter - Accueil">
+  <meta property="og:description" content="Découvrez la meilleure sélection d'outils en ligne pour simplifier votre vie.">
+  <meta property="og:image" content="/assets/tc_logo.webp">
+  <meta property="og:url" content="/">
+  <meta property="og:type" content="website">
+  <title>ToolCenter - Accueil</title>
+  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background-color: #0F0F15;
+      color: #FFFFFF;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+    body.light-theme {
+      background-color: #F8FAFF;
+      color: #1A1A25;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* HEADER & NAV */
+    .header {
+      position: fixed;
+      width: 100%;
+      z-index: 40;
+      padding: 12px 16px;
+      top: 0;
+      left: 0;
+    }
+    @media (min-width: 768px) {
+      .header {
+        padding: 12px 32px;
+      }
+    }
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      border-radius: 20px;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26,26,37,0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .light-theme .nav {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-img {
+      width: 40px;
+      height: 40px;
+    }
+    .site-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: none;
+      gap: 32px;
+    }
+    @media (min-width: 1024px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+    .nav-link {
+      position: relative;
+      font-weight: 500;
+      padding: 10px 0;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #3000FF;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .theme-switch-btn {
+      padding: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .theme-switch-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .btn-secondary, .btn-primary {
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      display: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3000FF 0%, #2A00D9 100%);
+      color: white;
+      display: none;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, #2A00D9 0%, #3000FF 100%);
+      opacity: 0; transition: opacity 0.3s ease; z-index: -1;
+    }
+    .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(48,0,255,0.3); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.2); transform: translateY(-5px);}
+    .mobile-menu-btn {
+      display: block;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .mobile-menu-btn:hover { background: rgba(255,255,255,0.2);}
+    @media (min-width: 768px) {
+      .btn-secondary, .btn-primary {
+        display: inline-block;
+      }
+    }
+    @media (min-width: 1024px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+    }
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      transform: translateX(100%);
+      transition: transform 0.4s ease;
+      display: block;
+    }
+    .mobile-menu.open { transform: translateX(0);}
+    .mobile-menu-content {
+      position: absolute;
+      right: 0; top: 0;
+      height: 100%;
+      width: 320px;
+      background: #1A1A25;
+      display: flex; flex-direction: column; padding: 32px; 
+    }
+    .light-theme .mobile-menu-content { background: #FFF; }
+    .close-menu-btn {
+      align-self: flex-end;
+      margin-bottom: 48px;
+      padding: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      cursor: pointer;
+    }
+    .mobile-menu-links {
+      display: flex; flex-direction: column; gap: 24px; margin-bottom: auto;
+    }
+    .mobile-menu-link {
+      font-size: 1.25rem;
+      font-weight: 500;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .mobile-menu-actions {
+      display: flex; flex-direction: column; gap: 16px; margin-top: 32px;
+    }
+    /* PRELOADER */
+    .preloader {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0F0F15;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    .light-theme .preloader { background: #F8FAFF;}
+    .spinner {
+      width: 60px; height: 60px;
+      border: 4px solid rgba(48,0,255,0.2);
+      border-top: 4px solid #3000FF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg);} }
+    /* HERO */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 96px;
+      padding-bottom: 80px;
+      padding-left: 16px; padding-right: 16px;
+      background-image: radial-gradient(circle at 10% 20%, rgba(48, 0, 255, 0.1) 0%, transparent 40%),radial-gradient(circle at 90% 80%, rgba(48, 0, 255, 0.1) 0%, transparent 40%);
+    }
+    .light-theme .hero-section {
+      background-image: radial-gradient(circle at 10% 20%, rgba(48, 0, 255, 0.05) 0%, transparent 40%),radial-gradient(circle at 90% 80%, rgba(48, 0, 255, 0.05) 0%, transparent 40%);
+    }
+    .hero-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    @media (min-width: 768px) {
+      .hero-container { grid-template-columns: 1fr 1fr;}
+    }
+    .hero-title {
+      font-size: 2.25rem;
+      font-weight: bold;
+      margin-bottom: 24px;
+      text-align: center;
+      text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .light-theme .hero-title { text-shadow: 0 5px 15px rgba(0,0,0,0.1);}
+    @media (min-width: 768px) {
+      .hero-title { text-align: left; font-size: 3rem;}
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #3000FF 0%, #00C2FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 1.125rem;
+      opacity: 0.8;
+      margin-bottom: 40px;
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
+    }
+    @media (min-width: 768px) {
+      .hero-desc { text-align: left; margin-left: 0;}
+    }
+    .hero-buttons {
+      display: flex; flex-direction: column; gap: 16px; justify-content: center;
+    }
+    @media (min-width: 640px) {
+      .hero-buttons { flex-direction: row; }
+    }
+    .hero-right {
+      position: relative;
+    }
+    .card {
+      background: #1A1A25;
+      border-radius: 20px;
+      padding: 32px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .light-theme .card {
+      background: #FFFFFF;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .light-theme .card:hover {
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .hero-tools-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;
+    }
+    .tool-card {
+      background: rgba(48,0,255,0.1);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex; flex-direction: column; align-items: center;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .tool-card img { width: 48px; height: 48px; margin-bottom: 12px; transition: transform 0.5s;}
+    .tool-card:hover { transform: translateY(-10px);}
+    .tool-card:hover img { transform: scale(1.05);}
+    .bg-fake { background: #F8FAFF;} /* juste pour différencier bg/section si besoin */
+    /* Features Section */
+    .section {
+      padding-top: 80px; padding-bottom: 80px; padding-left: 16px; padding-right: 16px;
+    }
+    .section-container { max-width: 1120px; margin: 0 auto; }
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      text-align: center;
+      font-size: 1.125rem;
+      opacity: 0.8;
+      max-width: 520px;
+      margin: 0 auto 48px auto;
+    }
+    .features-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    @media (min-width: 768px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1024px) {
+      .features-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .feature-item {
+      background: #1A1A25;
+      border-radius: 20px;
+      padding: 32px;
+      transition: transform 0.3s;
+      text-align: center;
+    }
+    .light-theme .feature-item { background: #FFF; box-shadow: 0 10px 30px rgba(0,0,0,0.05);}
+    .feature-item:hover { transform: translateY(-10px);}
+    .feature-icon {
+      width: 80px; height: 80px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 20px;
+      background: rgba(48,0,255,0.1);
+      margin: 0 auto 20px auto;
+      transition: transform 0.3s;
+    }
+    .feature-item:hover .feature-icon { transform: scale(1.1);}
+    .feature-icon img { width: 50px; height: 50px;}
+    .light-theme .feature-icon { background: rgba(48,0,255,0.05);}
+    /* Popular Tools Section */
+    .popular-section { padding-top: 80px; padding-bottom: 80px; padding-left: 16px; padding-right: 16px; background: #1A1A25;}
+    .tool-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    @media (min-width: 768px) {
+      .tool-grid { grid-template-columns: 1fr 1fr;}
+    }
+    @media (min-width: 1024px) {
+      .tool-grid { grid-template-columns: 1fr 1fr 1fr;}
+    }
+    .tool-grid-item {}
+    .tool-card .floating { animation: float 6s ease-in-out infinite;}
+    @keyframes float {
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(-20px);}
+    }
+    /* Community Stats */
+    .community-stats {
+      background: linear-gradient(135deg, rgba(48, 0, 255, 0.1) 0%, rgba(0, 194, 255, 0.1) 100%);
+      border-radius: 20px;
+      padding: 32px;
+      display: grid; grid-template-columns: 1fr;
+      gap: 32px;
+      margin-bottom: 0;
+    }
+    .light-theme .community-stats { background: linear-gradient(135deg, rgba(48, 0, 255, 0.05) 0%, rgba(0, 194, 255, 0.05) 100%);}
+    @media (min-width: 768px) {
+      .community-stats { grid-template-columns: 1fr 1fr;}
+    }
+    @media (min-width: 1200px) {
+      .community-stats { grid-template-columns: 1fr 1fr 1fr 1fr;}
+    }
+    .community-stats .text-center { text-align: center;}
+    .community-stats .stat-number {
+      font-size: 2.25rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .community-stats .stat-label {
+      font-size: 1.125rem;
+      opacity: 0.9;
+    }
+    /* FAQ */
+    .faq-section { padding-top: 80px; padding-bottom: 80px; padding-left: 16px; padding-right: 16px; background: #1A1A25;}
+    .faq-container { max-width: 700px; margin: 0 auto; }
+    .faq-list { display: flex; flex-direction: column; gap: 16px;}
+    .faq-item {
+      background: #1A1A25;
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .faq-item:hover { background: rgba(48,0,255,0.1);}
+    .light-theme .faq-item { background: #FFF;}
+    .faq-title-row {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      margin-top: 16px;
+    }
+    .faq-item.open .faq-content { max-height: 200px;}
+    /* CTA Section */
+    .cta-section { padding-top: 80px; padding-bottom: 80px; padding-left: 16px; padding-right: 16px; }
+    .cta-container { max-width: 700px; margin: 0 auto; text-align: center;}
+    .tool-highlight {
+      position: relative; z-index: 1;
+    }
+    .tool-highlight::before {
+      content: '';
+      position: absolute; top: 50%; left: 0; width: 100%; height: 20px;
+      background: rgba(48,0,255,0.2);
+      transform: translateY(-50%) skewX(-15deg);
+      z-index: -1; border-radius: 4px;
+    }
+    .light-theme .tool-highlight::before { background: rgba(48,0,255,0.1);}
+    /* FOOTER */
+    footer {
+      padding-top: 48px; padding-bottom: 48px; padding-left: 16px; padding-right: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-container { max-width: 1120px; margin: 0 auto;}
+    .footer-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 32px; margin-bottom: 48px;
+    }
+    @media (min-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr 1fr 1fr;}
+    }
+    .footer-logo-row {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+    }
+    .footer-social { display: flex; gap: 16px;}
+    .footer-social-link {
+      padding: 8px; border-radius: 50%; background: rgba(255,255,255,0.1);
+      transition: background 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .footer-social-link:hover { background: rgba(255,255,255,0.2);}
+    .footer-links, .footer-legal, .footer-contact { display: flex; flex-direction: column; gap: 12px;}
+    .footer-section-title { font-size: 1.125rem; font-weight: bold; margin-bottom: 24px;}
+    .footer-list { list-style: none; padding-left: 0;}
+    .footer-list li { opacity: 0.8; transition: opacity 0.2s;}
+    .footer-list li a:hover { opacity: 1;}
+    .footer-bottom { padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; opacity: 0.8;}
+    /* BACK TO TOP */
+    #back-to-top {
+      position: fixed; bottom: 32px; right: 32px;
+      background: #3000FF;
+      padding: 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      opacity: 0; transition: opacity 0.3s;
+      border: none; cursor: pointer;
+      z-index: 100;
+    }
+    #back-to-top svg { color: #fff;}
+    /* SCROLL REVEAL */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="preloader" class="preloader">
+    <div class="spinner"></div>
+    <p id="preloader-message" style="margin-top:24px; font-size:1.125rem; font-weight:500; opacity:0; transition:opacity 0.5s;">Chargement des outils...</p>
+  </div>
+
+  <!-- Navigation -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="/" class="header-logo">
+          <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo-img">
+          <span class="site-title">ToolCenter</span>
+        </a>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Accueil</a>
+          <a href="/tools" class="nav-link">Outils</a>
+          <a href="/community" class="nav-link">Communauté</a>
+          <a href="/about" class="nav-link">À propos</a>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <button id="theme-switcher" class="theme-switch-btn" aria-label="Switch theme">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        </button>
+        <a href="/signin" class="btn-secondary">Connexion</a>
+        <a href="/signup" class="btn-primary">Inscription</a>
+        <button id="mobile-menu-button" class="mobile-menu-btn" aria-label="Ouvrir menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="mobile-menu">
+    <div class="mobile-menu-content">
+      <button id="close-menu" class="close-menu-btn" aria-label="Fermer menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <div class="mobile-menu-links">
+        <a href="/" class="mobile-menu-link">Accueil</a>
+        <a href="/tools" class="mobile-menu-link">Outils</a>
+        <a href="/community" class="mobile-menu-link">Communauté</a>
+        <a href="/about" class="mobile-menu-link">À propos</a>
+      </div>
+      <div class="mobile-menu-actions">
+        <a href="/signin" class="btn-secondary">Connexion</a>
+        <a href="/signup" class="btn-primary">Inscription</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div>
+        <h1 class="hero-title">
+          Le meilleur des <span class="gradient-text">outils en ligne</span> à portée de main
+        </h1>
+        <p class="hero-desc">
+          Découvrez une collection d'outils puissants, gratuits et open-source pour booster votre productivité et simplifier votre quotidien.
+        </p>
+        <div class="hero-buttons">
+          <a href="/tools" class="btn-primary" style="display:inline-flex; align-items:center; justify-content:center;">
+            Explorer les outils
+            <svg style="margin-left:8px;" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+          <a href="/signup" class="btn-secondary" style="display:inline-flex; align-items:center; justify-content:center;">
+            Créer un compte
+          </a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="card">
+          <div class="hero-tools-grid">
+            <div class="tool-card">
+              <img src="/assets/code.png" alt="Code Icon">
+              <span class="font-medium">Générateur CSS</span>
+            </div>
+            <div class="tool-card">
+              <img src="/assets/verified-icon.png" alt="Verified Icon">
+              <span class="font-medium">Validateur JSON</span>
+            </div>
+            <div class="tool-card">
+              <img src="/assets/facile.png" alt="Easy Icon">
+              <span class="font-medium">Convertisseur</span>
+            </div>
+            <div class="tool-card">
+              <img src="/assets/personnaliser.png" alt="Customize Icon">
+              <span class="font-medium">Éditeur SVG</span>
+            </div>
+          </div>
+          <div style="text-align:center;">
+            <div style="display:inline-flex; align-items:center; background:rgba(48,0,255,0.2); padding:8px 16px; border-radius:24px; margin-bottom:16px;">
+              <span style="font-size:0.9rem; font-weight:500;">+100 outils disponibles</span>
+            </div>
+            <p style="opacity:0.8;">Tous nos outils sont vérifiés, sécurisés et 100% gratuits</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section">
+    <div class="section-container">
+      <div class="section-title">Pourquoi choisir ToolCenter ?</div>
+      <div class="section-desc">Une plateforme conçue pour les développeurs et créatifs exigeants</div>
+      <div class="features-grid">
+        <div class="feature-item scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/code.png" alt="Diversité">
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:12px;">Diversité des outils</h3>
+          <p style="opacity:0.8;">Accédez à une large gamme d'outils conçus pour vous simplifier la vie et booster votre productivité.</p>
+        </div>
+        <div class="feature-item scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/verified-icon.png" alt="Vérifié">
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:12px;">Outils vérifiés</h3>
+          <p style="opacity:0.8;">Tous les outils sont vérifiés pour garantir qu'ils ne contiennent pas de virus et fonctionnent parfaitement.</p>
+        </div>
+        <div class="feature-item scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/facile.png" alt="Simple">
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:12px;">Interface intuitive</h3>
+          <p style="opacity:0.8;">Une interface épurée et intuitive pour une prise en main immédiate sans courbe d'apprentissage.</p>
+        </div>
+        <div class="feature-item scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/personnaliser.png" alt="Personnalisation">
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:12px;">Personnalisation</h3>
+          <p style="opacity:0.8;">Personnalisez vos outils selon vos préférences pour une expérience sur mesure.</p>
+        </div>
+        <div class="feature-item scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/open-source.png" alt="Open Source">
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:12px;">100% Open-Source</h3>
+          <p style="opacity:0.8;">Tous les outils sont open-source, vous pouvez les adapter et les réutiliser librement.</p>
+        </div>
+        <div class="feature-item scroll-reveal">
+          <div class="feature-icon">
+            <img src="/assets/support.png" alt="Support">
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:12px;">Support 24/7</h3>
+          <p style="opacity:0.8;">Notre équipe est disponible 24h/24 et 7j/7 pour répondre à toutes vos questions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Tools -->
+  <section class="popular-section">
+    <div class="section-container">
+      <div class="section-title">Outils <span class="gradient-text">populaires</span></div>
+      <div class="section-desc">Découvrez les outils les plus appréciés par notre communauté</div>
+      <div class="tool-grid">
+        <div class="tool-grid-item">
+          <div class="tool-card card">
+            <div style="height:192px; display:flex; align-items:center; justify-content:center;">
+              <img src="/assets/code.png" alt="Générateur CSS" class="floating" style="width:80px; height:80px;">
+            </div>
+            <div style="padding:24px;">
+              <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:8px;">Générateur CSS</h3>
+              <p style="opacity:0.8; margin-bottom:16px;">Créez des styles CSS complexes en quelques clics sans écrire de code.</p>
+              <a href="#" class="gradient-text" style="font-weight:500; display:inline-flex; align-items:center;">
+                Utiliser l'outil
+                <svg style="margin-left:8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Répète pour chaque outil (remplacé juste l’icône, le titre et la desc, tout le reste c’est pareil, c’est du ctrl+c/ctrl+v mon gars) -->
+        <!-- Les autres outils sont identiques au dessus (change juste l’icon/texte) -->
+        <div class="tool-grid-item">
+          <div class="tool-card card">
+            <div style="height:192px; display:flex; align-items:center; justify-content:center;">
+              <img src="/assets/verified-icon.png" alt="Validateur JSON" class="floating" style="width:80px; height:80px;">
+            </div>
+            <div style="padding:24px;">
+              <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:8px;">Validateur JSON</h3>
+              <p style="opacity:0.8; margin-bottom:16px;">Validez et formatez vos fichiers JSON instantanément.</p>
+              <a href="#" class="gradient-text" style="font-weight:500; display:inline-flex; align-items:center;">
+                Utiliser l'outil
+                <svg style="margin-left:8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="tool-grid-item">
+          <div class="tool-card card">
+            <div style="height:192px; display:flex; align-items:center; justify-content:center;">
+              <img src="/assets/facile.png" alt="Convertisseur" class="floating" style="width:80px; height:80px;">
+            </div>
+            <div style="padding:24px;">
+              <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:8px;">Convertisseur universel</h3>
+              <p style="opacity:0.8; margin-bottom:16px;">Convertissez entre différents formats de fichiers en un instant.</p>
+              <a href="#" class="gradient-text" style="font-weight:500; display:inline-flex; align-items:center;">
+                Utiliser l'outil
+                <svg style="margin-left:8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="tool-grid-item">
+          <div class="tool-card card">
+            <div style="height:192px; display:flex; align-items:center; justify-content:center;">
+              <img src="/assets/personnaliser.png" alt="Éditeur SVG" class="floating" style="width:80px; height:80px;">
+            </div>
+            <div style="padding:24px;">
+              <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:8px;">Éditeur SVG</h3>
+              <p style="opacity:0.8; margin-bottom:16px;">Créez et modifiez des fichiers SVG directement dans votre navigateur.</p>
+              <a href="#" class="gradient-text" style="font-weight:500; display:inline-flex; align-items:center;">
+                Utiliser l'outil
+                <svg style="margin-left:8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="tool-grid-item">
+          <div class="tool-card card">
+            <div style="height:192px; display:flex; align-items:center; justify-content:center;">
+              <img src="/assets/open-source.png" alt="Générateur QR" class="floating" style="width:80px; height:80px;">
+            </div>
+            <div style="padding:24px;">
+              <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:8px;">Générateur QR Code</h3>
+              <p style="opacity:0.8; margin-bottom:16px;">Créez des codes QR personnalisés pour vos URLs, contacts ou Wi-Fi.</p>
+              <a href="#" class="gradient-text" style="font-weight:500; display:inline-flex; align-items:center;">
+                Utiliser l'outil
+                <svg style="margin-left:8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="tool-grid-item">
+          <div class="tool-card card">
+            <div style="height:192px; display:flex; align-items:center; justify-content:center;">
+              <img src="/assets/support.png" alt="Optimiseur" class="floating" style="width:80px; height:80px;">
+            </div>
+            <div style="padding:24px;">
+              <h3 style="font-size:1.25rem; font-weight:bold; margin-bottom:8px;">Optimiseur d'images</h3>
+              <p style="opacity:0.8; margin-bottom:16px;">Réduisez la taille de vos images sans perte de qualité visible.</p>
+              <a href="#" class="gradient-text" style="font-weight:500; display:inline-flex; align-items:center;">
+                Utiliser l'outil
+                <svg style="margin-left:8px;" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:64px;">
+        <a href="/tools" class="btn-primary" style="display:inline-flex; align-items:center;">
+          Voir tous les outils
+          <svg style="margin-left:8px;" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Stats -->
+  <section class="section">
+    <div class="section-container">
+      <div class="community-stats">
+        <div class="text-center">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">Outils disponibles</div>
+        </div>
+        <div class="text-center">
+          <div class="stat-number">50K+</div>
+          <div class="stat-label">Utilisateurs actifs</div>
+        </div>
+        <div class="text-center">
+          <div class="stat-number">1M+</div>
+          <div class="stat-label">Outils utilisés</div>
+        </div>
+        <div class="text-center">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Support disponible</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="faq-container">
+      <div class="section-title">Questions <span class="gradient-text">fréquentes</span></div>
+      <div class="section-desc">Trouvez les réponses aux questions les plus posées</div>
+      <div class="faq-list">
+        <div class="faq-item card">
+          <div class="faq-title-row">
+            <h3 style="font-size:1.25rem; font-weight:bold;">🛠️ C'est quoi ToolCenter ?</h3>
+            <svg class="faq-arrow" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content">
+            <p style="opacity:0.8;">ToolCenter est une plateforme où vous pouvez retrouver, partager et utiliser des outils gratuits en ligne. Tous nos outils sont open-source et vérifiés par notre équipe.</p>
+          </div>
+        </div>
+        <div class="faq-item card">
+          <div class="faq-title-row">
+            <h3 style="font-size:1.25rem; font-weight:bold;">💸 Est-ce que c'est payant ?</h3>
+            <svg class="faq-arrow" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content">
+            <p style="opacity:0.8;">Non, tous les outils sont 100% gratuits à utiliser. Nous croyons en l'accès libre aux outils de productivité et nous nous engageons à maintenir cette gratuité.</p>
+          </div>
+        </div>
+        <div class="faq-item card">
+          <div class="faq-title-row">
+            <h3 style="font-size:1.25rem; font-weight:bold;">🔐 Est-ce que les outils sont sûrs ?</h3>
+            <svg class="faq-arrow" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content">
+            <p style="opacity:0.8;">Absolument ! Chaque outil est vérifié manuellement avant d'être publié pour éviter tout scam ou malware. De plus, étant open-source, le code est transparent et vérifiable par tous.</p>
+          </div>
+        </div>
+        <div class="faq-item card">
+          <div class="faq-title-row">
+            <h3 style="font-size:1.25rem; font-weight:bold;">👥 Qui peut publier un outil ?</h3>
+            <svg class="faq-arrow" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content">
+            <p style="opacity:0.8;">Tout le monde peut proposer un outil après inscription. Chaque proposition est examinée par notre équipe avant d'être mise en ligne pour garantir sa qualité et sa sécurité.</p>
+          </div>
+        </div>
+        <div class="faq-item card">
+          <div class="faq-title-row">
+            <h3 style="font-size:1.25rem; font-weight:bold;">⚙️ Comment personnaliser les outils ?</h3>
+            <svg class="faq-arrow" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div class="faq-content">
+            <p style="opacity:0.8;">La plupart de nos outils offrent des options de personnalisation. Connectez-vous à votre compte pour accéder aux paramètres et enregistrer vos préférences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <h2 style="font-size:2rem; font-weight:bold; margin-bottom:24px;">Prêt à <span class="tool-highlight">transformer votre workflow</span> ?</h2>
+      <p style="font-size:1.125rem; opacity:0.8; margin-bottom:40px; max-width:520px; margin-left:auto; margin-right:auto;">
+        Rejoignez des milliers de créatifs et développeurs qui utilisent déjà ToolCenter au quotidien
+      </p>
+      <div style="display:flex; flex-direction:column; gap:16px; justify-content:center;">
+        <a href="/signup" class="btn-primary">Créer un compte gratuit</a>
+        <a href="/tools" class="btn-secondary">Explorer les outils</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo-row">
+            <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo-img">
+            <span class="site-title">ToolCenter</span>
+          </div>
+          <p style="opacity:0.8; margin-bottom:24px;">La plateforme d'outils en ligne pour les créatifs et développeurs exigeants.</p>
+          <div class="footer-social">
+            <a href="#" class="footer-social-link">
+              <!-- Facebook icon -->
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer-social-link">
+              <!-- Twitter icon -->
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer-social-link">
+              <!-- Github icon -->
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-section-title">Navigation</div>
+          <ul class="footer-list">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/tools">Outils</a></li>
+            <li><a href="/community">Communauté</a></li>
+            <li><a href="/about">À propos</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-section-title">Légal</div>
+          <ul class="footer-list">
+            <li><a href="/privacy">Politique de confidentialité</a></li>
+            <li><a href="/terms">Conditions d'utilisation</a></li>
+            <li><a href="/cookies">Politique des cookies</a></li>
+            <li><a href="/legals">Mentions légales</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-section-title">Contact</div>
+          <ul class="footer-list">
+            <li><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="25565055554a575165514a4a490846404b5140570b4357">[email&#160;protected]</a></li>
+            <li>Paris, France</li>
+            <li><a href="/contact">Formulaire de contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 ToolCenter. Tous droits réservés. Conçu avec ❤️ pour les créatifs.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top button -->
+  <button id="back-to-top">
+    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+    </svg>
+  </button>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Theme switcher
+    const themeSwitcher = document.getElementById('theme-switcher');
+    const body = document.body;
+    if (localStorage.getItem('theme') === 'light') {
+      body.classList.add('light-theme');
+    }
+    themeSwitcher.addEventListener('click', () => {
+      body.classList.toggle('light-theme');
+      localStorage.setItem('theme', body.classList.contains('light-theme') ? 'light' : 'dark');
+    });
+    // Mobile menu
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+    });
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+    });
+    // FAQ functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('open');
+      });
+    });
+    // Back to top button
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.style.opacity = '1';
+      } else {
+        backToTop.style.opacity = '0';
+      }
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    // Scroll reveal animation
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    const revealOnScroll = () => {
+      scrollRevealElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('visible');
+        }
+      });
+    };
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+    // Preloader
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      const preloaderMessage = document.getElementById('preloader-message');
+      // Show message after 1s
+      setTimeout(() => {
+        preloaderMessage.style.opacity = '1';
+      }, 1000);
+      // Hide preloader after 2s
+      setTimeout(() => {
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }, 2000);
+    });
+    // Tool card animations (déjà géré en CSS mais on garde si besoin d’effets JS)
+    const toolCards = document.querySelectorAll('.tool-card');
+    toolCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-10px)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"95b56a375d68063a","version":"2025.6.2","r":1,"token":"75d076604ade4995a125ca9925818136","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>
