@@ -12,8 +12,8 @@ export default defineConfig(async () => {
   );
 
   return {
-    root: '.',           // répertoire courant
-    publicDir: 'assets', // tu gardes /assets/ exactement comme aujourd’hui
+    root: '.',
+    publicDir: 'public/',
     build: {
       outDir: 'dist',
       rollupOptions: { input }
