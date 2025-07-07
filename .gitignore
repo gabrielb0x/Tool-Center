@@ -11,3 +11,6 @@ storage/tools_images/*
 /api/toolcenter
 /api/config.json
 /api/logs/api.log
+frontend/dist
+frontend/node_modules
+

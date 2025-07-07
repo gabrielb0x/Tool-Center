@@ -312,5 +312,18 @@
     "tags": [
       "backend"
     ]
+  },
+  {
+    "id": 35,
+    "date": "2025-11-01",
+    "displayDate": "01/11/2025",
+    "title": "Intégration de Vite pour le frontend",
+    "summary": "Le frontend peut désormais être buildé via Vite.",
+    "content": "Une configuration Vite permet de compiler les fichiers HTML, JS et CSS du site. Installez Vite via npm puis lancez `npm run build` pour générer le dossier `dist`.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "frontend"
+    ]
   }
 ]
