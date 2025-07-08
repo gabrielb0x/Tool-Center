@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import fg from 'fast-glob';
 import obfuscator from 'vite-plugin-javascript-obfuscator';
+import tailwindcss from '@tailwindcss/vite';
 
 const OBF_LEVEL   = 'hard';     // 'none' | 'simple' | 'medium' | 'hard'
 const MINIFY_HARD = true;       // true  = Terser vénère, false = esbuild par défaut
@@ -45,6 +46,7 @@ export default defineConfig(async () => {
     root: '.',
     publicDir: 'public/',
     plugins: [
+      tailwindcss(),
       ...(OBF_LEVEL !== 'none'
         ? [obfuscator({ apply: 'build', options: obfPresets[OBF_LEVEL] })]
         : [])

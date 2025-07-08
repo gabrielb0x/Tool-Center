@@ -12,9 +12,16 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "fast-glob": "^3.3.3",
+    "tailwindcss": "^4.1.11",
     "terser": "^5.43.1",
     "vite": "^7.0.2",
     "vite-plugin-javascript-obfuscator": "^3.1.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@tailwindcss/oxide"
+    ]
   }
 }
