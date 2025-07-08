@@ -1,6 +1,6 @@
 # 🚀 **Tool Center**
 
-![Tool Center Banner](./frontend/public/assetsBanniere-TC.png)
+![Tool Center Banner](./frontend/public/assets/Banniere-TC.png)
 
 > **Tool Center** is the flagship project of **[@gabrielb0x](https://github.com/gabrielb0x)**.
 > A mix of **code**, **passion** and **usefulness** made for people who want quality tools.
