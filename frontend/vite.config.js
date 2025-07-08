@@ -3,10 +3,8 @@ import { resolve } from 'path';
 import fg from 'fast-glob';
 import obfuscator from 'vite-plugin-javascript-obfuscator';
 
-/* ======================= 🌶️ RÉGLAGES RAPIDES ICI ======================= */
 const OBF_LEVEL   = 'hard';     // 'none' | 'simple' | 'medium' | 'hard'
 const MINIFY_HARD = true;       // true  = Terser vénère, false = esbuild par défaut
-/* ======================================================================= */
 
 const obfPresets = {
   simple: {

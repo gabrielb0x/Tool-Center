@@ -1,9 +1,7 @@
-# Ignore tous les fichiers dans avatars et banners
 storage/avatars/*
 storage/banners/*
 storage/tools_images/*
 
-# Mais garde les dossiers (sinon Git va même pas les créer si tu clones ailleurs)
 !storage/avatars/.keep
 !storage/banners/.keep
 !storage/tools_images/.keep
