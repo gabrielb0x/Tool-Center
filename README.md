@@ -25,7 +25,7 @@
 
 <br/>
 
-![Preview Interface](./frontend/public/assetsdemo-preview.png)
+![Preview Interface](./frontend/public/assets/demo-preview.png)
 
 ---
 
@@ -106,7 +106,7 @@ curl https://api.tool-center.fr/v1/users/gabex
 
 | 🔐 Login                             | 📊 Dashboard                        |
 |-------------------------------------|------------------------------------|
-| ![Login](./frontend/public/assetslogin-preview.png)        | ![Dashboard](./frontend/public/assetsdashbord-preview.png) |
+| ![Login](./frontend/public/assets/login-preview.png)        | ![Dashboard](./frontend/public/assets/dashbord-preview.png) |
 
 > _Screenshots taken on 2025‑05‑24. The real interface may have evolved since then._
 
