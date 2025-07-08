@@ -14,3 +14,4 @@ storage/tools_images/*
 frontend/dist
 frontend/node_modules
 
+frontend/package-lock.json
