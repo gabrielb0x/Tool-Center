@@ -1,6 +1,6 @@
 # 🚀 **Tool Center**
 
-![Tool Center Banner](./frontend/assets/Banniere-TC.png)
+![Tool Center Banner](./frontend/public/Banniere-TC.png)
 
 > **Tool Center** is the flagship project of **[@gabrielb0x](https://github.com/gabrielb0x)**.
 > A mix of **code**, **passion** and **usefulness** made for people who want quality tools.
@@ -25,7 +25,7 @@
 
 <br/>
 
-![Preview Interface](./frontend/assets/demo-preview.png)
+![Preview Interface](./frontend/public/demo-preview.png)
 
 ---
 
@@ -106,7 +106,7 @@ curl https://api.tool-center.fr/v1/users/gabex
 
 | 🔐 Login                             | 📊 Dashboard                        |
 |-------------------------------------|------------------------------------|
-| ![Login](./frontend/assets/login-preview.png)        | ![Dashboard](./frontend/assets/dashbord-preview.png) |
+| ![Login](./frontend/public/login-preview.png)        | ![Dashboard](./frontend/public/dashbord-preview.png) |
 
 > _Screenshots taken on 2025‑05‑24. The real interface may have evolved since then._
 
