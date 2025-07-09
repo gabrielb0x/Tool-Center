@@ -75,6 +75,8 @@ cp .env.example .env  # adjust VITE_API_BASE_URL if necessary
 npm run build
 ```
 
+Prototype pages like `frontend/prototypes/index3.html` use Tailwind CSS 4. Run `npm run build` to generate their optimized versions in `frontend/dist`.
+
 This will generate a `dist` folder containing the static site ready to deploy.
 
 ### Useful API endpoints
