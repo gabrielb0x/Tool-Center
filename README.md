@@ -62,6 +62,7 @@ Use the `storage` section to configure directories for avatars and tool images.
 The `moderation` section now includes `auto_unban` to automatically lift temporary bans when expired.
 The `status_banner` section controls the outage banner displayed on the frontend.
 `user_public_tools_limit` defines how many public tools are returned in user search results.
+`rate_limit` sets the maximum number of requests per IP and the time window in seconds.
 Update `frontend/src/utils/config.js` to change the API base URL used by the static pages or set `VITE_API_BASE_URL` in a `.env` file for Vite.
 
 ### Build the frontend with Vite

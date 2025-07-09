@@ -69,6 +69,10 @@ type Config struct {
 	PasswordReset struct {
 		TokenExpiryMinutes int `json:"token_expiry_minutes"`
 	} `json:"password_reset"`
+	RateLimit struct {
+		Requests      int `json:"requests"`
+		WindowSeconds int `json:"window_seconds"`
+	} `json:"rate_limit"`
 	StatusBanner struct {
 		ErrorRateThreshold  float64 `json:"error_rate_threshold"`
 		WindowMinutes       int     `json:"window_minutes"`
@@ -104,6 +108,12 @@ func Load(path string) error {
 	}
 	if cfg.PasswordReset.TokenExpiryMinutes == 0 {
 		cfg.PasswordReset.TokenExpiryMinutes = 15
+	}
+	if cfg.RateLimit.Requests == 0 {
+		cfg.RateLimit.Requests = 60
+	}
+	if cfg.RateLimit.WindowSeconds == 0 {
+		cfg.RateLimit.WindowSeconds = 60
 	}
 	if cfg.StatusBanner.WindowMinutes == 0 {
 		cfg.StatusBanner.WindowMinutes = 10
