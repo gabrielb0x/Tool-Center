@@ -193,6 +193,7 @@ func main() {
 
 	r := gin.Default()
 	r.Use(corsMiddleware())
+	r.Use(utils.RateLimitMiddleware())
 	r.Use(utils.MonitorMiddleware())
 	setupRoutes(r)
 

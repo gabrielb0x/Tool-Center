@@ -325,5 +325,18 @@
     "tags": [
       "frontend"
     ]
+  },
+  {
+    "id": 36,
+    "date": "2025-11-02",
+    "displayDate": "02/11/2025",
+    "title": "Protection anti-spam API",
+    "summary": "Ajout d'un rate limit configurable pour limiter les requêtes par IP.",
+    "content": "Un middleware Go restreint désormais le nombre de requêtes par adresse IP. Les paramètres `requests` et `window_seconds` sont réglables dans `config.json`.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "backend"
+    ]
   }
 ]

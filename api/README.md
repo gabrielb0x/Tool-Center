@@ -264,6 +264,10 @@ cp config.sample.json config.json && nano config.json
         "username_change_days": 30,
         "tool_post_hours": 24,
         "avatar_change_hours": 24
+    },
+    "rate_limit": {
+        "requests": 60,
+        "window_seconds": 60
     }
 }
 ```

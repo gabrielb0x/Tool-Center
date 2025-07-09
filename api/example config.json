@@ -56,6 +56,10 @@
   "password_reset": {
     "token_expiry_minutes": 15
   },
+  "rate_limit": {
+    "requests": 60,
+    "window_seconds": 60
+  },
   "status_banner": {
     "error_rate_threshold": 0.3,
     "window_minutes": 10,
