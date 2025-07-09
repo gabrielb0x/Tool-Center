@@ -13,8 +13,8 @@
   <title>ToolCenter - Accueil</title>
   <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
+  <link rel="stylesheet" href="/src/CSS/prototypes/index3.css">
+  <!-- <script>
     tailwind.config = {
       theme: {
         extend: {
@@ -49,339 +49,7 @@
         }
       }
     }
-  </script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
-    
-    body {
-      background-color: #0F0F15;
-      color: #FFFFFF;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      overflow-x: hidden;
-    }
-    
-    body.light-theme {
-      background-color: #F8FAFF;
-      color: #1A1A25;
-    }
-    
-    .gradient-bg {
-      background: linear-gradient(135deg, #3000FF 0%, #2A00D9 100%);
-    }
-    
-    .glass-effect {
-      background: rgba(26, 26, 37, 0.5);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .light-theme .glass-effect {
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-    }
-    
-    .card {
-      background: #1A1A25;
-      border-radius: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .light-theme .card {
-      background: #FFFFFF;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
-    
-    .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    }
-    
-    .light-theme .card:hover {
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-    
-    .feature-icon {
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 20px;
-      background: rgba(48, 0, 255, 0.1);
-      margin-bottom: 20px;
-      transition: transform 0.3s ease;
-    }
-    
-    .feature-icon img {
-      width: 50px;
-      height: 50px;
-    }
-    
-    .feature-item:hover .feature-icon {
-      transform: scale(1.1);
-    }
-    
-    .light-theme .feature-icon {
-      background: rgba(48, 0, 255, 0.05);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #3000FF 0%, #2A00D9 100%);
-      color: white;
-      border-radius: 50px;
-      padding: 12px 30px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-    
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #2A00D9 0%, #3000FF 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: -1;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(48, 0, 255, 0.3);
-    }
-    
-    .btn-primary:hover::before {
-      opacity: 1;
-    }
-    
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border-radius: 50px;
-      padding: 12px 30px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-    
-    .light-theme .btn-secondary {
-      background: rgba(26, 26, 37, 0.1);
-      color: #1A1A25;
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-5px);
-    }
-    
-    .light-theme .btn-secondary:hover {
-      background: rgba(26, 26, 37, 0.2);
-    }
-    
-    .floating {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    .hero-pattern {
-      background-image: radial-gradient(circle at 10% 20%, rgba(48, 0, 255, 0.1) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(48, 0, 255, 0.1) 0%, transparent 40%);
-    }
-    
-    .light-theme .hero-pattern {
-      background-image: radial-gradient(circle at 10% 20%, rgba(48, 0, 255, 0.05) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(48, 0, 255, 0.05) 0%, transparent 40%);
-    }
-    
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 30px;
-    }
-    
-    .tool-card {
-      border-radius: 16px;
-      overflow: hidden;
-      transition: transform 0.3s ease;
-    }
-    
-    .tool-card:hover {
-      transform: translateY(-10px);
-    }
-    
-    .tool-card img {
-      transition: transform 0.5s ease;
-    }
-    
-    .tool-card:hover img {
-      transform: scale(1.05);
-    }
-    
-    .faq-item {
-      border-radius: 16px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .faq-item:hover {
-      background: rgba(48, 0, 255, 0.1);
-    }
-    
-    .light-theme .faq-item:hover {
-      background: rgba(48, 0, 255, 0.05);
-    }
-    
-    .faq-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-    }
-    
-    .faq-item.open .faq-content {
-      max-height: 200px;
-    }
-    
-    .nav-link {
-      position: relative;
-      padding: 10px 0;
-    }
-    
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #3000FF;
-      transition: width 0.3s ease;
-    }
-    
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    
-    .mobile-menu {
-      transform: translateX(100%);
-      transition: transform 0.4s ease;
-    }
-    
-    .mobile-menu.open {
-      transform: translateX(0);
-    }
-    
-    .preloader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #0F0F15;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-    
-    .light-theme .preloader {
-      background: #F8FAFF;
-    }
-    
-    .spinner {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(48, 0, 255, 0.2);
-      border-top: 4px solid #3000FF;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .scroll-reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    
-    .scroll-reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    .tool-highlight {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .tool-highlight::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 20px;
-      background: rgba(48, 0, 255, 0.2);
-      transform: translateY(-50%) skewX(-15deg);
-      z-index: -1;
-      border-radius: 4px;
-    }
-    
-    .light-theme .tool-highlight::before {
-      background: rgba(48, 0, 255, 0.1);
-    }
-    
-    .tool-grid-item:nth-child(1) .tool-card { transition-delay: 0.1s; }
-    .tool-grid-item:nth-child(2) .tool-card { transition-delay: 0.2s; }
-    .tool-grid-item:nth-child(3) .tool-card { transition-delay: 0.3s; }
-    .tool-grid-item:nth-child(4) .tool-card { transition-delay: 0.4s; }
-    .tool-grid-item:nth-child(5) .tool-card { transition-delay: 0.5s; }
-    .tool-grid-item:nth-child(6) .tool-card { transition-delay: 0.6s; }
-    
-    .tool-card {
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    
-    .hero-text {
-      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .light-theme .hero-text {
-      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .gradient-text {
-      background: linear-gradient(135deg, #3000FF 0%, #00C2FF 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .community-stats {
-      background: linear-gradient(135deg, rgba(48, 0, 255, 0.1) 0%, rgba(0, 194, 255, 0.1) 100%);
-      border-radius: 20px;
-    }
-    
-    .light-theme .community-stats {
-      background: linear-gradient(135deg, rgba(48, 0, 255, 0.05) 0%, rgba(0, 194, 255, 0.05) 100%);
-    }
-  </style>
+  </script> -->
 </head>
 <body>
   <!-- Preloader -->
@@ -426,7 +94,6 @@
     </nav>
   </header>
 
-  <!-- Mobile Menu -->
   <div id="mobile-menu" class="mobile-menu fixed inset-0 z-30 bg-black/80 backdrop-blur-sm lg:hidden">
     <div class="absolute right-0 top-0 h-full w-80 bg-darkCard">
       <div class="p-8 h-full flex flex-col">
@@ -451,7 +118,6 @@
     </div>
   </div>
 
-  <!-- Hero Section -->
   <section class="hero-pattern min-h-screen flex items-center pt-24 pb-20 px-4">
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
       <div class="text-center md:text-left">
@@ -506,7 +172,6 @@
     </div>
   </section>
 
-  <!-- Features Section -->
   <section class="py-20 px-4">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16">
@@ -566,7 +231,6 @@
     </div>
   </section>
 
-  <!-- Popular Tools -->
   <section class="py-20 px-4 bg-darkCard">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16">
@@ -695,7 +359,6 @@
     </div>
   </section>
 
-  <!-- Community Stats -->
   <section class="py-20 px-4">
     <div class="max-w-7xl mx-auto">
       <div class="community-stats p-8 md:p-12 rounded-3xl grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -719,7 +382,6 @@
     </div>
   </section>
 
-  <!-- FAQ Section -->
   <section class="py-20 px-4 bg-darkCard">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-16">
@@ -791,7 +453,6 @@
     </div>
   </section>
 
-  <!-- CTA Section -->
   <section class="py-20 px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h2 class="text-3xl md:text-4xl font-bold mb-6">Prêt à <span class="tool-highlight">transformer votre workflow</span> ?</h2>
@@ -803,7 +464,6 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="py-12 px-4 border-t border-white/10">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
@@ -869,7 +529,6 @@
     </div>
   </footer>
 
-  <!-- Back to top button -->
   <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary p-3 rounded-full shadow-lg opacity-0 transition-opacity">
     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
@@ -877,7 +536,6 @@
   </button>
 
   <script>
-    // Theme switcher
     const themeSwitcher = document.getElementById('theme-switcher');
     const body = document.body;
     
@@ -890,7 +548,6 @@
       localStorage.setItem('theme', body.classList.contains('light-theme') ? 'light' : 'dark');
     });
     
-    // Mobile menu
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     const closeMenu = document.getElementById('close-menu');
@@ -903,7 +560,6 @@
       mobileMenu.classList.remove('open');
     });
     
-    // FAQ functionality
     const faqItems = document.querySelectorAll('.faq-item');
     
     faqItems.forEach(item => {
@@ -912,7 +568,6 @@
       });
     });
     
-    // Back to top button
     const backToTop = document.getElementById('back-to-top');
     
     window.addEventListener('scroll', () => {
@@ -927,7 +582,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
     
-    // Scroll reveal animation
     const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
     
     const revealOnScroll = () => {
@@ -944,17 +598,14 @@
     window.addEventListener('scroll', revealOnScroll);
     window.addEventListener('load', revealOnScroll);
     
-    // Preloader
     window.addEventListener('load', () => {
       const preloader = document.getElementById('preloader');
       const preloaderMessage = document.getElementById('preloader-message');
       
-      // Show message after 1s
       setTimeout(() => {
         preloaderMessage.style.opacity = '1';
       }, 1000);
       
-      // Hide preloader after 2s
       setTimeout(() => {
         preloader.style.opacity = '0';
         setTimeout(() => {
@@ -963,7 +614,6 @@
       }, 2000);
     });
     
-    // Tool card animations
     const toolCards = document.querySelectorAll('.tool-card');
     
     toolCards.forEach(card => {

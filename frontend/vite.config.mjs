@@ -9,6 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const OBF_LEVEL   = 'hard';   // 'none' | 'simple' | 'medium' | 'hard'
 const MINIFY_HARD = true;     // true = terser hard, false = esbuild
+const ghost_names = true;    // true = noms hashéss, false = Noms normaux
 
 const obfPresets = {
   simple: {
@@ -36,6 +37,25 @@ const obfPresets = {
   },
 };
 
+if (OBF_LEVEL === 'none') {
+  console.warn('⚠️ Obfuscation is disabled. This is not recommended for production!');
+}
+if (OBF_LEVEL === 'hard' && !MINIFY_HARD) {
+  console.warn('⚠️ Hard obfuscation is enabled, but minification is set to false. This may lead to larger file sizes and reduced performance.');
+}
+
+const output = ghost_names
+  ? {
+      entryFileNames: 'assets/[hash].js',
+      chunkFileNames: 'assets/[hash].js',
+      assetFileNames: 'assets/[hash].[ext]',
+    }
+  : {
+      entryFileNames: 'assets/[name].js',
+      chunkFileNames: 'assets/[name].js',
+      assetFileNames: 'assets/[name].[ext]',
+    };
+
 export default defineConfig(async () => {
   const files = await fg(['**/*.html', '!node_modules/**', '!dist/**']);
   const input = Object.fromEntries(
@@ -58,7 +78,10 @@ export default defineConfig(async () => {
       outDir: 'dist',
       minify: MINIFY_HARD ? 'terser' : true,
       sourcemap: false,
-      rollupOptions: { input },
+      rollupOptions: {
+        input,
+        output
+      }
     },
   };
 });
