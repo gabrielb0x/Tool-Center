@@ -60,6 +60,15 @@
     "requests": 60,
     "window_seconds": 60
   },
+  "anti_spam": {
+    "enabled": true,
+    "request_threshold": 10,
+    "interval_seconds": 1,
+    "initial_block_seconds": 30,
+    "max_strike": 3,
+    "status_decrease": 2,
+    "ban_hours": 24
+  },
   "status_banner": {
     "error_rate_threshold": 0.3,
     "window_minutes": 10,

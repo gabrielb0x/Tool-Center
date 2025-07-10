@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         Promise.resolve()
             .then(() => fetchUserData())
+            .then(() => fetchSanctions())
             .then(() => {
                 initAvatarModal();
                 initEmailModal();
@@ -590,3 +591,33 @@ function setAccountStatus(status) {
     statusText.textContent = steps[idx];
     statusDesc.textContent = descriptions[idx];
 }
+
+function fetchSanctions() {
+    const token = localStorage.getItem('token');
+    return fetch(`${apiBaseURL}/user/sanctions`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(r => r.json())
+    .then(data => {
+        const sk = document.getElementById('skeleton-sanctions');
+        sk.classList.add('fade-out');
+        setTimeout(() => { sk.style.display = 'none'; }, 300);
+        if(!data.success) return;
+        document.querySelector('.sanctions-section').style.display = 'block';
+        const active = document.getElementById('active-sanctions');
+        const expired = document.getElementById('expired-sanctions');
+        active.innerHTML = '';
+        expired.innerHTML = '';
+        data.active.forEach(s => active.appendChild(createSanctionItem(s, false)));
+        data.expired.forEach(s => expired.appendChild(createSanctionItem(s, true)));
+    });
+}
+
+function createSanctionItem(sanction, expired) {
+    const div = document.createElement('div');
+    div.className = 'sanction-item' + (expired ? ' expired' : '');
+    const end = sanction.end ? new Date(sanction.end).toLocaleString('fr-FR') : '';
+    div.textContent = `${sanction.type} - ${sanction.reason || ''}${end ? ' (jusqu\u2019au ' + end + ')' : ''}`;
+    return div;
+}
+
