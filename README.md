@@ -1,156 +1,252 @@
-# 🚀 **Tool Center**
+# 🚀✨ **Tool Center**
 
-![Tool Center Banner](./frontend/public/assets/Banniere-TC.png)
+![Banner](./frontend/public/assets/Banniere-TC.png)
 
-> **Tool Center** is the flagship project of **[@gabrielb0x](https://github.com/gabrielb0x)**.
-> A mix of **code**, **passion** and **usefulness** made for people who want quality tools.
+<p align="center">
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
+  <a href="https://github.com/gabrielb0x/tool-center/actions"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/gabrielb0x/tool-center/ci.yml?label=CI&logo=github"></a>
+  <a href="https://github.com/gabrielb0x/tool-center/releases"><img alt="GitHub release" src="https://img.shields.io/github/v/release/gabrielb0x/tool-center?include_prereleases&sort=semver&color=brightgreen"></a>
+  <a href="https://github.com/gabrielb0x/tool-center/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/gabrielb0x/tool-center?style=social"></a>
+  <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/gabrielb0x/tool-center?color=blueviolet">
+  <img alt="Go Version" src="https://img.shields.io/github/go-mod/go-version/gabrielb0x/tool-center?logo=go&logoColor=white">
+  <img alt="Node Version" src="https://img.shields.io/node/v/rollup?color=orange&label=node">
+</p>
 
----
-
-## 🌐 **Quick overview**
-
-**Tool Center** is a web platform designed to:
-
-- 🔧 **Create & publish** your own tools
-- 💬 **Like, comment and share** other people's tools
-- 👤 **Manage your account**: avatar, security, statistics
-- 🔐 **Two-factor authentication** with Google Authenticator
-- 🤖 Smooth 2FA prompt when signing in if your account requires it
-- 🔑 **Password reset** via email link
-- 🖥️ **Manage active sessions** in your security settings
-- ✏️ **Update email and password** directly from the security page (2FA required when enabled)
-- 🛡️ A clean **moderation system**
-- ⏳ **Ban durations** and role restrictions for moderators
-- 📜 **Comprehensive logs** for users and admins
-- ⚡ A responsive design focused on usability
-
-<br/>
-
-![Preview Interface](./frontend/public/assets/demo-preview.png)
+> **Tool Center** is the 🏡 **tracker‑free** & **ad‑free** playground where indie devs can **🚀 create**, **📦 ship** & **🔍 discover** tiny web tools ‑ all running happily on a Raspberry Pi 5.
 
 ---
 
-## 🧠 **Why does Tool Center exist?**
+## 📑 Table of Contents
 
-Because the world needed:
-
-- An **open-source hub** for web tools, **without ads** and **without trackers**
-- A place where **indie developers can shine**
-- A **modern** and **fast** site not solely aimed at developers
-- A project made **by a passionate developer** for other enthusiasts
-
----
-
-## 🧱 **Project architecture**
-
-| 🧩 Part           | ⚙️ Tech stack                                                             |
-| ----------------- | ------------------------------------------------------------------------- |
-| **Backend API**   | Go (Golang) + MariaDB                                                     |
-| **Frontend**      | HTML, JS, CSS (vanilla)                                                   |
-| **Auth**          | Email with hashed tokens, UUIDv7 IDs, verification, sessions              |
-| **Hosting**       | Raspberry Pi 5                                                            |
-| **Proxy / HTTPS** | Nginx + SSL via Cloudflare                                                |
-| **Domains**       | [tool-center.fr](https://tool-center.fr) & [gabex.xyz](https://gabex.xyz) |
+* [🧠 About](#about)
+* [✨ Features](#features)
+* [🚀 Live Demo](#live-demo)
+* [⚡ Quick Start](#quick-start)
+* [🧱 Project Structure](#project-structure)
+* [🔧 Configuration](#configuration)
+* [🌍 Deployment](#deployment)
+* [📡 API Overview](#api-overview)
+* [🧪 Testing](#testing)
+* [🤝 Contributing](#contributing)
+* [👥 Community](#community)
+* [🔮 Roadmap](#roadmap)
+* [📜 Changelog](#changelog)
+* [📝 License](#license)
 
 ---
 
-## ⚙️ **Quick configuration**
+## 🧠 About
 
-All API variables live in `api/example config.json`.
-Adjust this file (ports, database, SMTP...) to match your environment.
-A new `private_news_password` field secures access to private news articles.
-Set `cors_allowed_origin` to control the `Access-Control-Allow-Origin` header.
-Use the `storage` section to configure directories for avatars and tool images.
-The `moderation` section now includes `auto_unban` to automatically lift temporary bans when expired.
-The `status_banner` section controls the outage banner displayed on the frontend.
-`user_public_tools_limit` defines how many public tools are returned in user search results.
-`rate_limit` sets the maximum number of requests per IP and the time window in seconds.
-`anti_spam` adds progressive blocking and automatic sanctions when the API is spammed. A new `proxy_multiplier` field lets you tune how much stricter proxy traffic is treated.
-Sanctions can now be contested via the API. Admins review these appeals from the panel.
-When an appeal is processed, the sanction expires and the user's previous status is restored.
-Appeal-related emails now include the appeal ID for easier follow-up and are sent immediately.
-Update `frontend/src/utils/config.js` to change the API base URL used by the static pages or set `VITE_API_BASE_URL` in a `.env` file for Vite.
+<a id="about"></a>
 
-### Build the frontend with Vite
+**Tool Center** started as the late‑night idea of [@gabrielb0x](https://github.com/gabrielb0x) and quickly snowballed into a community‑driven platform. Mission 🔭: offer a **⚡ fast**, **🔒 privacy‑first** and **✨ fun** alternative to ad‑infested “online tool” sites.
 
-The `frontend` directory now includes a Vite configuration. To build the optimized assets:
+* 🏎️ **Runs** on a Raspberry Pi 5 (ARM64)
+* 🕵️ **Zero trackers** – your data 👉 *yours*
+* 🛠️ **One‑click publish** workflow (UI & REST API)
+* 🛡️ **Transparent moderation** – public JSON audit log
 
-```bash
-cd frontend
-npm install
-cp .env.example .env  # adjust VITE_API_BASE_URL if necessary
-npm run build
-```
-
-Prototype pages like `frontend/prototypes/index3.html` use Tailwind CSS 4. Run `npm run build` to generate their optimized versions in `frontend/dist`.
-
-This will generate a `dist` folder containing the static site ready to deploy.
-
-### Useful API endpoints
-
-- `POST /v{n}/admin/logs/clear` – clear all activity logs
-- `GET /v{n}/admin/users/{id}/tools` – list tools of a specific user
-- `GET /v{n}/admin/users/{id}/ban` – get last ban reason
-- `GET /v{n}/auth/sessions` – list active sessions
-- `DELETE /v{n}/auth/sessions` – revoke all other sessions
-- `DELETE /v{n}/auth/sessions/{id}` – revoke a specific session
-- `GET /v{n}/status` – check API health status
-- `GET /v{n}/users/search?q=<name>&page=<n>` – search users by username. Results include `is_verified` and a list of public tools.
-- `GET /v{n}/users/{username}` – public profile of a user
-
-Example search request:
-
-```bash
-curl "https://api.tool-center.fr/v1/users/search?q=gab&page=1"
-```
-
-Example profile request:
-
-```bash
-curl https://api.tool-center.fr/v1/users/gabex
-```
+> **Status:** *Beta* – solid, but you might still find sharp edges.
 
 ---
 
-## 📸 **Gallery**
+## ✨ Features
 
-| 🔐 Login                                             | 📊 Dashboard                                                |
-| ---------------------------------------------------- | ----------------------------------------------------------- |
+<a id="features"></a>
+
+| 📂 Area            | 🌟 Highlights                                                                       |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| 👤 **Accounts**    | Sign‑up / login, avatar upload, profile stats, social links                         |
+| 🔐 **Security**    | Password reset, **TOTP 2FA**, brute‑force shield, rate‑limit, anti‑spam             |
+| 🛠️ **Tools**      | Create, edit, publish, like, comment, share, **versioning** *(soon)*                |
+| 🛡️ **Moderation** | Role‑based perms, temp/perma bans, auto‑unban, sanction appeals, exportable logs    |
+| 🎨 **UX**          | Responsive layout, dark‑mode, keyboard shortcuts, accessible components, PWA splash |
+| ⚙️ **DevOps**      | OpenAPI 3 docs, GitHub Actions, Docker/Compose, semantic releases, Dependabot       |
+| 📈 **Analytics**   | Self‑hosted [Plausible](https://plausible.io/) (💡 opt‑in)                          |
+
+---
+
+## 🚀 Live Demo
+
+<a id="live-demo"></a>
+
+👉 **[https://tool-center.fr](https://tool-center.fr)** — come poke it!
+
+|                       🔐 Log in                      |                         📊 Dashboard                        |
+| :--------------------------------------------------: | :---------------------------------------------------------: |
 | ![Login](./frontend/public/assets/login-preview.png) | ![Dashboard](./frontend/public/assets/dashbord-preview.png) |
 
-> _Screenshots taken on 2025‑05‑24. The real interface may have evolved since then._
+*UI snapshots from **2025‑05‑24**.*
 
 ---
 
-## 🧙‍♂️ **The creator**
+## ⚡ Quick Start
 
-Developed by **[@gabrielb0x](https://github.com/gabrielb0x)**,
-a young full‑stack developer passionate about **AI**, **cybersecurity** and **innovative projects**.
-👉 **Tool Center** is his biggest and most ambitious project so far.
+<a id="quick-start"></a>
+
+### 🐳 Docker (recommended)
+
+```bash
+# 1 › clone & cd
+git clone https://github.com/gabrielb0x/tool-center.git && cd tool-center
+
+# 2 › config
+cp api/example\ config.json api/config.json
+cp deploy/.env.example deploy/.env
+
+# 3 › run 🚀
+docker compose up -d --build
+```
+
+Stacks included 🧩: `api` (Go), `db` (MariaDB 11) & `frontend` (Nginx).
+
+### 🛠️ Manual
+
+```bash
+# API (Go 1.22+)
+cd api && go mod tidy && go run .
+
+# Front (Node 20+)
+cd ../frontend && npm i && npm run build  # → ./dist
+```
 
 ---
 
-## ❤️ **Support & Contributions**
+## 🧱 Project Structure
 
-**Tool Center** is an **open‑source** project built with:
+<a id="project-structure"></a>
 
-- 💕 Love
-- ⏱️ Patience and determination
-- ❤️‍🔥 Passion for computing
-
-Want to contribute or report a bug?
-→ **Reach me at gabex@gabex.xyz** (address may change)
-
----
-
-## 🔮 **Coming soon**
-
-- 🔄 Automatic update of posted tools
-- 📊 Public statistics & user ranking
-- ⚔️ Gamification and level system
-- 🌍 Multilingual translations
-- 🔐 More security tools and audits
+```text
+📦 tool-center
+ ┣ api/            # Go source, config, mail templates
+ ┣ frontend/       # Vanilla JS + Vite static site
+ ┣ deploy/         # Docker, Nginx, systemd, k8s (WIP)
+ ┣ docs/           # Diagrams, ADRs, threat‑model
+ ┣ scripts/        # Helpers & seeders
+ ┗ tests/          # Go + JS suites
+```
 
 ---
 
-## **© Gabriel B., 2024-2025 — All rights reserved.**
+## 🔧 Configuration
+
+<a id="configuration"></a>
+
+All settings live in **`api/config.json`** 🔒 (`api/config.secrets.json` overrides 🔑).
+
+| 🗝️ Key               | 📓 Description | 🧩 Example                                 |
+| --------------------- | -------------- | ------------------------------------------ |
+| `port`                | API port       | `8080`                                     |
+| `database.dsn`        | MariaDB DSN    | `user:pass@tcp(db:3306)/toolcenter`        |
+| `smtp`                | Mail server    | `{ "host":"smtp.gmx.net", "port":587, … }` |
+| `cors_allowed_origin` | CORS origins   | `"https://tool-center.fr"`                 |
+| `rate_limit.limit`    | Requests / IP  | `200`                                      |
+| `status_banner`       | UI banner      | "Maintenance 22:00‑23:00 UTC"              |
+
+---
+
+## 🌍 Deployment
+
+<a id="deployment"></a>
+
+| 🌐 Where           | ⚙️ How                                        | 📝 Notes                             |
+| ------------------ | --------------------------------------------- | ------------------------------------ |
+| **Raspberry Pi 5** | Systemd (`deploy/systemd/`)                   | Needs < 1 GB RAM                     |
+| **Cloudflare**     | Free SSL + WAF                                | orange‑cloud CNAME + *Full (strict)* |
+| **Docker Hub**     | `docker pull gabrielb0x/tool-center` *(soon)* | Version‑tagged images                |
+| **Kubernetes**     | Helm chart *(WIP)*                            | autoscale & GitOps ready             |
+| **Backup**         | `scripts/backup.sh`                           | mysqldump + rclone                   |
+
+---
+
+## 📡 API Overview
+
+<a id="api-overview"></a>
+
+RESTful JSON, versioned (`/v1`). Docs auto‑generated:
+
+* **Swagger UI** → `/docs/swagger/`
+* **OpenAPI 3** JSON → `/docs/openapi.json`
+
+Example 🔑:
+
+```bash
+curl -X POST https://api.tool-center.fr/v1/auth/login \
+     -H "Content-Type: application/json" \
+     -d '{"email":"user@site.com","password":"hunter2"}'
+```
+
+---
+
+## 🧪 Testing
+
+<a id="testing"></a>
+
+```bash
+# Go unit tests
+cd api && go test ./...
+
+# Frontend lint + tests
+cd ../frontend && npm run lint && npm test
+```
+
+CI (GitHub Actions) runs both.
+
+---
+
+## 🤝 Contributing
+
+<a id="contributing"></a>
+
+1. **Fork** & `git checkout -b feat/cool dev` 🛠️
+2. **Commit**: `type(scope): subject` ✅ (Conventional Commits)
+3. **Lint / test** before PR 🔍
+4. **Open PR** & fill template ✍️
+
+First‑timer? Check **good first issue** label.
+
+---
+
+## 👥 Community
+
+<a id="community"></a>
+
+* 💬 **Discord** → [https://discord.gg/toolcenter](https://discord.gg/toolcenter)
+* 🐦 **Twitter/X** → [https://x.com/toolcenter](https://x.com/toolcenter)
+* 📝 **Blog** → *soon™*
+
+---
+
+## 🔮 Roadmap
+
+<a id="roadmap"></a>
+
+* [ ] 🔄 Auto‑update tools (webhooks)
+* [ ] 📊 Public stats & leaderboard
+* [ ] ⚔️ Gamification (XP, badges)
+* [ ] 🌐 Multi‑language UI (i18n)
+* [ ] 🐳 Docker Hub image
+* [ ] 🔐 Security audit guide
+* [ ] 🦾 AI‑powered code snippets
+* [ ] 📱 Installable PWA
+
+Vote / suggest in **Discussions**!
+
+---
+
+## 📜 Changelog
+
+<a id="changelog"></a>
+See **CHANGELOG.md** for semantic‑versioned release notes.
+
+---
+
+## 📝 License
+
+<a id="license"></a>
+
+© **2024‑2025 Gabriel B.** — Released under the **[MIT License](LICENSE)**.
+
+---
+
+> *Made with 🩶, insomnia & way too many cups of coffee.*
