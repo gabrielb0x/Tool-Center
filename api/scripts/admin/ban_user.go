@@ -77,6 +77,9 @@ func BanUserHandler(c *gin.Context) {
                req.Duration = maxHours
        }
 
+       var prevStatus string
+       _ = db.QueryRow(`SELECT account_status FROM users WHERE user_id=?`, targetID).Scan(&prevStatus)
+
        var end sql.NullTime
        if req.Duration > 0 {
                end.Valid = true
@@ -89,7 +92,7 @@ func BanUserHandler(c *gin.Context) {
                c.JSON(http.StatusInternalServerError, gin.H{"success": false})
                return
        }
-       _, _ = db.Exec(`INSERT INTO moderation_actions (moderator_id, user_id, action_type, reason, start_date, end_date) VALUES (?, ?, 'Ban', ?, NOW(), ?)`, moderatorID, targetID, req.Reason, end)
+       _, _ = db.Exec(`INSERT INTO moderation_actions (moderator_id, user_id, action_type, reason, previous_status, start_date, end_date) VALUES (?, ?, 'Ban', ?, ?, NOW(), ?)`, moderatorID, targetID, req.Reason, prevStatus, end)
        utils.LogActivity(c, moderatorID, "ban_user", true, "")
        c.JSON(http.StatusOK, gin.H{"success": true})
 }

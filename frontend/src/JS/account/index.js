@@ -616,11 +616,14 @@ function fetchSanctions() {
 function createSanctionItem(sanction, expired) {
     const div = document.createElement('div');
     div.className = 'sanction-item' + (expired ? ' expired' : '');
-    const icon = document.createElement('span');
+    const icon = document.createElement('img');
     icon.className = 'sanction-icon';
-    if (sanction.type === 'Ban') icon.textContent = '🚫';
-    else if (sanction.type === 'Warn') icon.textContent = '⚠️';
-    else icon.textContent = '⏳';
+    const urls = {
+        Ban: '/assets/error.png',
+        Warn: '/assets/alert.png',
+        Other: '/assets/update.png'
+    };
+    icon.src = urls[sanction.type] || urls.Other;
     div.appendChild(icon);
     const label = document.createElement('span');
     const end = sanction.end ? new Date(sanction.end).toLocaleString('fr-FR') : '';
@@ -636,10 +639,16 @@ function openSanctionModal(s) {
     document.getElementById('sanctionDate').textContent = s.start ? new Date(s.start).toLocaleString('fr-FR') : '';
     document.getElementById('sanctionAdmin').textContent = s.by || 'systauto';
     const btn = document.getElementById('appealSanctionBtn');
-    if (s.appeal_status === 'Pending' || s.appeal_status === 'Approved') {
+    btn.style.display = 'inline-block';
+    if (s.appeal_status === 'Pending') {
+        btn.disabled = true;
+        btn.style.cursor = 'not-allowed';
+        btn.onclick = null;
+    } else if (s.appeal_status === 'Approved') {
         btn.style.display = 'none';
     } else {
-        btn.style.display = 'inline-block';
+        btn.disabled = false;
+        btn.style.cursor = 'pointer';
         btn.onclick = () => appealSanction(s.id);
     }
     document.getElementById('sanctionDetailsModal').classList.add('active');

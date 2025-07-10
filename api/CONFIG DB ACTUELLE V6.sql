@@ -191,6 +191,7 @@ CREATE TABLE moderation_actions (
   user_id CHAR(36) NOT NULL,
   action_type ENUM('Warn','Ban','Unban','Limit_Comments','Limit_Tools'),
   reason TEXT,
+  previous_status ENUM('Good','Limited','Very Limited','At Risk','Banned') DEFAULT 'Good',
   start_date TIMESTAMP,
   end_date TIMESTAMP,
   action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -65,6 +65,7 @@ The `status_banner` section controls the outage banner displayed on the frontend
 `rate_limit` sets the maximum number of requests per IP and the time window in seconds.
 `anti_spam` adds progressive blocking and automatic sanctions when the API is spammed. A new `proxy_multiplier` field lets you tune how much stricter proxy traffic is treated.
 Sanctions can now be contested via the API. Admins review these appeals from the panel.
+When an appeal is processed, the sanction expires and the user's previous status is restored.
 Update `frontend/src/utils/config.js` to change the API base URL used by the static pages or set `VITE_API_BASE_URL` in a `.env` file for Vite.
 
 ### Build the frontend with Vite

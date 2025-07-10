@@ -42,17 +42,17 @@ func ApplySpamSanction(userID string) {
 	}
 	defer db.Close()
 	cfg := config.Get()
-	newStatus, err := DecreaseStatus(db, userID, cfg.AntiSpam.StatusDecrease)
-	if err != nil {
-		return
-	}
+       prevStatus, newStatus, err := DecreaseStatus(db, userID, cfg.AntiSpam.StatusDecrease)
+       if err != nil {
+               return
+       }
 	reason := "Abus de l'API (spam)"
 	var end *time.Time
 	if newStatus == "Banned" {
 		t := time.Now().Add(time.Duration(cfg.AntiSpam.BanHours) * time.Hour)
 		end = &t
 	}
-	recordSanction(db, userID, reason, end)
+       recordSanction(db, userID, prevStatus, reason, end)
 	var email string
 	_ = db.QueryRow("SELECT email FROM users WHERE user_id=?", userID).Scan(&email)
 	if email != "" {
@@ -61,12 +61,12 @@ func ApplySpamSanction(userID string) {
 	}
 }
 
-func recordSanction(db *sql.DB, userID, reason string, end *time.Time) {
-	if end != nil {
-		_, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, start_date, end_date) VALUES (?, 'Ban', ?, NOW(), ?)`, userID, reason, *end)
-	} else {
-		_, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, start_date) VALUES (?, 'Warn', ?, NOW())`, userID, reason)
-	}
+func recordSanction(db *sql.DB, userID, prevStatus, reason string, end *time.Time) {
+       if end != nil {
+               _, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, previous_status, start_date, end_date) VALUES (?, 'Ban', ?, ?, NOW(), ?)`, userID, reason, prevStatus, *end)
+       } else {
+               _, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, previous_status, start_date) VALUES (?, 'Warn', ?, ?, NOW())`, userID, reason, prevStatus)
+       }
 }
 
 // SpamProtectionMiddleware blocks aggressive clients and triggers sanctions on abuse.
