@@ -81,6 +81,7 @@ type Config struct {
                 MaxStrike          int     `json:"max_strike"`
                 StatusDecrease     int     `json:"status_decrease"`
                 BanHours           int     `json:"ban_hours"`
+                ProxyMultiplier    int     `json:"proxy_multiplier"`
         } `json:"anti_spam"`
 	StatusBanner struct {
 		ErrorRateThreshold  float64 `json:"error_rate_threshold"`
@@ -162,6 +163,9 @@ func Load(path string) error {
        }
        if cfg.AntiSpam.BanHours == 0 {
                cfg.AntiSpam.BanHours = 24
+       }
+       if cfg.AntiSpam.ProxyMultiplier == 0 {
+               cfg.AntiSpam.ProxyMultiplier = 2
        }
        if !cfg.AntiSpam.Enabled {
                cfg.AntiSpam.Enabled = true

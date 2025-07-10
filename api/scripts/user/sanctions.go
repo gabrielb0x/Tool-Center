@@ -34,9 +34,11 @@ func SanctionsHandler(c *gin.Context) {
         Reason sql.NullString `json:"reason"`
         Start  sql.NullTime   `json:"start"`
         End    sql.NullTime   `json:"end"`
+        By     sql.NullString `json:"by"`
+        Appeal sql.NullString `json:"appeal"`
     }
 
-    rows, err := db.Query(`SELECT action_id, action_type, reason, start_date, end_date FROM moderation_actions WHERE user_id=? ORDER BY action_date DESC`, uid)
+    rows, err := db.Query(`SELECT action_id, action_type, reason, start_date, end_date, COALESCE(moderator_id,'systauto') FROM moderation_actions WHERE user_id=? ORDER BY action_date DESC`, uid)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"success": false})
         return
@@ -47,8 +49,8 @@ func SanctionsHandler(c *gin.Context) {
     expired := make([]gin.H, 0)
     for rows.Next() {
         var s sanction
-        if err := rows.Scan(&s.ID, &s.Type, &s.Reason, &s.Start, &s.End); err == nil {
-            item := gin.H{"id": s.ID, "type": s.Type}
+        if err := rows.Scan(&s.ID, &s.Type, &s.Reason, &s.Start, &s.End, &s.By); err == nil {
+            item := gin.H{"id": s.ID, "type": s.Type, "by": s.By.String}
             if s.Reason.Valid {
                 item["reason"] = s.Reason.String
             }
@@ -57,6 +59,10 @@ func SanctionsHandler(c *gin.Context) {
             }
             if s.End.Valid {
                 item["end"] = s.End.Time
+            }
+            _ = db.QueryRow(`SELECT status FROM sanction_appeals WHERE action_id=? ORDER BY created_at DESC LIMIT 1`, s.ID).Scan(&s.Appeal)
+            if s.Appeal.Valid {
+                item["appeal_status"] = s.Appeal.String
             }
             if utils.SanctionActive(s.End) {
                 active = append(active, item)

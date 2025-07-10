@@ -67,7 +67,8 @@
     "initial_block_seconds": 30,
     "max_strike": 3,
     "status_decrease": 2,
-    "ban_hours": 24
+    "ban_hours": 24,
+    "proxy_multiplier": 2
   },
   "status_banner": {
     "error_rate_threshold": 0.3,

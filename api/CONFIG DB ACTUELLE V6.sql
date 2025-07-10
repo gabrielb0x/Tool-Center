@@ -295,3 +295,19 @@ CREATE TABLE email_queue (
   body     TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB;
+
+-- ========= SANCTION APPEALS =========
+CREATE TABLE sanction_appeals (
+  appeal_id CHAR(36) PRIMARY KEY,
+  action_id INT UNSIGNED NOT NULL,
+  user_id CHAR(36) NOT NULL,
+  message TEXT,
+  status ENUM('Pending','Approved','Rejected') DEFAULT 'Pending',
+  reviewed_by CHAR(36),
+  reviewed_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (action_id) REFERENCES moderation_actions (action_id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+  FOREIGN KEY (reviewed_by) REFERENCES users (user_id) ON DELETE SET NULL
+) ENGINE = InnoDB;
+

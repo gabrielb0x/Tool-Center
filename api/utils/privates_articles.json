@@ -347,9 +347,23 @@
     "summary": "Blocages progressifs et baisse du statut si un utilisateur spamme l'API.",
     "content": "Un middleware détecte les proxys et applique des blocages de plus en plus longs. Après plusieurs avertissements, le statut de l'utilisateur est diminué et un mail est envoyé.",
     "isNew": true,
+  "isPrivate": true,
+  "tags": [
+      "backend"
+  ]
+  },
+  {
+    "id": 38,
+    "date": "2025-11-10",
+    "displayDate": "10/11/2025",
+    "title": "Contestations de sanctions",
+    "summary": "Les utilisateurs peuvent faire appel de leurs sanctions depuis la page compte.",
+    "content": "Un endpoint permet d'envoyer une contestation. Les administrateurs disposent d'une vue pour valider ou refuser et un email est envoyé.",
+    "isNew": true,
     "isPrivate": true,
     "tags": [
-      "backend"
+      "backend",
+      "frontend"
     ]
   }
 ]
