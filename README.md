@@ -1,12 +1,6 @@
 # 🚀✨ **Tool Center**
 
-<<<<<<< HEAD
 ![Banner](./frontend/public/assets/Banniere-TC.png)
-=======
-> **English ⇩** — [Version française](#-version-francaise)
-
-![Tool Center Banner](./frontend/public/assets/Banniere-TC.png)
->>>>>>> c7e115a6981b16b4856f3838a4be61625a38265d
 
 <p align="center">
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
@@ -19,11 +13,6 @@
 </p>
 
 > **Tool Center** is the 🏡 **tracker‑free** & **ad‑free** playground where indie devs can **🚀 create**, **📦 ship** & **🔍 discover** tiny web tools ‑ all running happily on a Raspberry Pi 5.
-
-
-## About this project
-
-This repository is open-source under the [MIT License](LICENSE). It started as a personal learning project for Gabriel B., a 17-year-old high-school student in the French CIEL track. The code heavily relies on AI-assisted generation but was a great way to gain experience. You are welcome to study it, improve it and adapt it for your own needs.
 
 ---
 
@@ -156,7 +145,6 @@ All settings live in **`api/config.json`** 🔒 (`api/config.secrets.json` overr
 
 ---
 
-<<<<<<< HEAD
 ## 🌍 Deployment
 
 <a id="deployment"></a>
@@ -262,36 +250,3 @@ See **CHANGELOG.md** for semantic‑versioned release notes.
 ---
 
 > *Made with 🩶, insomnia & way too many cups of coffee.*
-=======
-## **© 2024-2025 Gabriel B. (gabrielb0x) — Released under the MIT License.**
-
----
-
-## 🇫🇷 Version française
-
-**Tool Center** est un projet open source sous licence [MIT](LICENSE). Il a été réalisé principalement pour apprendre et expérimenter. En tant qu'étudiant de 17 ans en filière professionnelle CIEL, j'ai utilisé l'intelligence artificielle pour accélérer le développement, mais j'ai beaucoup progressé grâce à ce projet. Vous êtes libres de l'étudier, de l'améliorer et de le partager.
-
-### Démarrage rapide
-
-1. Clonez le dépôt :
-   ```bash
-   git clone https://github.com/gabrielb0x/tool-center.git
-   ```
-2. Copiez `api/example config.json` vers `api/config.json` et ajustez les paramètres (base de données, SMTP, etc.).
-3. Installez les dépendances Go :
-   ```bash
-   cd api && go mod tidy
-   ```
-4. Lancez l'API :
-   ```bash
-   go run main.go
-   ```
-5. Construisez le frontend :
-   ```bash
-   cd ../frontend
-   npm install
-   npm run build
-   ```
-
-Pour plus de détails, reportez‑vous aux sections précédentes de ce README.
->>>>>>> c7e115a6981b16b4856f3838a4be61625a38265d
