@@ -44,7 +44,7 @@
 * 🛠️ **One‑click publish** workflow (UI & API)
 * 🙌 **Transparent moderation** with public logs & audit trail
 
-> **Status:** *Beta* – stable but expect the occasional paper‑cut.
+> **Status:** *Beta* – v2.
 
 ---
 
@@ -244,7 +244,7 @@ Join to get help, show off tools, or drop dank memes.
 
 ## 📜 Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for semantic‑versioned release notes.
+See [CHANGELOG.md](CHANGELOG.md) for versioned release notes.
 
 ---
 
@@ -255,4 +255,4 @@ nReleased under the **[MIT License](LICENSE)**.
 
 ---
 
-> *Built with 🤘, insomnia & way too many cups of coffee.*
+> *Someone said: “it’s not your project if you used AI to make it” — I laughed.*
