@@ -60,8 +60,6 @@ func init() {
 	go cleanupLimiters()
 }
 
-// RateLimitMiddleware restricts the number of requests per IP
-// based on the RateLimit settings in config.json.
 func RateLimitMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := c.ClientIP()
@@ -69,8 +67,22 @@ func RateLimitMiddleware() gin.HandlerFunc {
 			ip = "unknown"
 		}
 		limiter := getLimiter(ip)
-		if !limiter.Allow() {
-			c.AbortWithStatusJSON(429, gin.H{"success": false, "message": "Trop de requêtes, veuillez patienter."})
+		res := limiter.Reserve()
+		if !res.OK() {
+			c.AbortWithStatusJSON(429, gin.H{
+				"success":             false,
+				"message":             "Trop de requêtes, veuillez patienter.",
+				"retry_after_seconds": 60, // valeur par défaut si Reserve échoue
+			})
+			return
+		}
+		delay := res.Delay()
+		if delay > 0 {
+			c.AbortWithStatusJSON(429, gin.H{
+				"success":             false,
+				"message":             "Trop de requêtes, veuillez patienter.",
+				"retry_after_seconds": int(delay.Seconds()),
+			})
 			return
 		}
 		c.Next()
