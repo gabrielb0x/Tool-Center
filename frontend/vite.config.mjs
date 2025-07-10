@@ -4,12 +4,24 @@ import { fileURLToPath } from 'node:url';
 import fg from 'fast-glob';
 import tailwindcss from '@tailwindcss/vite';
 import obfuscator from 'vite-plugin-javascript-obfuscator';
+import compression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const OBF_LEVEL   = 'hard';   // 'none' | 'simple' | 'medium' | 'hard'
-const MINIFY_HARD = true;     // true = terser hard, false = esbuild
-const ghost_names = true;    // true = noms hashéss, false = Noms normaux
+// ---------------------------------------------------------------------------
+// ⚙️  Build switches (toggle as you need)
+// ---------------------------------------------------------------------------
+const OBF_LEVEL     = 'hard';       // 'none' | 'simple' | 'medium' | 'hard'
+const MINIFY_HARD   = true;         // true = terser hard, false = esbuild
+const ghost_names   = true;         // true = hashed names, false = readable names
+
+// NEW FLAGS ↓↓↓ -------------------------------------------------------------
+const ANALYZE_BUNDLE = false;            // false | true
+const COMPRESS       = 'none';          // 'none' | 'gzip' | 'brotli' | 'both'
+const CSS_MINIFIER   = 'lightningcss';  // 'esbuild' | 'lightningcss'
+const SOURCE_MAPS    = 'none';          // 'dev' | 'prod' | 'none'
+// ---------------------------------------------------------------------------
 
 const obfPresets = {
   simple: {
@@ -65,23 +77,52 @@ export default defineConfig(async () => {
     ]),
   );
 
+  const extraPlugins = [];
+
+  if (OBF_LEVEL !== 'none') {
+    extraPlugins.push(obfuscator({ apply: 'build', options: obfPresets[OBF_LEVEL] }));
+  }
+
+  if (ANALYZE_BUNDLE) {
+    extraPlugins.push(
+      visualizer({
+        filename: 'dist/stats.html',
+        template: 'treemap',
+        open: false,
+        gzipSize: true,
+        brotliSize: true,
+      }),
+    );
+  }
+
+  if (COMPRESS === 'gzip' || COMPRESS === 'both') {
+    extraPlugins.push(
+      compression({ algorithm: 'gzip', ext: '.gz' }),
+    );
+  }
+  if (COMPRESS === 'brotli' || COMPRESS === 'both') {
+    extraPlugins.push(
+      compression({ algorithm: 'brotliCompress', ext: '.br' }),
+    );
+  }
+
   return {
     root: '.',
     publicDir: 'public/',
     plugins: [
       tailwindcss(),
-      ...(OBF_LEVEL !== 'none'
-        ? [obfuscator({ apply: 'build', options: obfPresets[OBF_LEVEL] })]
-        : []),
+      ...extraPlugins,
     ],
+
     build: {
       outDir: 'dist',
       minify: MINIFY_HARD ? 'terser' : true,
-      sourcemap: false,
+      cssMinify: CSS_MINIFIER,                // esbuild or lightningcss
+      sourcemap: SOURCE_MAPS === 'prod',      // only generate in prod if flag is 'prod'
       rollupOptions: {
         input,
-        output
-      }
+        output,
+      },
     },
   };
 });
