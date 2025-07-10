@@ -101,10 +101,14 @@ func SpamProtectionMiddleware() gin.HandlerFunc {
 			})
 			return
 		}
-		interval := time.Duration(cfg.AntiSpam.IntervalSeconds) * time.Second
-		if proxy {
-			interval /= 2
-		}
+                interval := time.Duration(cfg.AntiSpam.IntervalSeconds) * time.Second
+                if proxy {
+                        if cfg.AntiSpam.ProxyMultiplier > 1 {
+                                interval /= time.Duration(cfg.AntiSpam.ProxyMultiplier)
+                        } else {
+                                interval /= 2
+                        }
+                }
 		if now.Sub(ent.last) < interval {
 			ent.count++
 		} else {
@@ -113,10 +117,14 @@ func SpamProtectionMiddleware() gin.HandlerFunc {
 		ent.last = now
 		if ent.count > cfg.AntiSpam.RequestThreshold {
 			ent.strikes++
-			block := time.Duration(cfg.AntiSpam.InitialBlockSeconds) * time.Second * time.Duration(ent.strikes)
-			if proxy {
-				block *= 2
-			}
+                        block := time.Duration(cfg.AntiSpam.InitialBlockSeconds) * time.Second * time.Duration(ent.strikes)
+                        if proxy {
+                                m := cfg.AntiSpam.ProxyMultiplier
+                                if m == 0 {
+                                        m = 2
+                                }
+                                block *= time.Duration(m)
+                        }
 			ent.blockedUntil = now.Add(block)
 			ent.count = 0
 		}

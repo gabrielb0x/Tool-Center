@@ -616,8 +616,57 @@ function fetchSanctions() {
 function createSanctionItem(sanction, expired) {
     const div = document.createElement('div');
     div.className = 'sanction-item' + (expired ? ' expired' : '');
+    const icon = document.createElement('span');
+    icon.className = 'sanction-icon';
+    if (sanction.type === 'Ban') icon.textContent = '🚫';
+    else if (sanction.type === 'Warn') icon.textContent = '⚠️';
+    else icon.textContent = '⏳';
+    div.appendChild(icon);
+    const label = document.createElement('span');
     const end = sanction.end ? new Date(sanction.end).toLocaleString('fr-FR') : '';
-    div.textContent = `${sanction.type} - ${sanction.reason || ''}${end ? ' (jusqu\u2019au ' + end + ')' : ''}`;
+    label.textContent = `${sanction.type}${end ? ' (jusqu\u2019au ' + end + ')' : ''}`;
+    div.appendChild(label);
+    div.addEventListener('click', () => openSanctionModal(sanction));
     return div;
 }
+
+function openSanctionModal(s) {
+    document.getElementById('sanctionModalTitle').textContent = s.type;
+    document.getElementById('sanctionReason').textContent = s.reason || 'Aucune raison';
+    document.getElementById('sanctionDate').textContent = s.start ? new Date(s.start).toLocaleString('fr-FR') : '';
+    document.getElementById('sanctionAdmin').textContent = s.by || 'systauto';
+    const btn = document.getElementById('appealSanctionBtn');
+    if (s.appeal_status === 'Pending' || s.appeal_status === 'Approved') {
+        btn.style.display = 'none';
+    } else {
+        btn.style.display = 'inline-block';
+        btn.onclick = () => appealSanction(s.id);
+    }
+    document.getElementById('sanctionDetailsModal').classList.add('active');
+}
+
+async function appealSanction(id) {
+    const msg = prompt('Message de contestation:');
+    if (!msg) return;
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${apiBaseURL}/user/sanctions/${id}/appeal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ message: msg })
+    });
+    if (res.ok) {
+        showSuccessModal('Contestation envoyée', 'Votre demande sera traitée prochainement.');
+    } else {
+        showError('Erreur lors de la contestation');
+    }
+    document.getElementById('sanctionDetailsModal').classList.remove('active');
+}
+
+document.getElementById('closeSanctionModal').addEventListener('click', () => {
+    document.getElementById('sanctionDetailsModal').classList.remove('active');
+});
+
+document.getElementById('closeSanctionDetailsBtn').addEventListener('click', () => {
+    document.getElementById('sanctionDetailsModal').classList.remove('active');
+});
 

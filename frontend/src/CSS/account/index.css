@@ -1288,3 +1288,8 @@ header.active {
     transition:opacity .2s;
 }
 .username-edit:hover { opacity:1;}
+.sanction-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--dark-border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:background .2s;}
+.sanction-item:hover{background:var(--primary-light);}
+.sanction-item.expired{opacity:0.6;cursor:default;}
+.sanction-icon{font-size:1.3rem;}
+
