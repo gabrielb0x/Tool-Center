@@ -2,11 +2,17 @@ package admin
 
 import (
     "net/http"
+    "time"
+    "fmt"
     "toolcenter/config"
     "toolcenter/utils"
 
     "github.com/gin-gonic/gin"
 )
+
+func buildDecisionEmail(username, msg string) string {
+    return fmt.Sprintf(`<!DOCTYPE html><html><body style="font-family:sans-serif;background:#121212;color:#e0e0e0;padding:20px;"><h2>Décision de contestation</h2><p>Bonjour %s,<br>%s</p><p style="font-size:12px;color:#888;">%d Tool Center</p></body></html>`, username, msg, time.Now().Year())
+}
 
 func ListAppealsHandler(c *gin.Context) {
     db, err := config.OpenDB()
@@ -71,14 +77,19 @@ func ReviewAppealHandler(c *gin.Context) {
     status := "Rejected"
     if req.Approve {
         status = "Approved"
-        _, _ = db.Exec(`UPDATE moderation_actions SET end_date=NOW() WHERE action_id=?`, actionID)
     }
+    var prev string
+    _ = db.QueryRow(`SELECT previous_status FROM moderation_actions WHERE action_id=?`, actionID).Scan(&prev)
+    if prev != "" {
+        _, _ = db.Exec(`UPDATE users SET account_status=? WHERE user_id=?`, prev, userID)
+    }
+    _, _ = db.Exec(`UPDATE moderation_actions SET end_date=NOW() WHERE action_id=?`, actionID)
     _, _ = db.Exec(`UPDATE sanction_appeals SET status=?, reviewed_by=?, reviewed_at=NOW() WHERE appeal_id=?`, status, adminID, appealID)
 
-    var email string
-    _ = db.QueryRow(`SELECT email FROM users WHERE user_id=?`, userID).Scan(&email)
+    var username, email string
+    _ = db.QueryRow(`SELECT username,email FROM users WHERE user_id=?`, userID).Scan(&username, &email)
     if email != "" {
-        body := utils.BuildStyledEmail("Décision de contestation", req.Message, "", "")
+        body := buildDecisionEmail(username, req.Message)
         _ = utils.QueueEmail(db, email, "Contestation", body)
     }
 

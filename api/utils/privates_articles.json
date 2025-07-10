@@ -361,9 +361,21 @@
     "content": "Un endpoint permet d'envoyer une contestation. Les administrateurs disposent d'une vue pour valider ou refuser et un email est envoyé.",
     "isNew": true,
     "isPrivate": true,
-    "tags": [
+  "tags": [
       "backend",
       "frontend"
     ]
+  }
+  ,
+  {
+    "id": 39,
+    "date": "2025-11-15",
+    "displayDate": "15/11/2025",
+    "title": "Amélioration des contestations",
+    "summary": "Les sanctions expirent après révision et le statut est restauré.",
+    "content": "Lorsqu'une contestation est acceptée ou refusée, la sanction est marquée comme expirée et le statut du compte revient à son niveau précédent.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": ["backend","frontend"]
   }
 ]

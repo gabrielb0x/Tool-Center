@@ -1,8 +1,9 @@
 package worker
 
 import (
-	"log"
-	"time"
+        "log"
+        "strings"
+        "time"
 
 	"toolcenter/config"
 
@@ -82,7 +83,11 @@ func sendEmail(to, subject, body string) {
 	msg.SetHeader("From", cfg.Email.From)
 	msg.SetHeader("To", to)
 	msg.SetHeader("Subject", subject)
-	msg.SetBody("text/plain", body)
+        ctype := "text/plain"
+        if strings.Contains(body, "<html") {
+                ctype = "text/html"
+        }
+        msg.SetBody(ctype, body)
 
 	d := gomail.NewDialer(cfg.Email.Host, cfg.Email.Port, cfg.Email.Username, cfg.Email.Password)
 	d.SSL = true

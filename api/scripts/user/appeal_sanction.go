@@ -3,6 +3,8 @@ package user
 import (
     "net/http"
     "strconv"
+    "time"
+    "fmt"
 
     "toolcenter/config"
     "toolcenter/utils"
@@ -13,6 +15,15 @@ import (
 
 type appealRequest struct {
     Message string `json:"message"`
+}
+
+func buildAppealEmail(username string) string {
+    return fmt.Sprintf(`<!DOCTYPE html>
+<html><body style="font-family:sans-serif;background:#121212;color:#e0e0e0;padding:20px;">
+<h2>Contestation enregistrée</h2>
+<p>Bonjour %s,<br>Votre contestation a bien été reçue et sera examinée prochainement.</p>
+<p style="font-size:12px;color:#888;">%d Tool Center</p>
+</body></html>`, username, time.Now().Year())
 }
 
 func AppealSanctionHandler(c *gin.Context) {
@@ -69,10 +80,10 @@ func AppealSanctionHandler(c *gin.Context) {
         return
     }
 
-    var email string
-    _ = db.QueryRow(`SELECT email FROM users WHERE user_id=?`, uid).Scan(&email)
+    var username, email string
+    _ = db.QueryRow(`SELECT username,email FROM users WHERE user_id=?`, uid).Scan(&username, &email)
     if email != "" {
-        body := utils.BuildStyledEmail("Contestation enregistrée", "Votre contestation a bien été reçue et sera examinée par l'équipe.", "", "")
+        body := buildAppealEmail(username)
         _ = utils.QueueEmail(db, email, "Contestation reçue", body)
     }
 

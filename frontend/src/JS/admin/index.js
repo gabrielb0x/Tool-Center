@@ -1,5 +1,5 @@
 const BASE_API_URL = PANEL_CONFIG.API_BASE;
-const SECTION_IDS = { users: 'users-section', logs: 'logs-section' };
+const SECTION_IDS = { users: 'users-section', logs: 'logs-section', appeals: 'appeals-section' };
 let currentUserId = null;
 let currentPage = 1;
 let currentUserRole = null;
@@ -228,6 +228,18 @@ async function fetchSystemLogs(page = 1) {
     }
 }
 
+async function fetchAppeals(page = 1) {
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${BASE_API_URL}/admin/appeals?page=${page}`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error(res.status);
+        return await res.json();
+    } catch (e) {
+        showToast('error', `Erreur chargement contestations: ${e}`);
+        return { appeals: [], total: 0 };
+    }
+}
+
 async function fetchStats() {
     showLoadingSkeleton('stats');
     
@@ -324,6 +336,26 @@ async function unbanUser(userId) {
     showToast('error', `Erreur lors du débannissement: ${error.message}`);
     console.error('Error unbanning user:', error);
     return null;
+    }
+}
+
+async function reviewAppeal(id, approve, message) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${BASE_API_URL}/admin/appeals/${id}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ approve, message })
+        });
+        if (!response.ok) throw new Error(response.status);
+        showToast('success', 'Contestation mise à jour');
+        return true;
+    } catch (e) {
+        showToast('error', `Erreur: ${e}`);
+        return false;
     }
 }
 
@@ -697,6 +729,40 @@ function renderSystemLogs(logs, page = 1, total = 0) {
     return container;
 }
 
+function renderAppealsTable(appeals, page = 1, total = 0) {
+    const container = document.createElement('div');
+    container.innerHTML = `
+    <h2 class="section-title">
+        <i class="fas fa-gavel"></i> Contestations
+    </h2>
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead><tr><th>Utilisateur</th><th>Message</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="appeals-body"></tbody>
+        </table>
+        <div class="pagination" id="appeals-pagination"></div>
+    </div>`;
+    const body = container.querySelector('#appeals-body');
+    appeals.forEach(ap => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${ap.user_id}</td><td>${ap.message}</td><td>${ap.status}</td><td><button class="btn btn-success" data-action="approve" data-id="${ap.appeal_id}">Accepter</button> <button class="btn btn-danger" data-action="reject" data-id="${ap.appeal_id}">Refuser</button></td>`;
+        body.appendChild(tr);
+    });
+    container.querySelectorAll('button[data-action]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            const id=btn.getAttribute('data-id');
+            const approve=btn.getAttribute('data-action')==='approve';
+            const msg=prompt('Message pour l\'utilisateur:')||'';
+            reviewAppeal(id,approve,msg).then(ok=>{if(ok) loadAppeals(page);});
+        });
+    });
+    const pag = container.querySelector('#appeals-pagination');
+    const maxPage = Math.max(1, Math.ceil(total/10));
+    pag.innerHTML = `<button class="page-btn" ${page<=1?'disabled':''} data-p="${page-1}"><i class="fas fa-chevron-left"></i></button><span class="page-info">Page ${page}/${maxPage}</span><button class="page-btn" ${page>=maxPage?'disabled':''} data-p="${page+1}"><i class="fas fa-chevron-right"></i></button>`;
+    pag.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const p=parseInt(b.dataset.p);if(p>=1&&p<=maxPage)loadAppeals(p);}));
+    return container;
+}
+
 function renderUserActivity(logs, page = 1, total = 0) {
     const container = document.createElement('div');
     if (!logs.length) {
@@ -977,20 +1043,38 @@ async function loadSystemLogs(page = 1) {
     placeholder.replaceWith(logsElement);
 }
 
+async function loadAppeals(page = 1) {
+    const existing = document.getElementById(SECTION_IDS.appeals);
+    if (existing) existing.remove();
+
+    const placeholder = renderAppealsTable([]);
+    placeholder.id = SECTION_IDS.appeals;
+    adminContent.appendChild(placeholder);
+
+    const { appeals, total } = await fetchAppeals(page);
+    const element = renderAppealsTable(appeals, page, total);
+    element.id = SECTION_IDS.appeals;
+    placeholder.replaceWith(element);
+}
+
 function navigate(path) {
     history.pushState({}, '', path);
     if (path.endsWith('/logs')) {
-    loadSystemLogs();
+        loadSystemLogs();
+    } else if (path.endsWith('/appeals')) {
+        loadAppeals();
     } else {
-    loadUsers();
+        loadUsers();
     }
 }
 
 window.addEventListener('popstate', () => {
     if (location.pathname.endsWith('/logs')) {
-    loadSystemLogs();
+        loadSystemLogs();
+    } else if (location.pathname.endsWith('/appeals')) {
+        loadAppeals();
     } else {
-    loadUsers();
+        loadUsers();
     }
 });
 
@@ -1005,6 +1089,7 @@ async function initAdminPanel() {
     await loadStats();
     await loadUsers();
     await loadSystemLogs();
+    await loadAppeals();
     
     setTimeout(() => {
     preloader.style.opacity = '0';
