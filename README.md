@@ -1,6 +1,6 @@
 # 🚀✨ **Tool Center**
 
-![Banner](./frontend/public/assets/Banniere-TC.png)
+![Tool Center Banner](./frontend/public/assets/Banniere-TC.png)
 
 <p align="center">
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg"></a>
@@ -12,169 +12,176 @@
   <img alt="Node Version" src="https://img.shields.io/node/v/rollup?color=orange&label=node">
 </p>
 
-> **Tool Center** is the 🏡 **tracker‑free** & **ad‑free** playground where indie devs can **🚀 create**, **📦 ship** & **🔍 discover** tiny web tools ‑ all running happily on a Raspberry Pi 5.
+> **Tool Center** is a **tracker‑free**, **ad‑free** playground where indie devs can **🚀 create**, **📨 publish** & **🔍 discover** useful web tools. Built with ❤️, ☕ and way too many commits at 3 a.m.
 
 ---
 
 ## 📑 Table of Contents
 
-* [🧠 About](#about)
-* [✨ Features](#features)
-* [🚀 Live Demo](#live-demo)
-* [⚡ Quick Start](#quick-start)
-* [🧱 Project Structure](#project-structure)
-* [🔧 Configuration](#configuration)
-* [🌍 Deployment](#deployment)
-* [📡 API Overview](#api-overview)
-* [🧪 Testing](#testing)
-* [🤝 Contributing](#contributing)
-* [👥 Community](#community)
-* [🔮 Roadmap](#roadmap)
-* [📜 Changelog](#changelog)
-* [📝 License](#license)
+* [🧠 About](#-about)
+* [✨ Features](#-features)
+* [🚀 Live Demo](#-live-demo)
+* [⚡ Quick Start](#-quick-start)
+* [🧱 Project Structure](#-project-structure)
+* [🔧 Configuration](#-configuration)
+* [🌍 Deployment](#-deployment)
+* [📡 API Overview](#-api-overview)
+* [🧪 Testing](#-testing)
+* [🤝 Contributing](#-contributing)
+* [👥 Community](#-community)
+* [🔮 Roadmap](#-roadmap)
+* [📜 Changelog](#-changelog)
+* [📝 License](#-license)
 
 ---
 
 ## 🧠 About
 
-<a id="about"></a>
+**Tool Center** began as a passion project by [@gabrielb0x](https://github.com/gabrielb0x), and has grown into a modern, community-powered platform. The mission 🔭: provide a **⚡ lightning-fast**, **🔒 privacy-focused**, and **✨ engaging** space for publishing and sharing useful web tools — without ads or invasive trackers.
 
-**Tool Center** started as the late‑night idea of [@gabrielb0x](https://github.com/gabrielb0x) and quickly snowballed into a community‑driven platform. Mission 🔭: offer a **⚡ fast**, **🔒 privacy‑first** and **✨ fun** alternative to ad‑infested “online tool” sites.
+* 🏎️ **Runs on a Raspberry Pi 5** without breaking a sweat
+* 🕵️ **Zero trackers** – your data ≠ product
+* 🛠️ **One‑click publish** workflow (UI & API)
+* 🙌 **Transparent moderation** with public logs & audit trail
 
-* 🏎️ **Runs** on a Raspberry Pi 5 (ARM64)
-* 🕵️ **Zero trackers** – your data 👉 *yours*
-* 🛠️ **One‑click publish** workflow (UI & REST API)
-* 🛡️ **Transparent moderation** – public JSON audit log
-
-> **Status:** *Beta* – solid, but you might still find sharp edges.
+> **Status:** *Beta* – stable but expect the occasional paper‑cut.
 
 ---
 
 ## ✨ Features
 
-<a id="features"></a>
-
-| 📂 Area            | 🌟 Highlights                                                                       |
-| ------------------ | ----------------------------------------------------------------------------------- |
-| 👤 **Accounts**    | Sign‑up / login, avatar upload, profile stats, social links                         |
-| 🔐 **Security**    | Password reset, **TOTP 2FA**, brute‑force shield, rate‑limit, anti‑spam             |
-| 🛠️ **Tools**      | Create, edit, publish, like, comment, share, **versioning** *(soon)*                |
-| 🛡️ **Moderation** | Role‑based perms, temp/perma bans, auto‑unban, sanction appeals, exportable logs    |
-| 🎨 **UX**          | Responsive layout, dark‑mode, keyboard shortcuts, accessible components, PWA splash |
-| ⚙️ **DevOps**      | OpenAPI 3 docs, GitHub Actions, Docker/Compose, semantic releases, Dependabot       |
-| 📈 **Analytics**   | Self‑hosted [Plausible](https://plausible.io/) (💡 opt‑in)                          |
+| 🗂️ Category       | 🌟 Highlights                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| 🙍‍♂️ **Accounts** | Sign‑up / login, avatar upload, profile stats, social links                                 |
+| 🔐 **Security**    | Password reset, **TOTP 2FA**, active sessions, brute‑force shield, rate‑limit, anti‑spam    |
+| 🛠️ **Tools**      | Create, edit, publish, like, comment, share, **versioning** *(coming)*                      |
+| 🛡️ **Moderation** | Role‑based perms, temp/perma bans, auto‑unban, sanction appeals, JSON exportable logs       |
+| 🎨 **UX**          | Responsive layout, dark mode, keyboard shortcuts, accessible components, PWA offline splash |
+| 🏗️ **DevOps**     | OpenAPI 3 docs, GitHub Actions CI, Docker/Compose, semantic releases, Dependabot            |
+| 📈 **Analytics**   | Self‑hosted [Plausible](https://plausible.io/) integration *(opt‑in)*                       |
 
 ---
 
 ## 🚀 Live Demo
 
-<a id="live-demo"></a>
+🔗 **[https://tool-center.fr](https://tool-center.fr)** — jump in and break things! (it’s a test‑bed)
 
-👉 **[https://tool-center.fr](https://tool-center.fr)** — come poke it!
-
-|                       🔐 Log in                      |                         📊 Dashboard                        |
+|                       🔐 Login                       |                         📊 Dashboard                        |
 | :--------------------------------------------------: | :---------------------------------------------------------: |
 | ![Login](./frontend/public/assets/login-preview.png) | ![Dashboard](./frontend/public/assets/dashbord-preview.png) |
 
-*UI snapshots from **2025‑05‑24**.*
+*Screenshots: **2025‑05‑24** – the UI changes faster than you can say “hot‑reload”.*
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start
 
-<a id="quick-start"></a>
-
-### 🐳 Docker (recommended)
+### 🐳 Option A — Docker *(recommended)*
 
 ```bash
 # 1 › clone & cd
 git clone https://github.com/gabrielb0x/tool-center.git && cd tool-center
 
-# 2 › config
+# 2 › copy env templates
 cp api/example\ config.json api/config.json
+touch api/config.secrets.json           # optional secrets override
 cp deploy/.env.example deploy/.env
 
-# 3 › run 🚀
+# 3 › spin it up 🚀
 docker compose up -d --build
 ```
 
-Stacks included 🧩: `api` (Go), `db` (MariaDB 11) & `frontend` (Nginx).
+Stack:
 
-### 🛠️ Manual
+* **api** ← Go 1.22 + Gin
+* **db** ← MariaDB 11 (persisted volume)
+* **frontend** ← Nginx static
 
-```bash
-# API (Go 1.22+)
-cd api && go mod tidy && go run .
+### 🛠️ Option B — Manual
 
-# Front (Node 20+)
-cd ../frontend && npm i && npm run build  # → ./dist
-```
+> Requires **Go 1.22+** & **Node 20+**.
+
+1. **API**
+
+   ```bash
+   cd api
+   go mod tidy && go run .
+   ```
+2. **Frontend**
+
+   ```bash
+   cd ../frontend
+   npm i && npm run build  # outputs ./dist
+   ```
+3. **Proxy** – see [`deploy/nginx.conf`](deploy/nginx.conf) for TLS & caching.
 
 ---
 
-## 🧱 Project Structure
-
-<a id="project-structure"></a>
+## 🧱 Project Structure
 
 ```text
 📦 tool-center
- ┣ api/            # Go source, config, mail templates
+ ┣ api/            # Go source, config, migrations, mail templates
  ┣ frontend/       # Vanilla JS + Vite static site
  ┣ deploy/         # Docker, Nginx, systemd, k8s (WIP)
- ┣ docs/           # Diagrams, ADRs, threat‑model
- ┣ scripts/        # Helpers & seeders
- ┗ tests/          # Go + JS suites
+ ┣ scripts/        # Helper CLI & data seeders
+ ┣ docs/           # Architecture diagrams, ADRs, threat‑model
+ ┣ tests/          # Go + JS test suites
+ ┗ .github/        # Workflows, issue templates, FUNDING.yml
 ```
 
 ---
 
 ## 🔧 Configuration
 
-<a id="configuration"></a>
+Everything lives in **`api/config.json`** 🔒 (override secrets in `api/config.secrets.json`).
 
-All settings live in **`api/config.json`** 🔒 (`api/config.secrets.json` overrides 🔑).
+| 🗝️ Key               | 📓 Description | 🧩 Example                                              |
+| --------------------- | -------------- | ------------------------------------------------------- |
+| `port`                | API port       | `8080`                                                  |
+| `database.dsn`        | MariaDB DSN    | `user:pass@tcp(db:3306)/toolcenter`                     |
+| `smtp`                | Mail server    | `{ "host":"smtp.gmx.net", "port":587, … }`              |
+| `cors_allowed_origin` | CORS origins   | `"https://tool-center.fr,https://admin.tool-center.fr"` |
+| `rate_limit.limit`    | Requests / IP  | `200`                                                   |
+| `status_banner`       | UI banner      | "Maintenance 22:00‑23:00 UTC"                           |
 
-| 🗝️ Key               | 📓 Description | 🧩 Example                                 |
-| --------------------- | -------------- | ------------------------------------------ |
-| `port`                | API port       | `8080`                                     |
-| `database.dsn`        | MariaDB DSN    | `user:pass@tcp(db:3306)/toolcenter`        |
-| `smtp`                | Mail server    | `{ "host":"smtp.gmx.net", "port":587, … }` |
-| `cors_allowed_origin` | CORS origins   | `"https://tool-center.fr"`                 |
-| `rate_limit.limit`    | Requests / IP  | `200`                                      |
-| `status_banner`       | UI banner      | "Maintenance 22:00‑23:00 UTC"              |
+> **Tip:** all fields are commented – open the file, read, tweak, profit.
 
 ---
 
 ## 🌍 Deployment
 
-<a id="deployment"></a>
-
-| 🌐 Where           | ⚙️ How                                        | 📝 Notes                             |
-| ------------------ | --------------------------------------------- | ------------------------------------ |
-| **Raspberry Pi 5** | Systemd (`deploy/systemd/`)                   | Needs < 1 GB RAM                     |
-| **Cloudflare**     | Free SSL + WAF                                | orange‑cloud CNAME + *Full (strict)* |
-| **Docker Hub**     | `docker pull gabrielb0x/tool-center` *(soon)* | Version‑tagged images                |
-| **Kubernetes**     | Helm chart *(WIP)*                            | autoscale & GitOps ready             |
-| **Backup**         | `scripts/backup.sh`                           | mysqldump + rclone                   |
+| 🌏 Where           | ⚙️ How                                        | 📝 Notes                                 |
+| ------------------ | --------------------------------------------- | ---------------------------------------- |
+| **Raspberry Pi 5** | Systemd units in `deploy/systemd/`            | < 1 GB RAM required                      |
+| **Cloudflare**     | Free SSL, caching, WAF                        | orange‑cloud CNAME + *Full (strict)* TLS |
+| **Docker Hub**     | `docker pull gabrielb0x/tool-center` *(soon)* | Version‑tagged images                    |
+| **Kubernetes**     | Helm chart *(WIP)*                            | autoscale & GitOps ready                 |
+| **Backup**         | `scripts/backup.sh` (mysqldump + rclone)      | Cron‑friendly                            |
 
 ---
 
-## 📡 API Overview
+## 📡 API Overview
 
-<a id="api-overview"></a>
-
-RESTful JSON, versioned (`/v1`). Docs auto‑generated:
-
-* **Swagger UI** → `/docs/swagger/`
-* **OpenAPI 3** JSON → `/docs/openapi.json`
-
-Example 🔑:
+RESTful, JSON, versioned (`/v1`). Full docs auto‑generated (Swagger / ReDoc).
 
 ```bash
 curl -X POST https://api.tool-center.fr/v1/auth/login \
      -H "Content-Type: application/json" \
      -d '{"email":"user@site.com","password":"hunter2"}'
 ```
+
+### Frequent Endpoints
+
+| 🛠️ Verb | 🛣️ Path                  | 📚 Purpose                    |
+| -------- | ------------------------- | ----------------------------- |
+| `POST`   | `/v1/auth/login`          | Login & obtain JWT            |
+| `GET`    | `/v1/tools`               | List public tools (paginated) |
+| `POST`   | `/v1/tools`               | Publish new tool              |
+| `GET`    | `/v1/mod/logs`            | Moderation logs (admin)       |
+| `POST`   | `/v1/admin/users/:id/ban` | Ban user                      |
+
+More? → hit `/docs/swagger/`.
 
 ---
 
@@ -184,69 +191,68 @@ curl -X POST https://api.tool-center.fr/v1/auth/login \
 
 ```bash
 # Go unit tests
-cd api && go test ./...
+a) cd api && go test ./...
 
-# Frontend lint + tests
-cd ../frontend && npm run lint && npm test
+# Frontend lint + unit tests
+b) cd ../frontend && npm run lint && npm test
 ```
 
-CI (GitHub Actions) runs both.
+CI (GitHub Actions) executes both pipelines on every PR.
 
 ---
 
 ## 🤝 Contributing
 
-<a id="contributing"></a>
-
-1. **Fork** & `git checkout -b feat/cool dev` 🛠️
-2. **Commit**: `type(scope): subject` ✅ (Conventional Commits)
+1. **Fork** & `git checkout -b feat/cool-stuff dev` 📚
+2. **Commit**: `type(scope): subject` ✅ (see Conventional Commits)
 3. **Lint / test** before PR 🔍
 4. **Open PR** & fill template ✍️
 
-First‑timer? Check **good first issue** label.
+First‑timer? Check [good first issue](https://github.com/gabrielb0x/tool-center/labels/good%20first%20issue).
+
+### Code Style
+
+* **Go**: `go fmt`, `go vet`, `golangci‑lint run`
+* **JS**: `eslint`, `prettier`, `vitest`
 
 ---
 
 ## 👥 Community
 
-<a id="community"></a>
-
 * 💬 **Discord** → [https://discord.gg/toolcenter](https://discord.gg/toolcenter)
 * 🐦 **Twitter/X** → [https://x.com/toolcenter](https://x.com/toolcenter)
-* 📝 **Blog** → *soon™*
+* 📝 **Blog** → [https://blog.tool-center.fr](https://blog.tool-center.fr) *(soon)*
+
+Join to get help, show off tools, or drop dank memes.
 
 ---
 
 ## 🔮 Roadmap
 
-<a id="roadmap"></a>
-
-* [ ] 🔄 Auto‑update tools (webhooks)
+* [ ] 🔄 Tool auto‑update (webhooks)
 * [ ] 📊 Public stats & leaderboard
 * [ ] ⚔️ Gamification (XP, badges)
 * [ ] 🌐 Multi‑language UI (i18n)
-* [ ] 🐳 Docker Hub image
+* [ ] 🐳 Docker Hub image
 * [ ] 🔐 Security audit guide
-* [ ] 🦾 AI‑powered code snippets
-* [ ] 📱 Installable PWA
+* [ ] 🦾 AI‑powered code snippets for docs
+* [ ] 📱 Progressive Web App (installable)
 
-Vote / suggest in **Discussions**!
+💡 Upvote or suggest in [Discussions](https://github.com/gabrielb0x/tool-center/discussions).
 
 ---
 
 ## 📜 Changelog
 
-<a id="changelog"></a>
-See **CHANGELOG.md** for semantic‑versioned release notes.
+See [CHANGELOG.md](CHANGELOG.md) for semantic‑versioned release notes.
 
 ---
 
 ## 📝 License
 
-<a id="license"></a>
-
-© **2024‑2025 Gabriel B.** — Released under the **[MIT License](LICENSE)**.
+Copyright © **2024‑2025 Gabriel B.** &#x20;
+nReleased under the **[MIT License](LICENSE)**.
 
 ---
 
-> *Made with 🩶, insomnia & way too many cups of coffee.*
+> *Built with 🤘, insomnia & way too many cups of coffee.*
