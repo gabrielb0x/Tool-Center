@@ -32,9 +32,10 @@ func DecreaseStatus(db *sql.DB, userID string, n int) (string, string, error) {
 	return current, newStatus, nil
 }
 
-func QueueEmail(db *sql.DB, to, subject, body string) error {
-	_, err := db.Exec(`INSERT INTO email_queue (to_email, subject, body) VALUES (?, ?, ?)`, to, subject, body)
-	return err
+// QueueEmail now sends the email immediately instead of storing it in a queue.
+// The database parameter is kept for backward compatibility but is unused.
+func QueueEmail(_ *sql.DB, to, subject, body string) error {
+	return SendEmail(to, subject, body)
 }
 
 func SanctionActive(end sql.NullTime) bool {

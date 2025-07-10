@@ -1,319 +1,586 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ToolCenter - Mon Compte</title>
-    <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
-    <link rel="stylesheet" href="/src/CSS/account/index.css">
-    <link rel="preload" href="/assets/switcher-noir.png" as="image">
-</head>
-<body>
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png" />
+    <link rel="stylesheet" href="/src/CSS/account/index.css" />
+    <link rel="preload" href="/assets/switcher-noir.png" as="image" />
+  </head>
+  <body>
     <div class="success-modal" id="successModal">
-        <div class="success-modal-content">
-            <img src="/assets/verified-icon.png" alt="Succès" class="success-icon">
-            <h3 class="success-title">Email vérifié !</h3>
-            <p class="success-message">Votre adresse email a été vérifiée avec succès. Vous pouvez maintenant profiter pleinement de votre compte ToolCenter.</p>
-            <button class="success-btn" id="successModalClose">Fermer</button>
-        </div>
+      <div class="success-modal-content">
+        <img
+          src="/assets/verified-icon.png"
+          alt="Succès"
+          class="success-icon"
+        />
+        <h3 class="success-title">Email vérifié !</h3>
+        <p class="success-message">
+          Votre adresse email a été vérifiée avec succès. Vous pouvez maintenant
+          profiter pleinement de votre compte ToolCenter.
+        </p>
+        <button class="success-btn" id="successModalClose">Fermer</button>
+      </div>
     </div>
 
     <div class="auth-container" id="authContainer">
-        <div class="auth-card">
-            <h2 class="auth-title">Connectez-vous</h2>
-            <p class="auth-message">Vous devez être connecté pour accéder à cette page. Veuillez vous connecter ou créer un compte.</p>
-            <div class="auth-buttons">
-                <a href="/signin" class="auth-btn auth-btn-primary">Se connecter</a>
-                <a href="/signup" class="auth-btn auth-btn-secondary">Créer un compte</a>
-            </div>
+      <div class="auth-card">
+        <h2 class="auth-title">Connectez-vous</h2>
+        <p class="auth-message">
+          Vous devez être connecté pour accéder à cette page. Veuillez vous
+          connecter ou créer un compte.
+        </p>
+        <div class="auth-buttons">
+          <a href="/signin" class="auth-btn auth-btn-primary">Se connecter</a>
+          <a href="/signup" class="auth-btn auth-btn-secondary"
+            >Créer un compte</a
+          >
         </div>
+      </div>
     </div>
 
     <div class="main-content-container" id="mainContentContainer">
-        <header id="mainHeader">
-            <div class="left-header">
-                <a href="/" class="logo-link">
-                    <img src="/assets/tc_logo.webp" alt="ToolCenter Logo" class="logo">
-                    <span class="site-title">ToolCenter</span>
-                </a>
+      <header id="mainHeader">
+        <div class="left-header">
+          <a href="/" class="logo-link">
+            <img
+              src="/assets/tc_logo.webp"
+              alt="ToolCenter Logo"
+              class="logo"
+            />
+            <span class="site-title">ToolCenter</span>
+          </a>
+        </div>
+        <div class="right-header">
+          <button class="theme-switcher" id="theme-switcher">
+            <img
+              src="/assets/switcher.png"
+              alt="Changer de thème"
+              class="theme-icon"
+              id="theme-icon"
+            />
+          </button>
+        </div>
+      </header>
+
+      <div class="container" id="mainContainer">
+        <nav class="sidebar">
+          <div class="sidebar-header">
+            <h3 class="sidebar-title">Navigation</h3>
+          </div>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="/account/" class="active">
+                <img
+                  src="/assets/account.png"
+                  alt="Informations"
+                  class="sidebar-icon"
+                />
+                Informations du compte
+              </a>
+            </li>
+            <li>
+              <a href="/account/tools">
+                <img src="/assets/code.png" alt="Tools" class="sidebar-icon" />
+                Tools Publiés
+              </a>
+            </li>
+            <li>
+              <a href="/account/security">
+                <img
+                  src="/assets/security-icon.png"
+                  alt="Sécurité"
+                  class="sidebar-icon"
+                />
+                Sécurité
+              </a>
+            </li>
+            <li>
+              <a href="/account/preferences">
+                <img
+                  src="/assets/preferences-icon.png"
+                  alt="Préférences"
+                  class="sidebar-icon"
+                />
+                Préférences
+              </a>
+            </li>
+            <li>
+              <a href="/account/confidentiality">
+                <img
+                  src="/assets/privacy-icon.png"
+                  alt="Confidentialité"
+                  class="sidebar-icon"
+                />
+                Confidentialité
+              </a>
+            </li>
+            <li>
+              <a href="/account/notifications">
+                <img
+                  src="/assets/newsletter.png"
+                  alt="Notifications"
+                  class="sidebar-icon"
+                />
+                Notifications
+              </a>
+            </li>
+            <li>
+              <a href="/account/logout">
+                <img
+                  src="/assets/logout.png"
+                  alt="Notifications"
+                  class="sidebar-icon"
+                />
+                Se déconnecter
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="main-content">
+          <div class="profile-header">
+            <h1 class="profile-title">Profil Utilisateur</h1>
+            <p class="profile-subtitle">
+              Gérez vos informations personnelles, vos paramètres et votre
+              activité sur ToolCenter
+            </p>
+          </div>
+
+          <div id="errorContainer" class="hidden"></div>
+
+          <div class="profile-card" style="padding: 0">
+            <div class="tabs-header">
+              <button class="tab-btn active" id="tabMainBtn">
+                Infos principales
+              </button>
+              <button class="tab-btn" id="tabStatusBtn">
+                Statut du compte
+              </button>
             </div>
-            <div class="right-header">
-                <button class="theme-switcher" id="theme-switcher">
-                    <img src="/assets/switcher.png" alt="Changer de thème" class="theme-icon" id="theme-icon">
+            <div class="tab-content active" id="tabMain">
+              <div class="profile-info" style="padding: 30px">
+                <div class="avatar-container">
+                  <div
+                    class="skeleton skeleton-avatar"
+                    id="skeleton-avatar"
+                  ></div>
+                  <img
+                    src="/assets/account.png"
+                    alt="Avatar"
+                    class="avatar"
+                    id="avatar"
+                  />
+                  <div class="avatar-edit" id="avatarEditBtn">
+                    <img
+                      src="/assets/edit-icon.png"
+                      alt="Modifier"
+                      class="avatar-edit-icon"
+                    />
+                  </div>
+                  <form
+                    id="avatarForm"
+                    action="/api/upload_avatar.php"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="hidden"
+                  >
+                    <input
+                      type="file"
+                      name="avatar"
+                      id="avatarInput"
+                      accept="image/*"
+                    />
+                  </form>
+                </div>
+                <div
+                  class="username-container"
+                  style="flex-direction: row; gap: 10px"
+                >
+                  <div
+                    class="skeleton skeleton-username"
+                    id="skeleton-username"
+                  ></div>
+                  <h2 class="username" id="username">Chargement</h2>
+                  <img
+                    src="/assets/verified.png"
+                    alt="Vérifié"
+                    class="verified-badge"
+                    id="verified-badge"
+                  />
+                  <img
+                    src="/assets/edit-icon.png"
+                    alt="Modifier"
+                    class="username-edit"
+                    id="editUsername"
+                    title="Modifier l'username"
+                    style="
+                      width: 20px;
+                      height: 20px;
+                      cursor: pointer;
+                      margin-top: 5px;
+                    "
+                  />
+                </div>
+                <div class="skeleton skeleton-date" id="skeleton-date"></div>
+                <p class="member-date" id="member-date">
+                  Chargement de la date de création...
+                </p>
+                <div class="email-container">
+                  <div
+                    class="skeleton skeleton-email"
+                    id="skeleton-email"
+                  ></div>
+                  <span class="email" id="email">Chargement...</span>
+                  <img
+                    src="/assets/show.png"
+                    alt="Afficher"
+                    class="email-toggle"
+                    id="toggleEmail"
+                  />
+                  <img
+                    src="/assets/edit-icon.png"
+                    alt="Modifier"
+                    class="email-edit"
+                    id="editEmail"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="tab-content" id="tabStatus" style="padding: 30px">
+              <h3 style="font-size: 1.3rem; margin-bottom: 18px">
+                Statut du compte
+              </h3>
+              <div id="status-bar-container">
+                <div
+                  class="skeleton skeleton-status-bar"
+                  id="skeleton-status-bar"
+                ></div>
+                <div
+                  class="status-progress-bar"
+                  id="statusProgress"
+                  style="display: none"
+                >
+                  <div class="status-progress" id="statusProgressFill"></div>
+                </div>
+                <div class="status-labels">
+                  <span>Tout bon !</span>
+                  <span>Limité</span>
+                  <span>Très limité</span>
+                  <span>À risque</span>
+                  <span>Banni(e)</span>
+                </div>
+              </div>
+              <div
+                style="
+                  margin-top: 20px;
+                  display: flex;
+                  align-items: center;
+                  gap: 5px;
+                "
+              >
+                <b>Votre statut :</b>
+                <div
+                  class="skeleton skeleton-status-text"
+                  id="skeleton-status-text"
+                ></div>
+                <span
+                  id="accountStatusText"
+                  style="font-weight: bold; display: none"
+                  >Chargement...</span
+                >
+              </div>
+              <div
+                id="statusDescription"
+                style="
+                  color: #aaa;
+                  margin-top: 8px;
+                  font-size: 1rem;
+                  max-width: 600px;
+                  display: none;
+                "
+              >
+                Chargement...
+              </div>
+              <div
+                class="skeleton skeleton-status-desc"
+                id="skeleton-status-desc"
+              ></div>
+
+              <div id="sanctions-container" style="margin-top: 30px">
+                <div
+                  class="skeleton skeleton-sanctions"
+                  id="skeleton-sanctions"
+                  style="
+                    height: 150px;
+                    width: 100%;
+                    border-radius: var(--radius);
+                  "
+                ></div>
+
+                <div class="sanctions-section" style="display: none">
+                  <h4
+                    style="
+                      margin-top: 30px;
+                      margin-bottom: 10px;
+                      color: #f77;
+                      border-bottom: 1px solid rgba(255, 119, 119, 0.2);
+                      padding-bottom: 8px;
+                    "
+                  >
+                    Sanctions actives (affectant votre statut)
+                  </h4>
+                  <div id="active-sanctions" class="sanctions-list"></div>
+
+                  <h4
+                    style="
+                      margin-top: 30px;
+                      margin-bottom: 10px;
+                      color: #ccc;
+                      border-bottom: 1px solid rgba(204, 204, 204, 0.2);
+                      padding-bottom: 8px;
+                    "
+                  >
+                    Sanctions expirées
+                  </h4>
+                  <div id="expired-sanctions" class="sanctions-list"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-overlay" id="sanctionDetailsModal">
+              <div class="modal" style="max-width: 600px">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="sanctionModalTitle">
+                    Détails de la sanction
+                  </h3>
+                  <button class="modal-close" id="closeSanctionModal">
+                    <img
+                      src="/assets/croix.png"
+                      alt="Fermer"
+                      class="modal-close-icon"
+                    />
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="sanction-modal-content">
+                    <div class="sanction-severity" id="sanctionSeverity"></div>
+                    <div class="sanction-reason" id="sanctionReason"></div>
+                    <div class="sanction-date" id="sanctionDate"></div>
+                    <div class="sanction-admin" id="sanctionAdmin"></div>
+
+                    <div class="sanction-restrictions" style="margin-top: 20px">
+                      <h4>Fonctionnalités affectées:</h4>
+                      <ul id="sanctionRestrictions"></ul>
+                    </div>
+
+                    <div class="sanction-additional-info">
+                      <h4>Informations supplémentaires:</h4>
+                      <p id="sanctionAdditionalInfo"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer" id="sanctionModalFooter">
+                  <button
+                    class="btn btn-secondary"
+                    id="appealSanctionBtn"
+                    style="display: none"
+                  >
+                    Contester cette sanction
+                  </button>
+                  <button class="btn btn-primary" id="closeSanctionDetailsBtn">
+                    Fermer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-overlay" id="appealModal">
+            <div class="modal" style="max-width: 500px">
+              <div class="modal-header">
+                <h3 class="modal-title">Contester cette sanction</h3>
+                <button class="modal-close" id="closeAppealModal">
+                  <img
+                    src="/assets/croix.png"
+                    alt="Fermer"
+                    class="modal-close-icon"
+                  />
                 </button>
+              </div>
+              <div class="modal-body">
+                <textarea
+                  id="appealMessage"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Votre message"
+                ></textarea>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAppeal">
+                  Annuler
+                </button>
+                <button class="btn btn-primary" id="sendAppeal">Envoyer</button>
+              </div>
             </div>
-        </header>
+          </div>
 
-        <div class="container" id="mainContainer">
-            <nav class="sidebar">
-                <div class="sidebar-header">
-                    <h3 class="sidebar-title">Navigation</h3>
-                </div>
-                <ul class="sidebar-menu">
-                    <li>
-                        <a href="/account/" class="active">
-                            <img src="/assets/account.png" alt="Informations" class="sidebar-icon">
-                            Informations du compte
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/account/tools">
-                            <img src="/assets/code.png" alt="Tools" class="sidebar-icon">
-                            Tools Publiés
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/account/security">
-                            <img src="/assets/security-icon.png" alt="Sécurité" class="sidebar-icon">
-                            Sécurité
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/account/preferences">
-                            <img src="/assets/preferences-icon.png" alt="Préférences" class="sidebar-icon">
-                            Préférences
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/account/confidentiality">
-                            <img src="/assets/privacy-icon.png" alt="Confidentialité" class="sidebar-icon">
-                            Confidentialité
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/account/notifications">
-                            <img src="/assets/newsletter.png" alt="Notifications" class="sidebar-icon">
-                            Notifications
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/account/logout">
-                            <img src="/assets/logout.png" alt="Notifications" class="sidebar-icon">
-                            Se déconnecter
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="main-content">
-                <div class="profile-header">
-                    <h1 class="profile-title">Profil Utilisateur</h1>
-                    <p class="profile-subtitle">Gérez vos informations personnelles, vos paramètres et votre activité sur ToolCenter</p>
-                </div>
-
-                <div id="errorContainer" class="hidden"></div>
-
-                <div class="profile-card" style="padding:0;">
-                    <div class="tabs-header">
-                        <button class="tab-btn active" id="tabMainBtn">Infos principales</button>
-                        <button class="tab-btn" id="tabStatusBtn">Statut du compte</button>
-                    </div>
-                    <div class="tab-content active" id="tabMain">
-                        <div class="profile-info" style="padding:30px;">
-                            <div class="avatar-container">
-                                <div class="skeleton skeleton-avatar" id="skeleton-avatar"></div>
-                                <img src="/assets/account.png" alt="Avatar" class="avatar" id="avatar">
-                                <div class="avatar-edit" id="avatarEditBtn">
-                                    <img src="/assets/edit-icon.png" alt="Modifier" class="avatar-edit-icon">
-                                </div>
-                                <form id="avatarForm" action="/api/upload_avatar.php" method="POST" enctype="multipart/form-data" class="hidden">
-                                    <input type="file" name="avatar" id="avatarInput" accept="image/*">
-                                </form>
-                            </div>
-                            <div class="username-container" style="flex-direction: row; gap:10px;">
-                                <div class="skeleton skeleton-username" id="skeleton-username"></div>
-                                <h2 class="username" id="username">Chargement</h2>
-                                <img src="/assets/verified.png" alt="Vérifié" class="verified-badge" id="verified-badge">
-                                <img src="/assets/edit-icon.png" alt="Modifier" class="username-edit" id="editUsername" title="Modifier l'username" style="width:20px;height:20px;cursor:pointer;margin-top: 5px;">
-                            </div>
-                            <div class="skeleton skeleton-date" id="skeleton-date"></div>
-                            <p class="member-date" id="member-date">Chargement de la date de création...</p>
-                            <div class="email-container">
-                                <div class="skeleton skeleton-email" id="skeleton-email"></div>
-                                <span class="email" id="email">Chargement...</span>
-                                <img src="/assets/show.png" alt="Afficher" class="email-toggle" id="toggleEmail">
-                                <img src="/assets/edit-icon.png" alt="Modifier" class="email-edit" id="editEmail">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-content" id="tabStatus" style="padding:30px;">
-                        <h3 style="font-size:1.3rem;margin-bottom:18px;">Statut du compte</h3>
-                        <div id="status-bar-container">
-                            <div class="skeleton skeleton-status-bar" id="skeleton-status-bar"></div>
-                            <div class="status-progress-bar" id="statusProgress" style="display: none;">
-                                <div class="status-progress" id="statusProgressFill"></div>
-                            </div>
-                            <div class="status-labels">
-                                <span>Tout bon !</span>
-                                <span>Limité</span>
-                                <span>Très limité</span>
-                                <span>À risque</span>
-                                <span>Banni(e)</span>
-                            </div>
-                        </div>
-                        <div style="margin-top:20px; display: flex; align-items: center; gap: 5px;">
-                            <b>Votre statut :</b> 
-                            <div class="skeleton skeleton-status-text" id="skeleton-status-text"></div>
-                            <span id="accountStatusText" style="font-weight:bold; display: none;">Chargement...</span>
-                        </div>
-                        <div id="statusDescription" style="color:#aaa;margin-top:8px;font-size: 1rem;max-width: 600px; display: none;">
-                            Chargement...
-                        </div>
-                        <div class="skeleton skeleton-status-desc" id="skeleton-status-desc"></div>
-
-                        <div id="sanctions-container" style="margin-top: 30px;">
-                            <div class="skeleton skeleton-sanctions" id="skeleton-sanctions" style="height: 150px; width: 100%; border-radius: var(--radius);"></div>
-                            
-                            <div class="sanctions-section" style="display: none;">
-                                <h4 style="margin-top: 30px; margin-bottom: 10px; color: #f77; border-bottom: 1px solid rgba(255,119,119,0.2); padding-bottom: 8px;">
-                                    Sanctions actives (affectant votre statut)
-                                </h4>
-                                <div id="active-sanctions" class="sanctions-list"></div>
-                                
-                                <h4 style="margin-top: 30px; margin-bottom: 10px; color: #ccc; border-bottom: 1px solid rgba(204,204,204,0.2); padding-bottom: 8px;">
-                                    Sanctions expirées
-                                </h4>
-                                <div id="expired-sanctions" class="sanctions-list"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-overlay" id="sanctionDetailsModal">
-                        <div class="modal" style="max-width: 600px;">
-                            <div class="modal-header">
-                                <h3 class="modal-title" id="sanctionModalTitle">Détails de la sanction</h3>
-                                <button class="modal-close" id="closeSanctionModal">
-                                    <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="sanction-modal-content">
-                                    <div class="sanction-severity" id="sanctionSeverity"></div>
-                                    <div class="sanction-reason" id="sanctionReason"></div>
-                                    <div class="sanction-date" id="sanctionDate"></div>
-                                    <div class="sanction-admin" id="sanctionAdmin"></div>
-                                    
-                                    <div class="sanction-restrictions" style="margin-top: 20px;">
-                                        <h4>Fonctionnalités affectées:</h4>
-                                        <ul id="sanctionRestrictions"></ul>
-                                    </div>
-                                    
-                                    <div class="sanction-additional-info" style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: var(--radius-sm);">
-                                        <h4>Informations supplémentaires:</h4>
-                                        <p id="sanctionAdditionalInfo"></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer" id="sanctionModalFooter">
-                                <button class="btn btn-secondary" id="appealSanctionBtn" style="display: none;">Contester cette sanction</button>
-                                <button class="btn btn-primary" id="closeSanctionDetailsBtn">Fermer</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="skeleton skeleton-stat" id="skeleton-stat-1"></div>
-                        <div class="stat-value" id="tools-count">0</div>
-                        <div class="skeleton skeleton-label" id="skeleton-label-1"></div>
-                        <div class="stat-label">Tools Publiés</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="skeleton skeleton-stat" id="skeleton-stat-2"></div>
-                        <div class="stat-value" id="likes-count">0</div>
-                        <div class="skeleton skeleton-label" id="skeleton-label-2"></div>
-                        <div class="stat-label">Likes Reçus</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="skeleton skeleton-stat" id="skeleton-stat-3"></div>
-                        <div class="stat-value" id="views-count">0</div>
-                        <div class="skeleton skeleton-label" id="skeleton-label-3"></div>
-                        <div class="stat-label">Vues Totales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="skeleton skeleton-stat" id="skeleton-stat-4"></div>
-                        <div class="stat-value" id="followers-count">0</div>
-                        <div class="skeleton skeleton-label" id="skeleton-label-4"></div>
-                        <div class="stat-label">Abonnés</div>
-                    </div>
-                </div>
+          <div class="stats-container">
+            <div class="stat-card">
+              <div class="skeleton skeleton-stat" id="skeleton-stat-1"></div>
+              <div class="stat-value" id="tools-count">0</div>
+              <div class="skeleton skeleton-label" id="skeleton-label-1"></div>
+              <div class="stat-label">Tools Publiés</div>
             </div>
+            <div class="stat-card">
+              <div class="skeleton skeleton-stat" id="skeleton-stat-2"></div>
+              <div class="stat-value" id="likes-count">0</div>
+              <div class="skeleton skeleton-label" id="skeleton-label-2"></div>
+              <div class="stat-label">Likes Reçus</div>
+            </div>
+            <div class="stat-card">
+              <div class="skeleton skeleton-stat" id="skeleton-stat-3"></div>
+              <div class="stat-value" id="views-count">0</div>
+              <div class="skeleton skeleton-label" id="skeleton-label-3"></div>
+              <div class="stat-label">Vues Totales</div>
+            </div>
+            <div class="stat-card">
+              <div class="skeleton skeleton-stat" id="skeleton-stat-4"></div>
+              <div class="stat-value" id="followers-count">0</div>
+              <div class="skeleton skeleton-label" id="skeleton-label-4"></div>
+              <div class="stat-label">Abonnés</div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div class="modal-overlay" id="emailModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">Modifier votre email</h3>
-                    <button class="modal-close" id="closeEmailModal">
-                        <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="newEmail" class="form-label">Nouvel email</label>
-                        <input type="email" id="newEmail" class="form-input" placeholder="Entrez votre nouvel email">
-                    </div>
-                    <div class="form-group">
-                        <label for="currentPassword" class="form-label">Mot de passe actuel</label>
-                        <input type="password" id="currentPassword" class="form-input" placeholder="Entrez votre mot de passe actuel">
-                    </div>
-                    <div class="form-group" id="email2FAGroup" style="display:none;">
-                        <label for="email2FACode" class="form-label">Code 2FA</label>
-                        <input type="text" id="email2FACode" class="form-input" maxlength="6" placeholder="123456">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelEmailChange">Annuler</button>
-                    <button class="btn btn-primary" id="confirmEmailChange">Confirmer</button>
-                </div>
+      <div class="modal-overlay" id="emailModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 class="modal-title">Modifier votre email</h3>
+            <button class="modal-close" id="closeEmailModal">
+              <img
+                src="/assets/croix.png"
+                alt="Fermer"
+                class="modal-close-icon"
+              />
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="newEmail" class="form-label">Nouvel email</label>
+              <input
+                type="email"
+                id="newEmail"
+                class="form-input"
+                placeholder="Entrez votre nouvel email"
+              />
             </div>
+            <div class="form-group">
+              <label for="currentPassword" class="form-label"
+                >Mot de passe actuel</label
+              >
+              <input
+                type="password"
+                id="currentPassword"
+                class="form-input"
+                placeholder="Entrez votre mot de passe actuel"
+              />
+            </div>
+            <div class="form-group" id="email2FAGroup" style="display: none">
+              <label for="email2FACode" class="form-label">Code 2FA</label>
+              <input
+                type="text"
+                id="email2FACode"
+                class="form-input"
+                maxlength="6"
+                placeholder="123456"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelEmailChange">
+              Annuler
+            </button>
+            <button class="btn btn-primary" id="confirmEmailChange">
+              Confirmer
+            </button>
+          </div>
         </div>
+      </div>
 
-        <div class="modal-overlay" id="avatarModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">Confirmer votre nouvel avatar</h3>
-                    <button class="modal-close" id="closeAvatarModal">
-                        <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="avatar-preview-container">
-                        <img src="" alt="Prévisualisation de l'avatar" class="avatar-preview" id="avatarPreview">
-                        <p>Voulez-vous utiliser cette image comme avatar ?</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelAvatarChange">Annuler</button>
-                    <button class="btn btn-primary" id="confirmAvatarChange">Confirmer</button>
-                </div>
+      <div class="modal-overlay" id="avatarModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 class="modal-title">Confirmer votre nouvel avatar</h3>
+            <button class="modal-close" id="closeAvatarModal">
+              <img
+                src="/assets/croix.png"
+                alt="Fermer"
+                class="modal-close-icon"
+              />
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="avatar-preview-container">
+              <img
+                src=""
+                alt="Prévisualisation de l'avatar"
+                class="avatar-preview"
+                id="avatarPreview"
+              />
+              <p>Voulez-vous utiliser cette image comme avatar ?</p>
             </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelAvatarChange">
+              Annuler
+            </button>
+            <button class="btn btn-primary" id="confirmAvatarChange">
+              Confirmer
+            </button>
+          </div>
         </div>
+      </div>
 
-        <div class="modal-overlay" id="usernameModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">Modifier votre pseudo</h3>
-                    <button class="modal-close" id="closeUsernameModal">
-                        <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="newUsername" class="form-label">Nouveau pseudo</label>
-                        <input type="text" id="newUsername" class="form-input" placeholder="Entrez votre nouveau pseudo">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelUsernameChange">Annuler</button>
-                    <button class="btn btn-primary" id="confirmUsernameChange">Confirmer</button>
-                </div>
+      <div class="modal-overlay" id="usernameModal">
+        <div class="modal">
+          <div class="modal-header">
+            <h3 class="modal-title">Modifier votre pseudo</h3>
+            <button class="modal-close" id="closeUsernameModal">
+              <img
+                src="/assets/croix.png"
+                alt="Fermer"
+                class="modal-close-icon"
+              />
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="newUsername" class="form-label">Nouveau pseudo</label>
+              <input
+                type="text"
+                id="newUsername"
+                class="form-input"
+                placeholder="Entrez votre nouveau pseudo"
+              />
             </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelUsernameChange">
+              Annuler
+            </button>
+            <button class="btn btn-primary" id="confirmUsernameChange">
+              Confirmer
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script type="module" src="/src/utils/config.js"></script>
     <script type="module" src="/src/JS/account/index.js"></script>
-</body>
+  </body>
 </html>

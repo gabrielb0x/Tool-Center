@@ -17,7 +17,7 @@ type appealRequest struct {
 	Message string `json:"message"`
 }
 
-func buildAppealEmail(username string) string {
+func buildAppealEmail(username, appealID string) string {
 	return fmt.Sprintf(`<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -95,6 +95,7 @@ p{
     <div class="content">
     <h1>Contestation enregistrée</h1>
     <p>Bonjour <span class="highlight">%s</span>,</p>
+    <p><strong>ID de contestation&nbsp;:</strong> %s</p>
     <p>Votre contestation de sanction a bien été reçue.<br>
     Notre équipe va l'examiner dans les plus brefs délais et vous tiendra informé(e) par email.</p>
     <div class="divider"></div>
@@ -106,7 +107,7 @@ p{
 </div>
 </body>
 </html>
-`, username, time.Now().Year())
+`, username, appealID, time.Now().Year())
 }
 
 func AppealSanctionHandler(c *gin.Context) {
@@ -157,7 +158,8 @@ func AppealSanctionHandler(c *gin.Context) {
 	}
 
 	uuidV7, _ := uuid.NewV7()
-	_, err = db.Exec(`INSERT INTO sanction_appeals (appeal_id, action_id, user_id, message) VALUES (?,?,?,?)`, uuidV7.String(), sid, uid, req.Message)
+	appealID := uuidV7.String()
+	_, err = db.Exec(`INSERT INTO sanction_appeals (appeal_id, action_id, user_id, message) VALUES (?,?,?,?)`, appealID, sid, uid, req.Message)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
 		return
@@ -166,7 +168,7 @@ func AppealSanctionHandler(c *gin.Context) {
 	var username, email string
 	_ = db.QueryRow(`SELECT username,email FROM users WHERE user_id=?`, uid).Scan(&username, &email)
 	if email != "" {
-		body := buildAppealEmail(username)
+		body := buildAppealEmail(username, appealID)
 		_ = utils.QueueEmail(db, email, "Contestation reçue", body)
 	}
 

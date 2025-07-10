@@ -9,5 +9,16 @@
     "isNew": true,
     "isPrivate": true,
     "tags": ["information"]
+  },
+  {
+    "id": 41,
+    "date": "2026-01-01",
+    "displayDate": "01/01/2026",
+    "title": "Mise à jour contestations",
+    "summary": "Les emails de contestation incluent désormais l'ID et sont envoyés sans délai.",
+    "content": "Les sanctions inactives ne peuvent plus être contestées côté frontend et le panel admin utilise des icônes pour gérer les demandes.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": ["update"]
   }
 ]

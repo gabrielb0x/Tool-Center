@@ -10,6 +10,7 @@
 ## 🌐 **Quick overview**
 
 **Tool Center** is a web platform designed to:
+
 - 🔧 **Create & publish** your own tools
 - 💬 **Like, comment and share** other people's tools
 - 👤 **Manage your account**: avatar, security, statistics
@@ -32,6 +33,7 @@
 ## 🧠 **Why does Tool Center exist?**
 
 Because the world needed:
+
 - An **open-source hub** for web tools, **without ads** and **without trackers**
 - A place where **indie developers can shine**
 - A **modern** and **fast** site not solely aimed at developers
@@ -41,13 +43,13 @@ Because the world needed:
 
 ## 🧱 **Project architecture**
 
-| 🧩 Part       | ⚙️ Tech stack                        |
-|--------------|--------------------------------------|
-| **Backend API**   | Go (Golang) + MariaDB               |
-| **Frontend**      | HTML, JS, CSS (vanilla)             |
-| **Auth**          | Email with hashed tokens, UUIDv7 IDs, verification, sessions |
-| **Hosting**       | Raspberry Pi 5                      |
-| **Proxy / HTTPS** | Nginx + SSL via Cloudflare          |
+| 🧩 Part           | ⚙️ Tech stack                                                             |
+| ----------------- | ------------------------------------------------------------------------- |
+| **Backend API**   | Go (Golang) + MariaDB                                                     |
+| **Frontend**      | HTML, JS, CSS (vanilla)                                                   |
+| **Auth**          | Email with hashed tokens, UUIDv7 IDs, verification, sessions              |
+| **Hosting**       | Raspberry Pi 5                                                            |
+| **Proxy / HTTPS** | Nginx + SSL via Cloudflare                                                |
 | **Domains**       | [tool-center.fr](https://tool-center.fr) & [gabex.xyz](https://gabex.xyz) |
 
 ---
@@ -66,6 +68,7 @@ The `status_banner` section controls the outage banner displayed on the frontend
 `anti_spam` adds progressive blocking and automatic sanctions when the API is spammed. A new `proxy_multiplier` field lets you tune how much stricter proxy traffic is treated.
 Sanctions can now be contested via the API. Admins review these appeals from the panel.
 When an appeal is processed, the sanction expires and the user's previous status is restored.
+Appeal-related emails now include the appeal ID for easier follow-up and are sent immediately.
 Update `frontend/src/utils/config.js` to change the API base URL used by the static pages or set `VITE_API_BASE_URL` in a `.env` file for Vite.
 
 ### Build the frontend with Vite
@@ -84,6 +87,7 @@ Prototype pages like `frontend/prototypes/index3.html` use Tailwind CSS 4. Run `
 This will generate a `dist` folder containing the static site ready to deploy.
 
 ### Useful API endpoints
+
 - `POST /v{n}/admin/logs/clear` – clear all activity logs
 - `GET /v{n}/admin/users/{id}/tools` – list tools of a specific user
 - `GET /v{n}/admin/users/{id}/ban` – get last ban reason
@@ -110,9 +114,9 @@ curl https://api.tool-center.fr/v1/users/gabex
 
 ## 📸 **Gallery**
 
-| 🔐 Login                             | 📊 Dashboard                        |
-|-------------------------------------|------------------------------------|
-| ![Login](./frontend/public/assets/login-preview.png)        | ![Dashboard](./frontend/public/assets/dashbord-preview.png) |
+| 🔐 Login                                             | 📊 Dashboard                                                |
+| ---------------------------------------------------- | ----------------------------------------------------------- |
+| ![Login](./frontend/public/assets/login-preview.png) | ![Dashboard](./frontend/public/assets/dashbord-preview.png) |
 
 > _Screenshots taken on 2025‑05‑24. The real interface may have evolved since then._
 
@@ -129,6 +133,7 @@ a young full‑stack developer passionate about **AI**, **cybersecurity** and **
 ## ❤️ **Support & Contributions**
 
 **Tool Center** is an **open‑source** project built with:
+
 - 💕 Love
 - ⏱️ Patience and determination
 - ❤️‍🔥 Passion for computing
@@ -147,4 +152,5 @@ Want to contribute or report a bug?
 - 🔐 More security tools and audits
 
 ---
+
 ## **© Gabriel B., 2024-2025 — All rights reserved.**
