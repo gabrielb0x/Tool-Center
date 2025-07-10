@@ -34,7 +34,6 @@ func isProxy(r *http.Request) bool {
 	return false
 }
 
-// ApplySpamSanction decreases the user status and logs the action.
 func ApplySpamSanction(userID string) {
 	db, err := config.OpenDB()
 	if err != nil {
@@ -42,17 +41,17 @@ func ApplySpamSanction(userID string) {
 	}
 	defer db.Close()
 	cfg := config.Get()
-       prevStatus, newStatus, err := DecreaseStatus(db, userID, cfg.AntiSpam.StatusDecrease)
-       if err != nil {
-               return
-       }
+	prevStatus, newStatus, err := DecreaseStatus(db, userID, cfg.AntiSpam.StatusDecrease)
+	if err != nil {
+		return
+	}
 	reason := "Abus de l'API (spam)"
 	var end *time.Time
 	if newStatus == "Banned" {
 		t := time.Now().Add(time.Duration(cfg.AntiSpam.BanHours) * time.Hour)
 		end = &t
 	}
-       recordSanction(db, userID, prevStatus, reason, end)
+	recordSanction(db, userID, prevStatus, reason, end)
 	var email string
 	_ = db.QueryRow("SELECT email FROM users WHERE user_id=?", userID).Scan(&email)
 	if email != "" {
@@ -62,14 +61,13 @@ func ApplySpamSanction(userID string) {
 }
 
 func recordSanction(db *sql.DB, userID, prevStatus, reason string, end *time.Time) {
-       if end != nil {
-               _, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, previous_status, start_date, end_date) VALUES (?, 'Ban', ?, ?, NOW(), ?)`, userID, reason, prevStatus, *end)
-       } else {
-               _, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, previous_status, start_date) VALUES (?, 'Warn', ?, ?, NOW())`, userID, reason, prevStatus)
-       }
+	if end != nil {
+		_, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, previous_status, start_date, end_date) VALUES (?, 'Ban', ?, ?, NOW(), ?)`, userID, reason, prevStatus, *end)
+	} else {
+		_, _ = db.Exec(`INSERT INTO moderation_actions (user_id, action_type, reason, previous_status, start_date) VALUES (?, 'Warn', ?, ?, NOW())`, userID, reason, prevStatus)
+	}
 }
 
-// SpamProtectionMiddleware blocks aggressive clients and triggers sanctions on abuse.
 func SpamProtectionMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cfg := config.Get()
@@ -101,14 +99,14 @@ func SpamProtectionMiddleware() gin.HandlerFunc {
 			})
 			return
 		}
-                interval := time.Duration(cfg.AntiSpam.IntervalSeconds) * time.Second
-                if proxy {
-                        if cfg.AntiSpam.ProxyMultiplier > 1 {
-                                interval /= time.Duration(cfg.AntiSpam.ProxyMultiplier)
-                        } else {
-                                interval /= 2
-                        }
-                }
+		interval := time.Duration(cfg.AntiSpam.IntervalSeconds) * time.Second
+		if proxy {
+			if cfg.AntiSpam.ProxyMultiplier > 1 {
+				interval /= time.Duration(cfg.AntiSpam.ProxyMultiplier)
+			} else {
+				interval /= 2
+			}
+		}
 		if now.Sub(ent.last) < interval {
 			ent.count++
 		} else {
@@ -117,14 +115,14 @@ func SpamProtectionMiddleware() gin.HandlerFunc {
 		ent.last = now
 		if ent.count > cfg.AntiSpam.RequestThreshold {
 			ent.strikes++
-                        block := time.Duration(cfg.AntiSpam.InitialBlockSeconds) * time.Second * time.Duration(ent.strikes)
-                        if proxy {
-                                m := cfg.AntiSpam.ProxyMultiplier
-                                if m == 0 {
-                                        m = 2
-                                }
-                                block *= time.Duration(m)
-                        }
+			block := time.Duration(cfg.AntiSpam.InitialBlockSeconds) * time.Second * time.Duration(ent.strikes)
+			if proxy {
+				m := cfg.AntiSpam.ProxyMultiplier
+				if m == 0 {
+					m = 2
+				}
+				block *= time.Duration(m)
+			}
 			ent.blockedUntil = now.Add(block)
 			ent.count = 0
 		}

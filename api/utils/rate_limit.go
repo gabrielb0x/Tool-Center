@@ -72,7 +72,7 @@ func RateLimitMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(429, gin.H{
 				"success":             false,
 				"message":             "Trop de requêtes, veuillez patienter.",
-				"retry_after_seconds": 60, // valeur par défaut si Reserve échoue
+				"retry_after_seconds": 60,
 			})
 			return
 		}

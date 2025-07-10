@@ -50,7 +50,6 @@ type Status struct {
 	ErrorCount   int     `json:"error_count"`
 }
 
-// MonitorMiddleware records every request and whether it ended in an error.
 func MonitorMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
@@ -75,13 +74,11 @@ func getStatus() Status {
 	}
 }
 
-// StatusHandler exposes current error rate information.
 func StatusHandler(c *gin.Context) {
 	st := getStatus()
 	cfg := config.Get()
 	show := st.ErrorRate >= cfg.StatusBanner.ErrorRateThreshold && st.RequestCount > 0
 
-	// Always show banner if activated_for_testing is true
 	if cfg.StatusBanner.ActivatedForTesting {
 		msg := fmt.Sprintf("%s (%.0f%% d'erreurs)", cfg.StatusBanner.Message, st.ErrorRate*100)
 		c.JSON(http.StatusOK, gin.H{

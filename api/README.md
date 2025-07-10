@@ -1,5 +1,5 @@
-# 🚀 **ToolCenter API v1**  
-⏱️ **Date de dernière modification : 05/06/2025**
+# 🚀 **ToolCenter API v2**  
+⏱️ **Date de dernière modification : 10/07/2025**
 
 API performante écrite en **Go** 🐹 pour gérer les **utilisateurs**, les **outils** et l'ensemble des services associés (authentification, réservations, statistiques, etc.).
 
@@ -80,7 +80,7 @@ API performante écrite en **Go** 🐹 pour gérer les **utilisateurs**, les **
 #### Exemple : Login
 
 ```bash
-curl -X POST https://api.tool-center.fr/api/auth/login \
+curl -X POST https://api.tool-center.fr/v2/auth/login \
     -H "Content-Type: application/json" \
     -d '{"email":"john@doe.io","password":"s3cr3t"}'
 ```

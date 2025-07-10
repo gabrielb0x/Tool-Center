@@ -21,7 +21,6 @@ var (
 	tokenMu             sync.RWMutex
 )
 
-// Pour ajouter des tags à un article, il suffit d'ajouter les chaînes désirées dans le tableau.
 // Exemple : []string{"pinned", "urgent", "important", "todo", "inprogress", "done", "obsolete"},
 
 func loadPrivateArticles() ([]gin.H, error) {

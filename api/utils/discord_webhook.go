@@ -146,7 +146,6 @@ func DiscordWebhookNewsHandler(c *gin.Context) {
 		Content:   fmt.Sprintf("## 🛠️ Nouveau commit sur `%s`%s !", githubPayload.Repository.FullName, lockEmoji),
 	}
 
-	/* 7. Send to Discord */
 	jsonPayload, _ := json.Marshal(payload)
 	if cfg.DiscordWebhookURL != "" {
 		r, err := http.Post(cfg.DiscordWebhookURL, "application/json", bytes.NewBuffer(jsonPayload))

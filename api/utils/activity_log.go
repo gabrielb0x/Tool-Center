@@ -9,8 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// LogActivity stores an action made by a user or guest in the database.
-// If userID is empty, the value is stored as NULL.
 func LogActivity(c *gin.Context, userID, action string, success bool, message string) {
 	db, err := config.OpenDB()
 	if err != nil {
