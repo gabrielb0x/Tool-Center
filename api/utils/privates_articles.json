@@ -338,5 +338,18 @@
     "tags": [
       "backend"
     ]
+  },
+  {
+    "id": 37,
+    "date": "2025-11-15",
+    "displayDate": "15/11/2025",
+    "title": "Sanctions automatiques pour spam",
+    "summary": "Blocage progressif des IP et rétrogradation du statut utilisateur en cas d'abus.",
+    "content": "Le middleware de rate limit gère maintenant des blocs prolongés et applique une baisse de statut configurable. Les utilisateurs trop insistants reçoivent un e-mail et peuvent être bannis automatiquement.",
+    "isNew": true,
+    "isPrivate": true,
+    "tags": [
+      "backend"
+    ]
   }
 ]

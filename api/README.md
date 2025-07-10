@@ -104,6 +104,7 @@ Réponse :
 | `POST`   | `/api/user/update_password` | Changer le mot de passe |
 | `POST`   | `/api/user/avatar`          | Mettre à jour l'avatar |
 | `DELETE` | `/api/user/delete`          | Supprimer le compte |
+| `GET`    | `/api/user/sanctions`       | Liste des sanctions |
 
 ### Utilisateur ↦ `/api/user/me`
 
@@ -172,6 +173,15 @@ Réponse :
 | `POST`   | `/api/tools`      | Publier un outil |
 | `GET`    | `/api/tools`      | Liste des outils |
 | `DELETE` | `/api/tools/:id`  | Supprimer un outil |
+
+### Voir ses sanctions ↦ `/api/user/sanctions`
+
+```bash
+curl -X GET https://api.tool-center.fr/api/user/sanctions \
+    -H "Authorization: Bearer <token>"
+```
+
+Renvoie un tableau de sanctions avec les dates de début et de fin.
 
 ### Modifier son pseudo ↦ `/api/user/update_username`
 

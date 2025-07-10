@@ -189,12 +189,23 @@ CREATE TABLE moderation_actions (
   action_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   moderator_id CHAR(36),
   user_id CHAR(36) NOT NULL,
-  action_type ENUM('Warn','Ban','Unban','Limit_Comments','Limit_Tools'),
+  action_type ENUM('Warn','Ban','Unban','Limit_Comments','Limit_Tools','Limit_API'),
   reason TEXT,
   start_date TIMESTAMP,
   end_date TIMESTAMP,
   action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (moderator_id) REFERENCES users (user_id) ON DELETE SET NULL,
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+CREATE TABLE user_sanctions (
+  sanction_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  type VARCHAR(50),
+  reason TEXT,
+  start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  end_date DATETIME,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
 

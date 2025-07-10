@@ -139,8 +139,9 @@ func setupRoutes(r *gin.Engine) {
 	userGroup.POST("/update_password", user.UpdatePasswordHandler)
 	userGroup.GET("/2fa/setup", user.Generate2FAHandler)
 	userGroup.POST("/enable_2fa", user.Enable2FAHandler)
-	userGroup.POST("/disable_2fa", user.Disable2FAHandler)
-	userGroup.POST("/delete", user.DeleteAccountHandler)
+        userGroup.POST("/disable_2fa", user.Disable2FAHandler)
+        userGroup.POST("/delete", user.DeleteAccountHandler)
+        userGroup.GET("/sanctions", user.SanctionsHandler)
 
 	usersGroup := api.Group("/users")
 	usersGroup.GET("/search", user.SearchHandler)

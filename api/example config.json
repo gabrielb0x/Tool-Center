@@ -67,6 +67,13 @@
     "message": "Des perturbations sont en cours.",
     "activated_for_testing": true
   },
+  "spam_protection": {
+    "block_initial_seconds": 60,
+    "block_multiplier": 2,
+    "sanction_threshold": 3,
+    "status_drop": 2,
+    "ban_days": 7
+  },
   "private_news": {
     "password": "change-me",
     "token_hours": 24
