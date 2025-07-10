@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func buildDecisionEmail(username, msg string) string {
+func buildDecisionEmail(username, appealID, msg string) string {
 	return fmt.Sprintf(`
     <!DOCTYPE html>
     <html lang="fr">
@@ -98,6 +98,7 @@ func buildDecisionEmail(username, msg string) string {
         <div class="content">
         <h1>Décision de contestation</h1>
         <p>Bonjour <span class="highlight">%s</span>,</p>
+        <p><strong>ID de contestation&nbsp;:</strong> %s</p>
         <p>%s</p>
         <div class="divider"></div>
         <div class="security-note">
@@ -111,20 +112,20 @@ func buildDecisionEmail(username, msg string) string {
     </div>
     </body>
     </html>
-    `, username, msg, time.Now().Year())
+    `, username, appealID, msg, time.Now().Year())
 }
 
 func ListAppealsHandler(c *gin.Context) {
 	db, err := config.OpenDB()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "db open error"})
 		return
 	}
 	defer db.Close()
 
 	rows, err := db.Query(`SELECT appeal_id, action_id, user_id, message, status, created_at FROM sanction_appeals ORDER BY created_at DESC`)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "query error"})
 		return
 	}
 	defer rows.Close()
@@ -156,13 +157,13 @@ func ReviewAppealHandler(c *gin.Context) {
 		Message string `json:"message"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"success": false})
+		c.JSON(http.StatusBadRequest, gin.H{"success": false, "message": "bad request"})
 		return
 	}
 
 	db, err := config.OpenDB()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"success": false})
+		c.JSON(http.StatusInternalServerError, gin.H{"success": false, "message": "db open error"})
 		return
 	}
 	defer db.Close()
@@ -170,7 +171,7 @@ func ReviewAppealHandler(c *gin.Context) {
 	var actionID, userID string
 	err = db.QueryRow(`SELECT action_id, user_id FROM sanction_appeals WHERE appeal_id=? AND status='Pending'`, appealID).Scan(&actionID, &userID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"success": false})
+		c.JSON(http.StatusNotFound, gin.H{"success": false, "message": "appeal not found"})
 		return
 	}
 
@@ -189,7 +190,7 @@ func ReviewAppealHandler(c *gin.Context) {
 	var username, email string
 	_ = db.QueryRow(`SELECT username,email FROM users WHERE user_id=?`, userID).Scan(&username, &email)
 	if email != "" {
-		body := buildDecisionEmail(username, req.Message)
+		body := buildDecisionEmail(username, appealID, req.Message)
 		_ = utils.QueueEmail(db, email, "Contestation", body)
 	}
 

@@ -1,138 +1,171 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ToolCenter - Admin Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/src/CSS/admin/index.css">
-  <link rel="icon" href="/assets/tc_logo.webp" type="image/png">
-</head>
-<body>
-  <div id="preloader">
-    <div class="spinner"></div>
-    <div id="preloader-message">Vérification des permissions...</div>
-  </div>
-
-  <header class="admin-header">
-    <h1>
-      <img src="/assets/tc_logo.webp" alt="ToolCenter" class="logo">
-      ToolCenter <span>Admin</span>
-    </h1>
-    <nav class="admin-nav">
-      <a href="/" class="active">
-        <i class="fas fa-tachometer-alt"></i>
-        Acceuil
-      </a>
-      <button class="theme-toggle" id="theme-toggle">
-        <i class="fas fa-moon"></i>
-      </button>
-      <img src="/assets/account.png" alt="Admin" class="user-avatar" id="admin-avatar">
-    </nav>
-  </header>
-
-  <div class="admin-sidebar">
-    <a href="#" class="sidebar-item active">
-      <i class="fas fa-tachometer-alt"></i>
-      Tableau de bord
-    </a>
-    <a href="/admin/users" class="sidebar-item">
-      <i class="fas fa-users"></i>
-      Utilisateurs
-    </a>
-    <a href="/admin/mods" class="sidebar-item">
-      <i class="fas fa-user-shield"></i>
-      Modérateurs
-    </a>
-    <a href="/admin/logs" class="sidebar-item">
-      <i class="fas fa-clipboard-list"></i>
-      Logs système
-    </a>
-    <a href="/admin/tools" class="sidebar-item">
-      <i class="fas fa-tools"></i>
-      Outils
-    </a>
-    <a href="/admin/reports" class="sidebar-item">
-      <i class="fas fa-flag"></i>
-      Signalements
-    </a>
-    <a href="/admin/appeals" class="sidebar-item" data-path="/admin/appeals">
-      <i class="fas fa-gavel"></i>
-      Contestations
-    </a>
-    <a href="/admin/params" class="sidebar-item">
-      <i class="fas fa-cog"></i>
-      Paramètres
-    </a>
-    
-    <div class="sidebar-footer">
-      <a href="/account/logout" class="sidebar-item">
-        <i class="fas fa-sign-out-alt"></i>
-        Déconnexion
-      </a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToolCenter - Admin Panel</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/src/CSS/admin/index.css" />
+    <link rel="icon" href="/assets/tc_logo.webp" type="image/png" />
+  </head>
+  <body>
+    <div id="preloader">
+      <div class="spinner"></div>
+      <div id="preloader-message">Vérification des permissions...</div>
     </div>
-  </div>
 
-  <main class="admin-content" id="admin-content">
-  </main>
+    <header class="admin-header">
+      <h1>
+        <img src="/assets/tc_logo.webp" alt="ToolCenter" class="logo" />
+        ToolCenter <span>Admin</span>
+      </h1>
+      <nav class="admin-nav">
+        <a href="/" class="active">
+          <i class="fas fa-tachometer-alt"></i>
+          Acceuil
+        </a>
+        <button class="theme-toggle" id="theme-toggle">
+          <i class="fas fa-moon"></i>
+        </button>
+        <img
+          src="/assets/account.png"
+          alt="Admin"
+          class="user-avatar"
+          id="admin-avatar"
+        />
+      </nav>
+    </header>
 
-  <div class="modal-overlay" id="user-modal">
-    <div class="user-modal">
-      <div class="modal-header">
-        <h3 class="modal-title">
-          <i class="fas fa-user"></i>
-          Détails de l'utilisateur
-        </h3>
-        <button class="close-modal" id="close-modal">&times;</button>
+    <div class="admin-sidebar">
+      <a href="#" class="sidebar-item active">
+        <i class="fas fa-tachometer-alt"></i>
+        Tableau de bord
+      </a>
+      <a href="/admin/users" class="sidebar-item">
+        <i class="fas fa-users"></i>
+        Utilisateurs
+      </a>
+      <a href="/admin/mods" class="sidebar-item">
+        <i class="fas fa-user-shield"></i>
+        Modérateurs
+      </a>
+      <a href="/admin/logs" class="sidebar-item">
+        <i class="fas fa-clipboard-list"></i>
+        Logs système
+      </a>
+      <a href="/admin/tools" class="sidebar-item">
+        <i class="fas fa-tools"></i>
+        Outils
+      </a>
+      <a href="/admin/reports" class="sidebar-item">
+        <i class="fas fa-flag"></i>
+        Signalements
+      </a>
+      <a href="/admin/appeals" class="sidebar-item" data-path="/admin/appeals">
+        <i class="fas fa-gavel"></i>
+        Contestations
+      </a>
+      <a href="/admin/params" class="sidebar-item">
+        <i class="fas fa-cog"></i>
+        Paramètres
+      </a>
+
+      <div class="sidebar-footer">
+        <a href="/account/logout" class="sidebar-item">
+          <i class="fas fa-sign-out-alt"></i>
+          Déconnexion
+        </a>
       </div>
-      <div class="modal-body">
-        <div class="user-profile-header">
-          <img src="/assets/account.png" alt="User" class="user-avatar-lg" id="modal-avatar">
-          <div class="user-details">
-            <div class="user-name-wrapper">
-              <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
-              <img src="/assets/verified.png" id="modal-verified" title="Vérifié" class="verified-icon" style="display:none; margin-bottom: 3px;">
-              <span class="user-role role-user" id="modal-user-role">Utilisateur</span>
-            </div>
-            <div class="user-stats">
-              <div class="user-stat">
-                <div class="stat-number" id="tools-count">0</div>
-                <div class="stat-label">Outils</div>
+    </div>
+
+    <main class="admin-content" id="admin-content"></main>
+
+    <div class="modal-overlay" id="user-modal">
+      <div class="user-modal">
+        <div class="modal-header">
+          <h3 class="modal-title">
+            <i class="fas fa-user"></i>
+            Détails de l'utilisateur
+          </h3>
+          <button class="close-modal" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="user-profile-header">
+            <img
+              src="/assets/account.png"
+              alt="User"
+              class="user-avatar-lg"
+              id="modal-avatar"
+            />
+            <div class="user-details">
+              <div class="user-name-wrapper">
+                <h2 class="user-name-lg" id="modal-user-name">Chargement...</h2>
+                <img
+                  src="/assets/verified.png"
+                  id="modal-verified"
+                  title="Vérifié"
+                  class="verified-icon"
+                  style="display: none; margin-bottom: 3px"
+                />
+                <span class="user-role role-user" id="modal-user-role"
+                  >Utilisateur</span
+                >
               </div>
-              <div class="user-stat">
-                <div class="stat-number" id="reports-count">0</div>
-                <div class="stat-label">Signalements</div>
+              <div class="user-stats">
+                <div class="user-stat">
+                  <div class="stat-number" id="tools-count">0</div>
+                  <div class="stat-label">Outils</div>
+                </div>
+                <div class="user-stat">
+                  <div class="stat-number" id="reports-count">0</div>
+                  <div class="stat-label">Signalements</div>
+                </div>
+                <div class="user-stat">
+                  <div class="stat-number" id="joined-date">--/--/----</div>
+                  <div class="stat-label">Inscription</div>
+                </div>
               </div>
-              <div class="user-stat">
-              <div class="stat-number" id="joined-date">--/--/----</div>
-              <div class="stat-label">Inscription</div>
+              <div id="ban-info" class="ban-info" style="display: none"></div>
             </div>
           </div>
-          <div id="ban-info" class="ban-info" style="display:none;"></div>
-        </div>
-        </div>
 
-        <div class="user-tabs">
-          <div class="user-tab active" data-tab="info">Informations</div>
-          <div class="user-tab" data-tab="activity">Activité</div>
-          <div class="user-tab" data-tab="tools">Outils</div>
-          <div class="user-tab" data-tab="settings">Paramètres</div>
-        </div>
+          <div class="user-tabs">
+            <div class="user-tab active" data-tab="info">Informations</div>
+            <div class="user-tab" data-tab="activity">Activité</div>
+            <div class="user-tab" data-tab="tools">Outils</div>
+            <div class="user-tab" data-tab="settings">Paramètres</div>
+          </div>
 
-        <div class="tab-content active" id="info-tab">
-          <div class="form-row">
-            <!-- Champ nom complet retiré car absent de la base -->
+          <div class="tab-content active" id="info-tab">
+            <div class="form-row">
+              <!-- Champ nom complet retiré car absent de la base -->
+              <div class="form-group">
+                <label>Nom d'utilisateur</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  placeholder="Chargement..."
+                />
+              </div>
+            </div>
             <div class="form-group">
-              <label>Nom d'utilisateur</label>
-              <input type="text" class="form-control" id="username" placeholder="Chargement...">
+              <label>Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Chargement..."
+              />
             </div>
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Chargement...">
-          </div>
-          <!-- Champs personnels non disponibles dans l'API
+            <!-- Champs personnels non disponibles dans l'API
           <div class="form-row">
             <div class="form-group">
               <label>Date de naissance</label>
@@ -144,82 +177,133 @@
             </div>
           </div>
           -->
-          <div class="form-group">
-            <label>Bio</label>
-            <textarea class="form-control" id="bio" rows="3" placeholder="Chargement..."></textarea>
+            <div class="form-group">
+              <label>Bio</label>
+              <textarea
+                class="form-control"
+                id="bio"
+                rows="3"
+                placeholder="Chargement..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="tab-content" id="activity-tab">
+            <div
+              class="skeleton"
+              style="height: 300px; border-radius: 8px"
+            ></div>
+          </div>
+
+          <div class="tab-content" id="tools-tab">
+            <div
+              class="skeleton"
+              style="height: 300px; border-radius: 8px"
+            ></div>
+          </div>
+
+          <div class="tab-content" id="settings-tab">
+            <div class="form-group">
+              <label>Rôle</label>
+              <select class="form-control" id="user-role">
+                <option value="User">Utilisateur</option>
+                <option value="Moderator">Modérateur</option>
+                <option value="Admin">Administrateur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status du compte</label>
+              <select class="form-control" id="account-status">
+                <option value="Good">Actif</option>
+                <option value="Limited">Limité</option>
+                <option value="Very Limited">Très limité</option>
+                <option value="At Risk">À risque</option>
+                <option value="Banned">Banni</option>
+              </select>
+            </div>
+            <!-- Champs supplémentaires retirés car non gérés par l'API -->
           </div>
         </div>
-
-        <div class="tab-content" id="activity-tab">
-          <div class="skeleton" style="height: 300px; border-radius: 8px;"></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-changes">
+            <i class="fas fa-times"></i> Annuler
+          </button>
+          <button class="btn btn-danger" id="ban-user">
+            <i class="fas fa-ban"></i> Bannir
+          </button>
+          <button class="btn btn-primary" id="save-changes">
+            <i class="fas fa-save"></i> Enregistrer
+          </button>
         </div>
-
-        <div class="tab-content" id="tools-tab">
-          <div class="skeleton" style="height: 300px; border-radius: 8px;"></div>
-        </div>
-
-        <div class="tab-content" id="settings-tab">
-          <div class="form-group">
-            <label>Rôle</label>
-            <select class="form-control" id="user-role">
-              <option value="User">Utilisateur</option>
-              <option value="Moderator">Modérateur</option>
-              <option value="Admin">Administrateur</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Status du compte</label>
-            <select class="form-control" id="account-status">
-              <option value="Good">Actif</option>
-              <option value="Limited">Limité</option>
-              <option value="Very Limited">Très limité</option>
-              <option value="At Risk">À risque</option>
-              <option value="Banned">Banni</option>
-            </select>
-          </div>
-          <!-- Champs supplémentaires retirés car non gérés par l'API -->
-        </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" id="cancel-changes">
-      <i class="fas fa-times"></i> Annuler
-    </button>
-    <button class="btn btn-danger" id="ban-user">
-      <i class="fas fa-ban"></i> Bannir
-    </button>
-    <button class="btn btn-primary" id="save-changes">
-      <i class="fas fa-save"></i> Enregistrer
-    </button>
-  </div>
-</div>
-</div>
-
-<div class="modal-overlay" id="ban-modal">
-  <div class="confirm-modal">
-    <div class="modal-header">
-      <h3 class="modal-title" id="ban-modal-title">Bannir l'utilisateur</h3>
-      <button class="close-modal" id="close-ban-modal">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group ban-reason-group">
-        <label for="ban-reason">Raison du ban</label>
-        <textarea id="ban-reason" class="form-control" rows="3" placeholder="Indiquez la raison" style="resize: vertical;"></textarea>
-        <label for="ban-duration">Durée (heures, 0 = permanent)</label>
-        <input type="number" id="ban-duration" class="form-control" min="0" value="24">
       </div>
-      <p id="unban-text" class="hidden">Voulez-vous vraiment débannir cet utilisateur ?</p>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" id="cancel-ban"><i class="fas fa-times"></i>Annuler</button>
-      <button class="btn btn-danger" id="confirm-ban">Confirmer</button>
-    </div>
-  </div>
-</div>
 
-<div class="toast-container" id="toast-container">
-</div>
-  <script type="module" src="/src/utils/panel-config.js"></script>
-  <script type="module" src="/src/utils/config.js"></script>
-  <script type="module" src="/src/JS/admin/index.js"></script>
-</body>
+    <div class="modal-overlay" id="ban-modal">
+      <div class="confirm-modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="ban-modal-title">Bannir l'utilisateur</h3>
+          <button class="close-modal" id="close-ban-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group ban-reason-group">
+            <label for="ban-reason">Raison du ban</label>
+            <textarea
+              id="ban-reason"
+              class="form-control"
+              rows="3"
+              placeholder="Indiquez la raison"
+              style="resize: vertical"
+            ></textarea>
+            <label for="ban-duration">Durée (heures, 0 = permanent)</label>
+            <input
+              type="number"
+              id="ban-duration"
+              class="form-control"
+              min="0"
+              value="24"
+            />
+          </div>
+          <p id="unban-text" class="hidden">
+            Voulez-vous vraiment débannir cet utilisateur ?
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-ban">
+            <i class="fas fa-times"></i>Annuler
+          </button>
+          <button class="btn btn-danger" id="confirm-ban">Confirmer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="appeal-modal">
+      <div class="confirm-modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Message pour l'utilisateur</h3>
+          <button class="close-modal" id="close-appeal-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <textarea
+            id="appeal-message"
+            class="form-control"
+            rows="3"
+            placeholder="Message"
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-appeal">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="btn btn-primary" id="confirm-appeal">
+            <i class="fas fa-check"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script type="module" src="/src/utils/panel-config.js"></script>
+    <script type="module" src="/src/utils/config.js"></script>
+    <script type="module" src="/src/JS/admin/index.js"></script>
+  </body>
 </html>
