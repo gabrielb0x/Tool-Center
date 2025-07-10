@@ -69,10 +69,19 @@ type Config struct {
 	PasswordReset struct {
 		TokenExpiryMinutes int `json:"token_expiry_minutes"`
 	} `json:"password_reset"`
-	RateLimit struct {
-		Requests      int `json:"requests"`
-		WindowSeconds int `json:"window_seconds"`
-	} `json:"rate_limit"`
+        RateLimit struct {
+                Requests      int `json:"requests"`
+                WindowSeconds int `json:"window_seconds"`
+        } `json:"rate_limit"`
+        AntiSpam struct {
+                Enabled            bool    `json:"enabled"`
+                RequestThreshold   int     `json:"request_threshold"`
+                IntervalSeconds    int     `json:"interval_seconds"`
+                InitialBlockSeconds int    `json:"initial_block_seconds"`
+                MaxStrike          int     `json:"max_strike"`
+                StatusDecrease     int     `json:"status_decrease"`
+                BanHours           int     `json:"ban_hours"`
+        } `json:"anti_spam"`
 	StatusBanner struct {
 		ErrorRateThreshold  float64 `json:"error_rate_threshold"`
 		WindowMinutes       int     `json:"window_minutes"`
@@ -133,12 +142,33 @@ func Load(path string) error {
 	if cfg.UserSearchLimit <= 0 || cfg.UserSearchLimit > 20 {
 		cfg.UserSearchLimit = 10
 	}
-	if cfg.UserPublicToolsLimit <= 0 || cfg.UserPublicToolsLimit > 10 {
-		cfg.UserPublicToolsLimit = 3
-	}
-	mu.Lock()
-	Current = cfg
-	mu.Unlock()
+        if cfg.UserPublicToolsLimit <= 0 || cfg.UserPublicToolsLimit > 10 {
+                cfg.UserPublicToolsLimit = 3
+        }
+       if cfg.AntiSpam.RequestThreshold == 0 {
+               cfg.AntiSpam.RequestThreshold = 10
+       }
+       if cfg.AntiSpam.IntervalSeconds == 0 {
+               cfg.AntiSpam.IntervalSeconds = 1
+       }
+       if cfg.AntiSpam.InitialBlockSeconds == 0 {
+               cfg.AntiSpam.InitialBlockSeconds = 30
+       }
+       if cfg.AntiSpam.MaxStrike == 0 {
+               cfg.AntiSpam.MaxStrike = 3
+       }
+       if cfg.AntiSpam.StatusDecrease == 0 {
+               cfg.AntiSpam.StatusDecrease = 2
+       }
+       if cfg.AntiSpam.BanHours == 0 {
+               cfg.AntiSpam.BanHours = 24
+       }
+       if !cfg.AntiSpam.Enabled {
+               cfg.AntiSpam.Enabled = true
+       }
+        mu.Lock()
+        Current = cfg
+        mu.Unlock()
 	return nil
 }
 

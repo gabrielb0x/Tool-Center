@@ -130,10 +130,11 @@ func setupRoutes(r *gin.Engine) {
 	authGroup.DELETE("/sessions", auth.DeleteAllSessionsHandler)
 	authGroup.DELETE("/sessions/:id", auth.DeleteSessionHandler)
 
-	userGroup := api.Group("/user")
-	userGroup.GET("/verify_email", user.VerifyEmailHandler)
-	userGroup.GET(("/me"), user.MeHandler)
-	userGroup.POST("/avatar", user.UploadAvatar)
+        userGroup := api.Group("/user")
+        userGroup.GET("/verify_email", user.VerifyEmailHandler)
+        userGroup.GET(("/me"), user.MeHandler)
+        userGroup.GET("/sanctions", user.SanctionsHandler)
+        userGroup.POST("/avatar", user.UploadAvatar)
 	userGroup.POST("/update_username", user.UpdateUsernameHandler)
 	userGroup.POST("/update_email", user.UpdateEmailHandler)
 	userGroup.POST("/update_password", user.UpdatePasswordHandler)
@@ -191,11 +192,12 @@ func main() {
 		gin.SetMode(cfg.GinMode)
 	}
 
-	r := gin.Default()
-	r.Use(corsMiddleware())
-	r.Use(utils.RateLimitMiddleware())
-	r.Use(utils.MonitorMiddleware())
-	setupRoutes(r)
+       r := gin.Default()
+       r.Use(corsMiddleware())
+       r.Use(utils.RateLimitMiddleware())
+       r.Use(utils.SpamProtectionMiddleware())
+       r.Use(utils.MonitorMiddleware())
+       setupRoutes(r)
 
 	log.Printf("✅ API ToolCenter démarrée sur le port %d", cfg.Port)
 	r.Run(fmt.Sprintf(":%d", cfg.Port))

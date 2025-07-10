@@ -333,6 +333,19 @@
     "title": "Protection anti-spam API",
     "summary": "Ajout d'un rate limit configurable pour limiter les requêtes par IP.",
     "content": "Un middleware Go restreint désormais le nombre de requêtes par adresse IP. Les paramètres `requests` et `window_seconds` sont réglables dans `config.json`.",
+  "isNew": true,
+  "isPrivate": true,
+  "tags": [
+    "backend"
+  ]
+  },
+  {
+    "id": 37,
+    "date": "2025-11-05",
+    "displayDate": "05/11/2025",
+    "title": "Sanctions automatiques en cas de spam API",
+    "summary": "Blocages progressifs et baisse du statut si un utilisateur spamme l'API.",
+    "content": "Un middleware détecte les proxys et applique des blocages de plus en plus longs. Après plusieurs avertissements, le statut de l'utilisateur est diminué et un mail est envoyé.",
     "isNew": true,
     "isPrivate": true,
     "tags": [
