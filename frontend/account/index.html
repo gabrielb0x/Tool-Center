@@ -51,7 +51,7 @@
                 </div>
                 <ul class="sidebar-menu">
                     <li>
-                        <a href="/" class="active">
+                        <a href="/account/" class="active">
                             <img src="/assets/account.png" alt="Informations" class="sidebar-icon">
                             Informations du compte
                         </a>
@@ -124,7 +124,7 @@
                                 <div class="skeleton skeleton-username" id="skeleton-username"></div>
                                 <h2 class="username" id="username">Chargement</h2>
                                 <img src="/assets/verified.png" alt="Vérifié" class="verified-badge" id="verified-badge">
-                                <img src="/assets/edit-icon.png" alt="Modifier" class="username-edit" id="editUsername" title="Modifier l'username" style="width:20px;height:20px;cursor:pointer;">
+                                <img src="/assets/edit-icon.png" alt="Modifier" class="username-edit" id="editUsername" title="Modifier l'username" style="width:20px;height:20px;cursor:pointer;margin-top: 5px;">
                             </div>
                             <div class="skeleton skeleton-date" id="skeleton-date"></div>
                             <p class="member-date" id="member-date">Chargement de la date de création...</p>
@@ -139,7 +139,8 @@
                     <div class="tab-content" id="tabStatus" style="padding:30px;">
                         <h3 style="font-size:1.3rem;margin-bottom:18px;">Statut du compte</h3>
                         <div id="status-bar-container">
-                            <div class="status-progress-bar" id="statusProgress">
+                            <div class="skeleton skeleton-status-bar" id="skeleton-status-bar"></div>
+                            <div class="status-progress-bar" id="statusProgress" style="display: none;">
                                 <div class="status-progress" id="statusProgressFill"></div>
                             </div>
                             <div class="status-labels">
@@ -150,11 +151,63 @@
                                 <span>Banni(e)</span>
                             </div>
                         </div>
-                        <div style="margin-top:20px;">
-                            <b>Votre statut :</b> <span id="accountStatusText" style="font-weight:bold;">Chargement...</span>
+                        <div style="margin-top:20px; display: flex; align-items: center; gap: 5px;">
+                            <b>Votre statut :</b> 
+                            <div class="skeleton skeleton-status-text" id="skeleton-status-text"></div>
+                            <span id="accountStatusText" style="font-weight:bold; display: none;">Chargement...</span>
                         </div>
-                        <div id="statusDescription" style="color:#aaa;margin-top:8px;font-size: 1rem;max-width: 600px;">
-                            Chargemment...
+                        <div id="statusDescription" style="color:#aaa;margin-top:8px;font-size: 1rem;max-width: 600px; display: none;">
+                            Chargement...
+                        </div>
+                        <div class="skeleton skeleton-status-desc" id="skeleton-status-desc"></div>
+
+                        <div id="sanctions-container" style="margin-top: 30px;">
+                            <div class="skeleton skeleton-sanctions" id="skeleton-sanctions" style="height: 150px; width: 100%; border-radius: var(--radius);"></div>
+                            
+                            <div class="sanctions-section" style="display: none;">
+                                <h4 style="margin-top: 30px; margin-bottom: 10px; color: #f77; border-bottom: 1px solid rgba(255,119,119,0.2); padding-bottom: 8px;">
+                                    Sanctions actives (affectant votre statut)
+                                </h4>
+                                <div id="active-sanctions" class="sanctions-list"></div>
+                                
+                                <h4 style="margin-top: 30px; margin-bottom: 10px; color: #ccc; border-bottom: 1px solid rgba(204,204,204,0.2); padding-bottom: 8px;">
+                                    Sanctions expirées
+                                </h4>
+                                <div id="expired-sanctions" class="sanctions-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-overlay" id="sanctionDetailsModal">
+                        <div class="modal" style="max-width: 600px;">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="sanctionModalTitle">Détails de la sanction</h3>
+                                <button class="modal-close" id="closeSanctionModal">
+                                    <img src="/assets/croix.png" alt="Fermer" class="modal-close-icon">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="sanction-modal-content">
+                                    <div class="sanction-severity" id="sanctionSeverity"></div>
+                                    <div class="sanction-reason" id="sanctionReason"></div>
+                                    <div class="sanction-date" id="sanctionDate"></div>
+                                    <div class="sanction-admin" id="sanctionAdmin"></div>
+                                    
+                                    <div class="sanction-restrictions" style="margin-top: 20px;">
+                                        <h4>Fonctionnalités affectées:</h4>
+                                        <ul id="sanctionRestrictions"></ul>
+                                    </div>
+                                    
+                                    <div class="sanction-additional-info" style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: var(--radius-sm);">
+                                        <h4>Informations supplémentaires:</h4>
+                                        <p id="sanctionAdditionalInfo"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" id="sanctionModalFooter">
+                                <button class="btn btn-secondary" id="appealSanctionBtn" style="display: none;">Contester cette sanction</button>
+                                <button class="btn btn-primary" id="closeSanctionDetailsBtn">Fermer</button>
+                            </div>
                         </div>
                     </div>
                 </div>

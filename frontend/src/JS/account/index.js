@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         Promise.resolve()
             .then(() => fetchUserData())
+            .then(() => fetchSanctions())
             .then(() => {
                 initAvatarModal();
                 initEmailModal();
@@ -137,8 +138,17 @@ function displayUserData(userData) {
     document.querySelectorAll('.skeleton').forEach(el => {
         el.classList.add('fade-out');
         setTimeout(() => {
-            setAccountStatus(userData.account_status);
-            el.classList.add('hidden');
+            document.getElementById('skeleton-status-text').classList.add('fade-out');
+            document.getElementById('skeleton-status-desc').classList.add('fade-out');
+            document.getElementById('skeleton-status-bar').classList.add('fade-out');
+            
+            setTimeout(() => {
+                document.getElementById('accountStatusText').style.display = 'inline';
+                document.getElementById('statusDescription').style.display = 'block';
+                document.getElementById('statusProgress').style.display = 'block';
+                setAccountStatus(userData.account_status);
+                el.classList.add('hidden');
+            }, 300);
         }, 300);
     });
 
@@ -581,3 +591,82 @@ function setAccountStatus(status) {
     statusText.textContent = steps[idx];
     statusDesc.textContent = descriptions[idx];
 }
+
+function fetchSanctions() {
+    const token = localStorage.getItem('token');
+    return fetch(`${apiBaseURL}/user/sanctions`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(r => r.json())
+    .then(data => {
+        const sk = document.getElementById('skeleton-sanctions');
+        sk.classList.add('fade-out');
+        setTimeout(() => { sk.style.display = 'none'; }, 300);
+        if(!data.success) return;
+        document.querySelector('.sanctions-section').style.display = 'block';
+        const active = document.getElementById('active-sanctions');
+        const expired = document.getElementById('expired-sanctions');
+        active.innerHTML = '';
+        expired.innerHTML = '';
+        data.active.forEach(s => active.appendChild(createSanctionItem(s, false)));
+        data.expired.forEach(s => expired.appendChild(createSanctionItem(s, true)));
+    });
+}
+
+function createSanctionItem(sanction, expired) {
+    const div = document.createElement('div');
+    div.className = 'sanction-item' + (expired ? ' expired' : '');
+    const icon = document.createElement('span');
+    icon.className = 'sanction-icon';
+    if (sanction.type === 'Ban') icon.textContent = '🚫';
+    else if (sanction.type === 'Warn') icon.textContent = '⚠️';
+    else icon.textContent = '⏳';
+    div.appendChild(icon);
+    const label = document.createElement('span');
+    const end = sanction.end ? new Date(sanction.end).toLocaleString('fr-FR') : '';
+    label.textContent = `${sanction.type}${end ? ' (jusqu\u2019au ' + end + ')' : ''}`;
+    div.appendChild(label);
+    div.addEventListener('click', () => openSanctionModal(sanction));
+    return div;
+}
+
+function openSanctionModal(s) {
+    document.getElementById('sanctionModalTitle').textContent = s.type;
+    document.getElementById('sanctionReason').textContent = s.reason || 'Aucune raison';
+    document.getElementById('sanctionDate').textContent = s.start ? new Date(s.start).toLocaleString('fr-FR') : '';
+    document.getElementById('sanctionAdmin').textContent = s.by || 'systauto';
+    const btn = document.getElementById('appealSanctionBtn');
+    if (s.appeal_status === 'Pending' || s.appeal_status === 'Approved') {
+        btn.style.display = 'none';
+    } else {
+        btn.style.display = 'inline-block';
+        btn.onclick = () => appealSanction(s.id);
+    }
+    document.getElementById('sanctionDetailsModal').classList.add('active');
+}
+
+async function appealSanction(id) {
+    const msg = prompt('Message de contestation:');
+    if (!msg) return;
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${apiBaseURL}/user/sanctions/${id}/appeal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ message: msg })
+    });
+    if (res.ok) {
+        showSuccessModal('Contestation envoyée', 'Votre demande sera traitée prochainement.');
+    } else {
+        showError('Erreur lors de la contestation');
+    }
+    document.getElementById('sanctionDetailsModal').classList.remove('active');
+}
+
+document.getElementById('closeSanctionModal').addEventListener('click', () => {
+    document.getElementById('sanctionDetailsModal').classList.remove('active');
+});
+
+document.getElementById('closeSanctionDetailsBtn').addEventListener('click', () => {
+    document.getElementById('sanctionDetailsModal').classList.remove('active');
+});
+
