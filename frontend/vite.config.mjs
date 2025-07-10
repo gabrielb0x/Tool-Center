@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // ---------------------------------------------------------------------------
 // ⚙️  Build switches (toggle as you need)
 // ---------------------------------------------------------------------------
-const OBF_LEVEL     = 'hard';       // 'none' | 'simple' | 'medium' | 'hard'
+const OBF_LEVEL     = 'none';       // 'none' | 'simple' | 'medium' | 'hard'
 const MINIFY_HARD   = true;         // true = terser hard, false = esbuild
 const ghost_names   = true;         // true = hashed names, false = readable names
 
