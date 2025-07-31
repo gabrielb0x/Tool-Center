@@ -59,6 +59,7 @@
 | 🎨 **UX**          | Responsive layout, dark mode, keyboard shortcuts, accessible components, PWA offline splash |
 | 🏗️ **DevOps**     | OpenAPI 3 docs, GitHub Actions CI, Docker/Compose, semantic releases, Dependabot            |
 | 📈 **Analytics**   | Self‑hosted [Plausible](https://plausible.io/) integration *(opt‑in)*                       |
+| 📰 **News**        | Private articles via token-based API                                     |
 
 ---
 
