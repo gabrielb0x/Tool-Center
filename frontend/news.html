@@ -1549,8 +1549,8 @@
   </div>
   
   <script type="module" src="/src/utils/config.js"></script>
-  <script>
-    let API_BASE_URL = window.API_BASE_URL;
+  <script type="module">
+    const API_BASE_URL = window.API_BASE_URL;
     const PRIVATE_NEWS_ENDPOINT = '/utils/privates_news';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1559,8 +1559,8 @@
           displayArticles(getFilteredArticles());
           setupEventListeners();
 
-          const savedPassword = localStorage.getItem('tc_news_password');
-          if (savedPassword) {
+          const savedToken = localStorage.getItem('tc_news_token');
+          if (savedToken) {
             isAuthenticated = true;
             loadPrivateArticles();
           }
@@ -1666,8 +1666,8 @@
           const tabType = this.getAttribute('data-tab');
           
           if (tabType === 'private') {
-            const savedPassword = localStorage.getItem('tc_news_password');
-            if (!savedPassword) {
+            const savedToken = localStorage.getItem('tc_news_token');
+            if (!savedToken) {
               showPasswordModal();
               return;
             }
@@ -1894,8 +1894,8 @@
     }
     
     function loadPrivateArticles() {
-      const savedPassword = localStorage.getItem('tc_news_password');
-      if (!savedPassword) return;
+      const savedToken = localStorage.getItem('tc_news_token');
+      if (!savedToken) return;
       
       const loadingCard = document.createElement('div');
       loadingCard.className = 'col-span-full text-center py-10';
@@ -1912,7 +1912,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ password: savedPassword })
+        body: JSON.stringify({ token: savedToken })
       })
       .then(response => {
         if (!response.ok) {
@@ -1928,7 +1928,7 @@
           }));
           displayArticles(getFilteredArticles());
         } else {
-          localStorage.removeItem('tc_news_password');
+          localStorage.removeItem('tc_news_token');
           location.reload();
         }
       })
@@ -1989,7 +1989,9 @@
       .then(data => {
         if (data.success) {
           isAuthenticated = true;
-          localStorage.setItem('tc_news_password', password);
+          if (data.token) {
+            localStorage.setItem('tc_news_token', data.token);
+          }
           
           tabs.forEach(t => t.classList.remove('active'));
           document.querySelector('.tab[data-tab="private"]').classList.add('active');
