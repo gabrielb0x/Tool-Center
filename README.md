@@ -1,3 +1,6 @@
+> [!WARNING]
+> **This project is currently deprecated**: updates may occur, but they will be rare.
+
 # 🚀✨ **Tool Center**
 
 ![Tool Center Banner](./frontend/public/assets/Banniere-TC.png)
